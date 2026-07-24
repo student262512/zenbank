@@ -1,0 +1,11 @@
+﻿:root {
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --primary: #1E3A8A;
+  --secondary: #2563EB;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+}

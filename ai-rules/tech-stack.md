@@ -1,0 +1,1 @@
+Next.js app with the latest stable version with pnpm including better-auth, tidbcloud serverless, argon2, drizzle-orm, uuidv7, zod, lucide-react as dependencies and tailwindcss, eslint, tsx, typescript, drizzle-kit as dev dependencies.

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /s /b)",
+      "Bash(powershell -Command \"Get-ChildItem -Recurse -Force | Select-Object FullName\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''E:\\apps\\zenbank\\src'' -Recurse | Select-Object FullName\")",
+      "Bash(powershell -Command:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}

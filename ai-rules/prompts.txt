@@ -1,0 +1,59 @@
+I've created the Next.js app boilerplate using pnpm. Based on the tech stack and all the modules & features in @ai-rules\specifications.md & the @ai-rules\ui-design.md, generate all the required project folders & files structure that can be created using powershell in the file @ai-rules\folder-structure.md
+
+Generate a beautiful UI design template based on the below features and modules of the app for the AI to follow consistently and precisely for each feature and module.
+
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md, @ai-rules\tech-stack.md, @ai-rules\ui-design.md files, Create a stunning, futuristic, colorful, best-in-class enterprise grade responsive home page in @src\app\layout.tsx and @src\app\page.tsx with the below pattern:
+**Sticky Header**Based on all the app's features and modules, create a stunning, futuristic, colorful, best-in-class enterprise grade responsive Sticky Header in the app's root layout with multi level mega menu for each module with all features as menu items appropriately divided in sections.
+**Hero Carousel** Full-screen carousel showcasing each module with all its features. Each module must be shown without missing any module.
+**Banner** Promotional announcement with limited-time offer
+**Features Grid** Comprehensive overview of all platform modules
+**Platform Analytics** Real-time stats showing platform credibility
+**Testimonials** Social proof from satisfied customers
+**Partners** Logos of trusted technology partners
+**Sponsor Section** Partner offers and exclusive deals
+**FAQ** Comprehensive answers to common questions
+**CTA** Final conversion section with compelling call-to-action
+**Footer** Based on all the app's features and modules, create a stunning, futuristic, colorful, best-in-class enterprise grade responsive footer with all modules, pages, social links and contact information in the app's root layout.
+IMPORTANT: Keep the component structure as it is. Dont remove any existing component. Dont forget any feature. Add features to the below components: Header, PromoBanner, FeaturesGrid,  PlatformAnalytics,  Testimonials,  Partners,  CTASection. Do NOT CREATE ANY SUMMARY, GUIDES, DOCUMENTATION IN THE PROJECT. 
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md, @ai-rules\tech-stack.md and the @ai-rules\ui-design.md files, generate a separate file for the execution checklist along with real-time status for each of the below items in phase 1 in the folder @ai-rules\execution-checklist\phase-1\. Remember to use the folder structure, tech stack and the design philosophy to create the checklist with status for all the components, features, layouts & pages that have to be created for phase 1:
+Phase 1 — Core Platform
+
+1. Global Application Shell
+2. Enterprise Dashboard
+3. Universal Navigation
+4. AI Copilot
+5. Global Search
+6. Notification Center
+7. Command Center Home
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md, @ai-rules\tech-stack.md, @ai-rules\ui-design.md and the @ai-rules\execution-checklist\phase-1\checklist.md files, complete all the tasks in the checklist one by one starting with the root layout and home page. 
+
+Update the checklist file @ai-rules\execution-checklist\phase-1\checklist.md after completing the task.
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md, @ai-rules\tech-stack.md and the @ai-rules\ui-design.md, @ai-rules\specifications\01-finance-and-treasury\01-overview.md & @ai-rules\specifications\01-finance-and-treasury\02-executive-intelligence.md files, generate a separate execution checklist file along with real-time status for each of the page mentioned in the foundation file in the folder @ai-rules\execution-checklist\. Remember to use the folder structure, tech stack and the design philosophy to create the checklist with status for all the components, features, tabs, layouts that have to be created for creating the UI with only MOCK DATA
+IMPORTANT NOTE: Do NOT CREATE ANY SUMMARY, GUIDES, DOCUMENTATION IN THE PROJECT. create the checklist file ONLY for generating the UI with MOCK DATA. Do NOT generate database schema, end points, hooks FOR NOW.
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md, @ai-rules\tech-stack.md and the @ai-rules\ui-design.md, @ai-rules\specifications\01-finance-and-treasury\01-overview.md @ai-rules\specifications\01-finance-and-treasury\02-executive-intelligence.md @ai-rules\execution-checklist\01-foundation-executive-intelligence.md files, complete all the items in the checklist one by one and update the status once the item is completed.
+IMPORTANT NOTE: Do NOT CREATE ANY SUMMARY, GUIDES, DOCUMENTATION IN THE PROJECT. Generate the code ONLY for the UI with MOCK DATA. Do NOT generate database schema, end points, hooks FOR NOW.
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md and the @ai-rules\ui-design.md files, generate the page layouts of all the required pages along with details of the content, data in each page. Create a new file for each page in @ai-rules\page-layouts folder based on the folder structure of the app and follow the hierarchy.
+
+Based on the @ai-rules\specifications.md @ai-rules\ui-design.md files, generate a beautiful & responsive home page for the app by modifying @src\app\layout.tsx and @src\app\page.tsx pages along with components like app header\navbar and footer.
+
+Based on the @ai-rules\specifications.md and the @ai-rules\ui-design.md files, Generate the code for @src\app\error.tsx, @src\app\not-found.tsx & @src\app\loading.tsx
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md @ai-rules\ui-design.md and the @ai-rules\page-layouts files, generate the code for beautiful & responsive pages in the @src\app folder for the respective page mentioned in @ai-rules\page-layouts based on the UI design and maintain the realtime status checklist file in @ai-rules\real-page-checklist.md marking the status as complete once the page UI is completed.
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md and strictly following the tech stack, generate the respective backend code in @src\app\api for each of the page in @src\app. maintain the realtime status checklist file in @ai-rules\api-page-checklist.md marking the status as complete once the page UI is completed.
+
+Based on the @ai-rules\specifications.md and @"ai-rules\app\(auth)" files, generate the backend code for the auth handling of register, login, forgot password, reset password. Also generate code for next-auth for the login, logout using credential, google\facebook\instagram oauth, session management & proxy(middleware)  in @src\app\api\auth\[...nextauth]\route.ts and @src\app\layout.tsx and @proxy.ts allowing all pages to be accessed for the demo.
+
+Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md @ai-rules\ui-design.md @ai-rules\page-layouts\(dashboard)\dashboard.md files, generate the code for a beautiful & responsive page for the dashboard based on the UI design
+
+Based on the @ai-rules\specifications.md and @src\app files, generate the drizzle schema for all the required pages based on the frontend and backend logic. Use snowflake id logic with unsigned bigint for all ID related fields. Make sure to Follow all enterprise grade standards including compliance (GDPR, DPDPA) standards for all PII fields. Maintain a realtime status checklist file in @ai-rules\schema-checklist.md marking the status as complete once the schema is completed.
+
+Based on the @ai-rules\specifications.md @ai-rules\ui-design.md and @ai-rules\page-layouts files, modify all the pages in the @src\app\(dashboard) to make them completly responsive since none of the pages are responsive right now.
+
+Complete the remaining unfinished pages Based on the @ai-rules\specifications.md @ai-rules\folder-structure.md @ai-rules\ui-design.md and the @ai-rules\page-layouts files, generate the code for beautiful & responsive pages in the @src\app folder for the respective page mentioned in @ai-rules\page-layouts based on the UI design and maintain the realtime status checklist file in @ai-rules\real-page-checklist.md marking the status as complete once the page UI is completed.
