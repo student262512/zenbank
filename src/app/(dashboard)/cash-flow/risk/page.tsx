@@ -153,7 +153,7 @@ const kpiData = {
   liquidityRisk: {
     value: 'Medium',
     score: 65,
-    trend: 'stable' as const,
+    trend: 'neutral' as const,
     bufferDays: 45,
   },
   concentrationRisk: {
@@ -717,26 +717,27 @@ const formatPercentage = (value: number) => {
 
 export default function CashRiskIntelligencePage() {
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [filters, setFilters] = useState<CashFlowFilterState>({
-    search: '',
-    dateRange: { startDate: undefined, endDate: undefined },
-    entities: [],
-    projects: [],
-    banks: [],
-    transactionTypes: [],
-    status: [],
-    minAmount: undefined,
-    maxAmount: undefined,
-    currency: 'INR',
-    groupBy: 'none',
-    sortBy: 'date',
-    sortOrder: 'desc',
-  });
+  // const [filters, setFilters] = useState<CashFlowFilterState>({
+  //   search: '',
+  //   dateRange: { startDate: undefined, endDate: undefined },
+  //   entities: [],
+  //   projects: [],
+  //   banks: [],
+  //   transactionTypes: [],
+  //   status: [],
+  //   minAmount: undefined,
+  //   maxAmount: undefined,
+  //   currency: 'INR',
+  //   groupBy: 'none',
+  //   sortBy: 'date',
+  //   sortOrder: 'desc',
+  // });
   const [selectedRisk, setSelectedRisk] = useState<RiskItem | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<RiskAlert | null>(null);
 
   // Get tabs configuration
-  const tabs = cashRiskTabs || [
+  // const tabs = cashRiskTabs || [
+  const tabs = [
     { id: 'dashboard', label: 'Risk Dashboard' },
     { id: 'liquidity', label: 'Liquidity Risk' },
     { id: 'concentration', label: 'Concentration Risk' },
@@ -749,14 +750,16 @@ export default function CashRiskIntelligencePage() {
   // Column definitions
   const riskColumns: Column<RiskItem>[] = [
     {
-      key: 'id',
-      header: 'Risk ID',
+      id: 'id',
+      header: 'Risk ID',      
+      accessor: 'id',
       cell: (row) => <span className="font-mono text-sm">{row.id}</span>,
       sortable: true,
     },
     {
-      key: 'category',
+      id: 'category',
       header: 'Category',
+      accessor: 'category',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
           {row.category}
@@ -765,15 +768,17 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'description',
+      id: 'description',
       header: 'Description',
+      accessor: 'description',
       cell: (row) => (
         <span className="text-sm max-w-[300px] truncate block">{row.description}</span>
       ),
     },
     {
-      key: 'riskLevel',
+      id: 'riskLevel',
       header: 'Risk Level',
+      accessor: 'riskLevel',
       cell: (row) => (
         <Badge className={getRiskLevelColor(row.riskLevel)}>
           {row.riskLevel.toUpperCase()}
@@ -782,8 +787,9 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'probability',
+      id: 'probability',
       header: 'Probability',
+      accessor: 'probability',
       cell: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -798,14 +804,16 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'impactAmount',
+      id: 'impactAmount',
       header: 'Impact',
+      accessor: 'impactAmount',
       cell: (row) => <span className="text-red-400">{formatCurrency(row.impactAmount)}</span>,
       sortable: true,
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
+      accessor: 'status',
       cell: (row) => (
         <Badge className={getStatusColor(row.status)}>
           {row.status.charAt(0).toUpperCase() + row.status.slice(1)}
@@ -814,13 +822,14 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'owner',
+      id: 'owner',
       header: 'Owner',
+      accessor: 'owner',
       cell: (row) => <span className="text-sm">{row.owner}</span>,
       sortable: true,
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: 'Actions',
       cell: (row) => (
         <Button
@@ -836,13 +845,13 @@ export default function CashRiskIntelligencePage() {
 
   const liquidityColumns: Column<LiquidityRisk>[] = [
     {
-      key: 'entity',
+      id: 'entity',
       header: 'Entity',
       cell: (row) => <span className="font-medium">{row.entity}</span>,
       sortable: true,
     },
     {
-      key: 'currentRatio',
+      id: 'currentRatio',
       header: 'Current Ratio',
       cell: (row) => (
         <span className={row.currentRatio < 1.25 ? 'text-red-400' : row.currentRatio < 1.5 ? 'text-yellow-400' : 'text-green-400'}>
@@ -852,7 +861,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'quickRatio',
+      id: 'quickRatio',
       header: 'Quick Ratio',
       cell: (row) => (
         <span className={row.quickRatio < 1.0 ? 'text-red-400' : row.quickRatio < 1.2 ? 'text-yellow-400' : 'text-green-400'}>
@@ -862,13 +871,13 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'cashBuffer',
+      id: 'cashBuffer',
       header: 'Cash Buffer',
       cell: (row) => formatCurrency(row.cashBuffer),
       sortable: true,
     },
     {
-      key: 'cashBufferDays',
+      id: 'cashBufferDays',
       header: 'Buffer Days',
       cell: (row) => (
         <span className={row.cashBufferDays < 30 ? 'text-red-400' : row.cashBufferDays < 45 ? 'text-yellow-400' : 'text-green-400'}>
@@ -878,7 +887,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'riskScore',
+      id: 'riskScore',
       header: 'Risk Score',
       cell: (row) => (
         <div className="flex items-center gap-2">
@@ -894,7 +903,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'trend',
+      id: 'trend',
       header: 'Trend',
       cell: (row) => (
         <div className="flex items-center gap-1">
@@ -904,7 +913,7 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'alert',
+      id: 'alert',
       header: 'Alert',
       cell: (row) => row.alert ? (
         <span className="text-xs text-red-400">{row.alert}</span>
@@ -916,7 +925,7 @@ export default function CashRiskIntelligencePage() {
 
   const concentrationColumns: Column<ConcentrationRisk>[] = [
     {
-      key: 'type',
+      id: 'type',
       header: 'Type',
       cell: (row) => (
         <Badge variant="outline" className="capitalize bg-slate-800/50">
@@ -926,30 +935,30 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'name',
+      id: 'name',
       header: 'Name',
       cell: (row) => <span className="font-medium">{row.name}</span>,
       sortable: true,
     },
     {
-      key: 'exposure',
+      id: 'exposure',
       header: 'Exposure',
       cell: (row) => formatCurrency(row.exposure),
       sortable: true,
     },
     {
-      key: 'percentage',
+      id: 'percentage',
       header: '% of Total',
       cell: (row) => formatPercentage(row.percentage),
       sortable: true,
     },
     {
-      key: 'limit',
+      id: 'limit',
       header: 'Limit',
       cell: (row) => formatPercentage(row.limit),
     },
     {
-      key: 'utilizationPercent',
+      id: 'utilizationPercent',
       header: 'Utilization',
       cell: (row) => (
         <div className="flex items-center gap-2">
@@ -967,7 +976,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'riskLevel',
+      id: 'riskLevel',
       header: 'Risk',
       cell: (row) => (
         <Badge className={getRiskLevelColor(row.riskLevel)}>
@@ -976,7 +985,7 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'recommendation',
+      id: 'recommendation',
       header: 'Recommendation',
       cell: (row) => <span className="text-xs text-slate-400">{row.recommendation}</span>,
     },
@@ -984,13 +993,13 @@ export default function CashRiskIntelligencePage() {
 
   const covenantColumns: Column<CovenantRisk>[] = [
     {
-      key: 'lender',
+      id: 'lender',
       header: 'Lender',
       cell: (row) => <span className="font-medium">{row.lender}</span>,
       sortable: true,
     },
     {
-      key: 'covenantType',
+      id: 'covenantType',
       header: 'Type',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -999,18 +1008,18 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'metric',
+      id: 'metric',
       header: 'Metric',
       cell: (row) => <span>{row.metric}</span>,
       sortable: true,
     },
     {
-      key: 'required',
+      id: 'required',
       header: 'Required',
       cell: (row) => <span>{row.required.toFixed(2)}</span>,
     },
     {
-      key: 'actual',
+      id: 'actual',
       header: 'Actual',
       cell: (row) => (
         <span className={row.status === 'breach' ? 'text-red-400' : row.status === 'warning' ? 'text-yellow-400' : 'text-green-400'}>
@@ -1020,7 +1029,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'headroom',
+      id: 'headroom',
       header: 'Headroom',
       cell: (row) => (
         <span className={row.headroom < 10 ? 'text-red-400' : row.headroom < 20 ? 'text-yellow-400' : 'text-green-400'}>
@@ -1030,7 +1039,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       cell: (row) => (
         <Badge className={getStatusColor(row.status)}>
@@ -1039,7 +1048,7 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'trend',
+      id: 'trend',
       header: 'Trend',
       cell: (row) => (
         <div className="flex items-center gap-1">
@@ -1048,7 +1057,7 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'nextTestDate',
+      id: 'nextTestDate',
       header: 'Next Test',
       cell: (row) => <span className="text-sm">{row.nextTestDate}</span>,
       sortable: true,
@@ -1057,7 +1066,7 @@ export default function CashRiskIntelligencePage() {
 
   const counterpartyColumns: Column<CounterpartyRisk>[] = [
     {
-      key: 'name',
+      id: 'name',
       header: 'Counterparty',
       cell: (row) => (
         <div className="flex items-center gap-2">
@@ -1070,7 +1079,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'type',
+      id: 'type',
       header: 'Type',
       cell: (row) => (
         <Badge variant="outline" className="capitalize bg-slate-800/50">
@@ -1080,13 +1089,13 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'exposure',
+      id: 'exposure',
       header: 'Exposure',
       cell: (row) => formatCurrency(row.exposure),
       sortable: true,
     },
     {
-      key: 'creditRating',
+      id: 'creditRating',
       header: 'Credit Rating',
       cell: (row) => (
         <Badge variant="outline" className={
@@ -1100,7 +1109,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'paymentHistory',
+      id: 'paymentHistory',
       header: 'Payment Score',
       cell: (row) => (
         <div className="flex items-center gap-2">
@@ -1116,7 +1125,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'daysPastDue',
+      id: 'daysPastDue',
       header: 'Days Past Due',
       cell: (row) => (
         <span className={row.daysPastDue > 30 ? 'text-red-400' : row.daysPastDue > 0 ? 'text-yellow-400' : 'text-green-400'}>
@@ -1126,7 +1135,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'riskScore',
+      id: 'riskScore',
       header: 'Risk Score',
       cell: (row) => (
         <Badge className={row.riskScore > 60 ? 'bg-red-500/20 text-red-400' : row.riskScore > 40 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}>
@@ -1136,7 +1145,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'watchlist',
+      id: 'watchlist',
       header: 'Watchlist',
       cell: (row) => row.watchlist ? (
         <Badge className="bg-orange-500/20 text-orange-400">On Watch</Badge>
@@ -1148,25 +1157,25 @@ export default function CashRiskIntelligencePage() {
 
   const fxColumns: Column<FxRisk>[] = [
     {
-      key: 'currency',
+      id: 'currency',
       header: 'Currency Pair',
       cell: (row) => <span className="font-medium font-mono">{row.currency}</span>,
       sortable: true,
     },
     {
-      key: 'exposure',
+      id: 'exposure',
       header: 'Exposure',
       cell: (row) => formatCurrency(row.exposure),
       sortable: true,
     },
     {
-      key: 'hedgedAmount',
+      id: 'hedgedAmount',
       header: 'Hedged',
       cell: (row) => formatCurrency(row.hedgedAmount),
       sortable: true,
     },
     {
-      key: 'hedgeRatio',
+      id: 'hedgeRatio',
       header: 'Hedge Ratio',
       cell: (row) => (
         <div className="flex items-center gap-2">
@@ -1182,12 +1191,12 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'spotRate',
+      id: 'spotRate',
       header: 'Spot Rate',
       cell: (row) => <span className="font-mono">{row.spotRate.toFixed(2)}</span>,
     },
     {
-      key: 'volatility',
+      id: 'volatility',
       header: 'Volatility',
       cell: (row) => (
         <span className={row.volatility > 5 ? 'text-orange-400' : 'text-slate-400'}>
@@ -1197,12 +1206,12 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'varDaily',
+      id: 'varDaily',
       header: 'Daily VaR',
       cell: (row) => formatCurrency(row.varDaily),
     },
     {
-      key: 'recommendation',
+      id: 'recommendation',
       header: 'Recommendation',
       cell: (row) => <span className="text-xs text-slate-400">{row.recommendation}</span>,
     },
@@ -1210,13 +1219,13 @@ export default function CashRiskIntelligencePage() {
 
   const alertColumns: Column<RiskAlert>[] = [
     {
-      key: 'timestamp',
+      id: 'timestamp',
       header: 'Time',
       cell: (row) => <span className="text-sm text-slate-400">{row.timestamp}</span>,
       sortable: true,
     },
     {
-      key: 'severity',
+      id: 'severity',
       header: 'Severity',
       cell: (row) => (
         <Badge className={getRiskLevelColor(row.severity)}>
@@ -1226,7 +1235,7 @@ export default function CashRiskIntelligencePage() {
       sortable: true,
     },
     {
-      key: 'category',
+      id: 'category',
       header: 'Category',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -1235,17 +1244,17 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'title',
+      id: 'title',
       header: 'Alert',
       cell: (row) => <span className="font-medium">{row.title}</span>,
     },
     {
-      key: 'description',
+      id: 'description',
       header: 'Description',
       cell: (row) => <span className="text-sm text-slate-400 max-w-[300px] truncate block">{row.description}</span>,
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       cell: (row) => (
         <Badge className={getStatusColor(row.status)}>
@@ -1254,7 +1263,7 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'assignee',
+      id: 'assignee',
       header: 'Assignee',
       cell: (row) => row.assignee ? (
         <span className="text-sm">{row.assignee}</span>
@@ -1263,7 +1272,7 @@ export default function CashRiskIntelligencePage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: 'Actions',
       cell: (row) => (
         <Button
@@ -1308,10 +1317,10 @@ export default function CashRiskIntelligencePage() {
 
       {/* Filters */}
       <CashFlowFilters
-        filters={filters}
-        onFiltersChange={setFilters}
-        variant="compact"
-        availableFilters={['search', 'dateRange', 'entities', 'projects', 'status']}
+        // filters={filters}
+        // onFilterChange={setFilters}
+        // variant="compact"
+        // availableFilters={['search', 'dateRange', 'entities', 'projects', 'status']}
       />
 
       {/* KPI Grid */}
@@ -1319,17 +1328,19 @@ export default function CashRiskIntelligencePage() {
         <KPICard
           title="Overall Risk Score"
           value={kpiData.overallRiskScore.value}
-          suffix="/100"
-          icon={<Gauge className="h-5 w-5" />}
+          // suffix="/100"
+          icon={Gauge}
+          // icon={<Gauge className="h-5 w-5" />}
           trend={kpiData.overallRiskScore.trend}
-          trendValue={`${kpiData.overallRiskScore.trendValue} pts`}
+          // trendValue={`${kpiData.overallRiskScore.trendValue} pts`}
           className={kpiData.overallRiskScore.value > 70 ? 'border-orange-500/30' : kpiData.overallRiskScore.value > 50 ? 'border-yellow-500/30' : 'border-green-500/30'}
         />
         <KPICard
           title="Liquidity Risk"
           value={kpiData.liquidityRisk.value}
           subtitle={`${kpiData.liquidityRisk.bufferDays} days buffer`}
-          icon={<Activity className="h-5 w-5" />}
+          icon={Activity}
+          // icon={<Activity className="h-5 w-5" />}
           trend={kpiData.liquidityRisk.trend}
           className="border-yellow-500/30"
         />
@@ -1337,7 +1348,8 @@ export default function CashRiskIntelligencePage() {
           title="Concentration Risk"
           value={kpiData.concentrationRisk.value}
           subtitle={kpiData.concentrationRisk.topExposure}
-          icon={<Target className="h-5 w-5" />}
+          icon={Target}
+          // icon={<Target className="h-5 w-5" />}
           trend={kpiData.concentrationRisk.trend}
           className="border-orange-500/30"
         />
@@ -1345,7 +1357,7 @@ export default function CashRiskIntelligencePage() {
           title="Covenant Risk"
           value={kpiData.covenantRisk.value}
           subtitle={`${kpiData.covenantRisk.breaches} breaches, ${kpiData.covenantRisk.warnings} warnings`}
-          icon={<Shield className="h-5 w-5" />}
+          icon={Shield}
           className="border-green-500/30"
         />
       </KPIGrid>

@@ -971,7 +971,7 @@ export default function CashFlowAnalyticsPage() {
         <KPICard
           title="Avg Daily Inflow"
           value={formatCurrency(kpiData.avgDailyInflow.value)}
-          icon={<ArrowUpRight className="h-5 w-5" />}
+          icon={ArrowUpRight}
           trend={kpiData.avgDailyInflow.trend}
           trendValue={kpiData.avgDailyInflow.trendValue}
           subtitle={`vs ${formatCurrency(kpiData.avgDailyInflow.vsLastMonth)} last month`}
@@ -979,7 +979,7 @@ export default function CashFlowAnalyticsPage() {
         <KPICard
           title="Avg Daily Outflow"
           value={formatCurrency(kpiData.avgDailyOutflow.value)}
-          icon={<ArrowDownRight className="h-5 w-5" />}
+          icon={ArrowDownRight}
           trend={kpiData.avgDailyOutflow.trend}
           trendValue={kpiData.avgDailyOutflow.trendValue}
           subtitle={`vs ${formatCurrency(kpiData.avgDailyOutflow.vsLastMonth)} last month`}
@@ -988,7 +988,7 @@ export default function CashFlowAnalyticsPage() {
           title="Cash Conversion Cycle"
           value={kpiData.cashConversionCycle.value}
           suffix=" days"
-          icon={<Clock className="h-5 w-5" />}
+          icon={Clock}
           trend={kpiData.cashConversionCycle.trend}
           trendValue={kpiData.cashConversionCycle.trendValue}
           subtitle={`Benchmark: ${kpiData.cashConversionCycle.benchmark} days`}
@@ -997,7 +997,7 @@ export default function CashFlowAnalyticsPage() {
           title="Forecast Accuracy"
           value={kpiData.forecastAccuracy.value}
           suffix="%"
-          icon={<Target className="h-5 w-5" />}
+          icon={Target}
           trend={kpiData.forecastAccuracy.trend}
           trendValue={kpiData.forecastAccuracy.trendValue}
           subtitle={`Target: ${kpiData.forecastAccuracy.target}%`}

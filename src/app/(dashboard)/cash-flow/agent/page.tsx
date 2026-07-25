@@ -666,7 +666,7 @@ export default function CashFlowAIAgentPage() {
         <KPICard
           title="Tasks Completed"
           value={kpiData.tasksCompleted.value}
-          icon={<CheckCircle2 className="h-5 w-5" />}
+          icon={CheckCircle2}
           trend={kpiData.tasksCompleted.trend}
           trendValue={kpiData.tasksCompleted.trendValue}
           subtitle={kpiData.tasksCompleted.period}
@@ -675,7 +675,7 @@ export default function CashFlowAIAgentPage() {
           title="Avg Response Time"
           value={kpiData.avgResponseTime.value}
           suffix="s"
-          icon={<Clock className="h-5 w-5" />}
+          icon={Clock}
           trend={kpiData.avgResponseTime.trend}
           trendValue={kpiData.avgResponseTime.trendValue}
         />
@@ -683,7 +683,7 @@ export default function CashFlowAIAgentPage() {
           title="Accuracy Score"
           value={kpiData.accuracyScore.value}
           suffix="%"
-          icon={<Target className="h-5 w-5" />}
+          icon={Target}
           trend={kpiData.accuracyScore.trend}
           trendValue={kpiData.accuracyScore.trendValue}
         />
@@ -691,7 +691,7 @@ export default function CashFlowAIAgentPage() {
           title="Time Saved"
           value={kpiData.automationsSaved.value}
           suffix=" hrs"
-          icon={<Zap className="h-5 w-5" />}
+          icon={Zap}
           trend={kpiData.automationsSaved.trend}
           trendValue={kpiData.automationsSaved.trendValue}
           subtitle={kpiData.automationsSaved.period}

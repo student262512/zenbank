@@ -29,7 +29,7 @@ import {
 export interface Column<T> {
   id: string;
   header: string | React.ReactNode;
-  accessor: keyof T | ((row: T) => React.ReactNode);
+  accessor?: keyof T | ((row: T) => React.ReactNode);
   sortable?: boolean;
   width?: string;
   align?: 'left' | 'center' | 'right';
