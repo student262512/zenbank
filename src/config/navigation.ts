@@ -51,6 +51,7 @@ export const navigation: NavigationGroup[] = [
     title: 'Cash Flow Intelligence',
     icon: TrendingUp,
     items: [
+      { title: ' Cash Flow Dashboard', href: '/cash-flow/dashboard' },
       { title: 'Enterprise Cash Position', href: '/cash-flow/position' },
       { title: 'Cash Forecasting', href: '/cash-flow/forecasting', badge: 'AI', badgeVariant: 'default' },
       { title: 'Cash Inflow Intelligence', href: '/cash-flow/inflow' },

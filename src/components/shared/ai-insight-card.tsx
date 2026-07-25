@@ -99,8 +99,14 @@ export function AIInsightCard({
   className,
   compact = false,
 }: AIInsightCardProps) {
-  const config = typeConfig[type];
-  const Icon = config.icon;
+  // const config = typeConfig[type];
+  // const Icon = config.icon;
+  const config =
+  type && typeConfig[type]
+    ? typeConfig[type]
+    : typeConfig.recommendation;
+
+const Icon = config.icon;
 
   if (compact) {
     return (

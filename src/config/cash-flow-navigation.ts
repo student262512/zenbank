@@ -149,6 +149,28 @@ export const cashForecastingTabs = [
   { id: 'versions', label: 'Forecast Versions' },
 ];
 
+export const cashFlowTabs = [
+  { id: 'overview', label: 'Overview' },
+
+  { id: 'collections', label: 'Customer Collections' },
+  { id: 'advances', label: 'Booking Advances' },
+  { id: 'disbursements', label: 'Loan Disbursements' },
+  { id: 'rental-income', label: 'Rental Income' },
+  { id: 'interest-income', label: 'Interest Income' },
+  { id: 'receipts-other', label: 'Other Receipts' },
+  { id: 'refunds-received', label: 'Refunds Received' },
+
+  { id: 'vendor-payments', label: 'Vendor Payments' },
+  { id: 'construction-bills', label: 'Construction Bills' },
+  { id: 'payroll', label: 'Payroll' },
+  { id: 'loan-repayments', label: 'Loan Repayments' },
+  { id: 'taxes', label: 'Taxes' },
+  { id: 'utilities', label: 'Utilities' },
+  { id: 'construction-expenses', label: 'Construction Expenses' },
+  { id: 'customer-refunds', label: 'Customer Refunds' },
+  { id: 'payments-other', label: 'Other Payments' },
+];
+
 export const cashInflowTabs = [
   { id: 'overview', label: 'Overview' },
   { id: 'collections', label: 'Customer Collections' },
@@ -206,7 +228,14 @@ export const projectForecastTabs = [
 ];
 
 export const cashRiskTabs = [
+  { id: 'dashboard', label: 'Risk Dashboard' },
   { id: 'liquidity', label: 'Liquidity Risk' },
+  { id: 'concentration', label: 'Concentration Risk' },
+  { id: 'covenant', label: 'Covenant Risk' },
+  { id: 'counterparty', label: 'Counterparty Risk' },
+  { id: 'fx', label: 'FX & Interest Risk' },
+  // { id: 'alerts', label: 'Risk Alerts' },
+  // { id: 'liquidity', label: 'Liquidity Risk' },
   { id: 'negative', label: 'Negative Cash' },
   { id: 'funding', label: 'Funding Gap' },
   { id: 'collection', label: 'Collection Risk' },

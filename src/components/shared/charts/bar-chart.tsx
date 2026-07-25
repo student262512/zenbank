@@ -58,13 +58,22 @@ export function BarChart({
     );
   }
 
+  // const values = data.map((d) => {
+  //   if (stacked && d.value2) {
+  //     return d.value + d.value2;
+  //   }
+  //   return Math.max(d.value, d.value2 || 0);
+  // });
+  // const maxValue = Math.max(...values);
+
   const values = data.map((d) => {
-    if (stacked && d.value2) {
-      return d.value + d.value2;
-    }
-    return Math.max(d.value, d.value2 || 0);
-  });
-  const maxValue = Math.max(...values);
+  const value = Number.isFinite(d.value) ? d.value : 0;
+  const value2 = Number.isFinite(d.value2) ? d.value2! : 0;
+
+  return stacked ? value + value2 : Math.max(value, value2);
+});
+
+const maxValue = Math.max(...values, 1);
 
   const barWidth = 100 / (data.length * 2 + 1);
   const barGap = barWidth / 2;
@@ -93,7 +102,7 @@ export function BarChart({
         <div className="space-y-3">
           {data.map((item, index) => {
             const percentage = (item.value / maxValue) * 100;
-            const percentage2 = item.value2 ? (item.value2 / maxValue) * 100 : 0;
+            const percentage2 = item.value2 != null ? (item.value2 / maxValue) * 100 : 0;
 
             return (
               <div
@@ -116,7 +125,7 @@ export function BarChart({
                       backgroundColor: item.color || barColor,
                     }}
                   />
-                  {item.value2 && !stacked && (
+                  {item.value2 != null && !stacked && (
                     <div
                       className="absolute inset-y-0 rounded transition-all duration-300"
                       style={{
@@ -189,9 +198,9 @@ export function BarChart({
           {/* Bars */}
           {data.map((item, index) => {
             const barHeight = (item.value / maxValue) * chartHeight;
-            const bar2Height = item.value2 ? (item.value2 / maxValue) * chartHeight : 0;
+            const bar2Height = item.value2 != null ? (item.value2 / maxValue) * chartHeight : 0;
             const x = padding.left + (index / data.length) * (100 - padding.left - padding.right) + barGap;
-            const width = grouped && item.value2 ? barWidth * 0.45 : barWidth;
+            const width = grouped && item.value2 != null ? barWidth * 0.45 : barWidth;
 
             return (
               <g
@@ -214,7 +223,7 @@ export function BarChart({
                 />
 
                 {/* Secondary bar */}
-                {item.value2 && (
+                {item.value2 != null && (
                   <rect
                     x={grouped ? x + width + 1 : x}
                     y={stacked ? padding.top + chartHeight - barHeight - bar2Height : padding.top + chartHeight - bar2Height}

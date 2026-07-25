@@ -5,7 +5,8 @@
       "Bash(powershell -Command \"Get-ChildItem -Recurse -Force | Select-Object FullName\")",
       "Bash(powershell -Command \"Get-ChildItem -Path ''E:\\apps\\zenbank\\src'' -Recurse | Select-Object FullName\")",
       "Bash(powershell -Command:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(if not exist \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\\dashboard\" mkdir \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\\dashboard\")"
     ]
   }
 }
