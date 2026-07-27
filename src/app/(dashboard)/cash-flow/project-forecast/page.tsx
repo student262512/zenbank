@@ -384,9 +384,10 @@ export default function ProjectCompletionForecastPage() {
     loanIds: [],
     statusIds: [],
     tagIds: [],
-    scenarioId: 'actual',
-    forecastVersionId: 'current',
+    scenario: 'actual',
+    forecastVersion: 'current',
     forecastHorizon: '3m',
+    datePreset: 'thisMonth',
     dateRange: { startDate: undefined, endDate: undefined },
   });
   const [selectedMilestone, setSelectedMilestone] = useState<typeof projectMilestones[0] | null>(null);
@@ -394,7 +395,7 @@ export default function ProjectCompletionForecastPage() {
 
   const milestoneColumns: Column<typeof projectMilestones[0]>[] = [
     {
-      key: 'projectName',
+      id: 'projectName',
       header: 'Project',
       sortable: true,
       render: (row) => (
@@ -405,20 +406,20 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'milestoneType',
+      id: 'milestoneType',
       header: 'Type',
       render: (row) => (
         <Badge variant="outline">{row.milestoneType}</Badge>
       ),
     },
     {
-      key: 'targetDate',
+      id: 'targetDate',
       header: 'Target',
       sortable: true,
       render: (row) => new Date(row.targetDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'estimatedCompletion',
+      id: 'estimatedCompletion',
       header: 'Est. Completion',
       render: (row) => (
         <span className={new Date(row.estimatedCompletion) > new Date(row.targetDate) ? 'text-amber-400' : ''}>
@@ -427,7 +428,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'cashRequired',
+      id: 'cashRequired',
       header: 'Cash Required',
       align: 'right' as const,
       sortable: true,
@@ -436,7 +437,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'completionPercent',
+      id: 'completionPercent',
       header: 'Progress',
       render: (row) => (
         <div className="flex items-center gap-2">
@@ -451,7 +452,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'fundingStatus',
+      id: 'fundingStatus',
       header: 'Funding',
       render: (row) => (
         <Badge
@@ -465,7 +466,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge
@@ -482,7 +483,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -498,7 +499,7 @@ export default function ProjectCompletionForecastPage() {
 
   const progressColumns: Column<typeof constructionProgress[0]>[] = [
     {
-      key: 'projectName',
+      id: 'projectName',
       header: 'Project',
       sortable: true,
       render: (row) => (
@@ -509,7 +510,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'overallProgress',
+      id: 'overallProgress',
       header: 'Overall',
       render: (row) => (
         <div className="flex items-center gap-2">
@@ -524,22 +525,22 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'structuralProgress',
+      id: 'structuralProgress',
       header: 'Structural',
       render: (row) => <span>{row.structuralProgress}%</span>,
     },
     {
-      key: 'mepProgress',
+      id: 'mepProgress',
       header: 'MEP',
       render: (row) => <span>{row.mepProgress}%</span>,
     },
     {
-      key: 'finishingProgress',
+      id: 'finishingProgress',
       header: 'Finishing',
       render: (row) => <span>{row.finishingProgress}%</span>,
     },
     {
-      key: 'budgetUtilization',
+      id: 'budgetUtilization',
       header: 'Budget Used',
       render: (row) => (
         <span className={row.budgetUtilization > row.overallProgress + 10 ? 'text-red-400' : ''}>
@@ -548,12 +549,12 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'expectedCompletion',
+      id: 'expectedCompletion',
       header: 'Completion',
       render: (row) => new Date(row.expectedCompletion).toLocaleDateString('en-IN'),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge variant={row.status === 'on_track' ? 'default' : 'destructive'}>
@@ -562,7 +563,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -578,28 +579,28 @@ export default function ProjectCompletionForecastPage() {
 
   const requirementColumns: Column<typeof cashRequirements[0]>[] = [
     {
-      key: 'projectName',
+      id: 'projectName',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'period',
+      id: 'period',
       header: 'Period',
     },
     {
-      key: 'construction',
+      id: 'construction',
       header: 'Construction',
       align: 'right' as const,
       render: (row) => <span>₹{row.construction.toFixed(1)} Cr</span>,
     },
     {
-      key: 'materials',
+      id: 'materials',
       header: 'Materials',
       align: 'right' as const,
       render: (row) => <span>₹{row.materials.toFixed(1)} Cr</span>,
     },
     {
-      key: 'total',
+      id: 'total',
       header: 'Total Required',
       align: 'right' as const,
       render: (row) => (
@@ -607,7 +608,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'fundedAmount',
+      id: 'fundedAmount',
       header: 'Funded',
       align: 'right' as const,
       render: (row) => (
@@ -615,7 +616,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'gap',
+      id: 'gap',
       header: 'Gap',
       align: 'right' as const,
       render: (row) => (
@@ -625,7 +626,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'fundingSource',
+      id: 'fundingSource',
       header: 'Source',
       render: (row) => <span className="text-sm">{row.fundingSource}</span>,
     },
@@ -633,21 +634,21 @@ export default function ProjectCompletionForecastPage() {
 
   const timelineColumns: Column<typeof fundingTimeline[0]>[] = [
     {
-      key: 'projectName',
+      id: 'projectName',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'milestone',
+      id: 'milestone',
       header: 'Milestone',
     },
     {
-      key: 'expectedDate',
+      id: 'expectedDate',
       header: 'Expected',
       render: (row) => new Date(row.expectedDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'requiredFunding',
+      id: 'requiredFunding',
       header: 'Required',
       align: 'right' as const,
       render: (row) => (
@@ -655,11 +656,11 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'source',
+      id: 'source',
       header: 'Funding Source',
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge
@@ -673,7 +674,7 @@ export default function ProjectCompletionForecastPage() {
       ),
     },
     {
-      key: 'disbursementDate',
+      id: 'disbursementDate',
       header: 'Disbursement',
       render: (row) => row.disbursementDate !== '-' ? new Date(row.disbursementDate).toLocaleDateString('en-IN') : '-',
     },
@@ -706,7 +707,7 @@ export default function ProjectCompletionForecastPage() {
         }
       />
 
-      <CashFlowFilters filters={filters} onFiltersChange={setFilters} />
+      <CashFlowFilters initialFilters={filters} onFilterChange={setFilters} />
 
       {/* KPI Grid */}
       <KPIGrid columns={4}>

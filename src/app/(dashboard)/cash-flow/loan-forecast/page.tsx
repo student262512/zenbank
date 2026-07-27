@@ -375,16 +375,17 @@ export default function LoanRepaymentForecastPage() {
     loanIds: [],
     statusIds: [],
     tagIds: [],
-    scenarioId: 'actual',
-    forecastVersionId: 'current',
+    scenario: 'actual',
+    forecastVersion: 'current',
     forecastHorizon: '3m',
+    datePreset: 'thisMonth',
     dateRange: { startDate: undefined, endDate: undefined },
   });
   const [selectedLoan, setSelectedLoan] = useState<typeof loanSchedule[0] | null>(null);
 
   const loanColumns: Column<typeof loanSchedule[0]>[] = [
     {
-      key: 'lender',
+      id: 'lender',
       header: 'Lender',
       sortable: true,
       render: (row) => (
@@ -395,25 +396,25 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'loanType',
+      id: 'loanType',
       header: 'Type',
       render: (row) => (
         <Badge variant="outline">{row.loanType}</Badge>
       ),
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'sanctionedAmount',
+      id: 'sanctionedAmount',
       header: 'Sanctioned',
       align: 'right' as const,
       render: (row) => <span>₹{row.sanctionedAmount.toFixed(0)} Cr</span>,
     },
     {
-      key: 'outstanding',
+      id: 'outstanding',
       header: 'Outstanding',
       align: 'right' as const,
       sortable: true,
@@ -422,13 +423,13 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'interestRate',
+      id: 'interestRate',
       header: 'Rate',
       align: 'right' as const,
       render: (row) => <span>{row.interestRate}%</span>,
     },
     {
-      key: 'emiAmount',
+      id: 'emiAmount',
       header: 'EMI',
       align: 'right' as const,
       render: (row) => (
@@ -436,12 +437,12 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'nextEmiDate',
+      id: 'nextEmiDate',
       header: 'Next EMI',
       render: (row) => new Date(row.nextEmiDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge
@@ -455,7 +456,7 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'covenantStatus',
+      id: 'covenantStatus',
       header: 'Covenant',
       render: (row) => (
         <Badge
@@ -469,7 +470,7 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -485,33 +486,33 @@ export default function LoanRepaymentForecastPage() {
 
   const interestColumns: Column<typeof interestSchedule[0]>[] = [
     {
-      key: 'lender',
+      id: 'lender',
       header: 'Lender',
       sortable: true,
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'period',
+      id: 'period',
       header: 'Period',
     },
     {
-      key: 'principalOutstanding',
+      id: 'principalOutstanding',
       header: 'Principal O/S',
       align: 'right' as const,
       render: (row) => <span>₹{row.principalOutstanding.toFixed(1)} Cr</span>,
     },
     {
-      key: 'interestRate',
+      id: 'interestRate',
       header: 'Rate',
       align: 'right' as const,
       render: (row) => <span>{row.interestRate}%</span>,
     },
     {
-      key: 'interestAmount',
+      id: 'interestAmount',
       header: 'Interest Due',
       align: 'right' as const,
       render: (row) => (
@@ -519,12 +520,12 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'dueDate',
+      id: 'dueDate',
       header: 'Due Date',
       render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge variant={row.status === 'due_soon' ? 'default' : 'secondary'}>
@@ -536,21 +537,21 @@ export default function LoanRepaymentForecastPage() {
 
   const principalColumns: Column<typeof principalSchedule[0]>[] = [
     {
-      key: 'lender',
+      id: 'lender',
       header: 'Lender',
       sortable: true,
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'period',
+      id: 'period',
       header: 'Period',
     },
     {
-      key: 'principalDue',
+      id: 'principalDue',
       header: 'Principal Due',
       align: 'right' as const,
       render: (row) => (
@@ -558,24 +559,24 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'totalEmi',
+      id: 'totalEmi',
       header: 'Total EMI',
       align: 'right' as const,
       render: (row) => <span>₹{row.totalEmi.toFixed(2)} Cr</span>,
     },
     {
-      key: 'principalAfterPayment',
+      id: 'principalAfterPayment',
       header: 'After Payment',
       align: 'right' as const,
       render: (row) => <span>₹{row.principalAfterPayment.toFixed(2)} Cr</span>,
     },
     {
-      key: 'dueDate',
+      id: 'dueDate',
       header: 'Due Date',
       render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge variant={row.status === 'due_soon' ? 'default' : 'secondary'}>
@@ -587,23 +588,23 @@ export default function LoanRepaymentForecastPage() {
 
   const upcomingColumns: Column<typeof upcomingPayments[0]>[] = [
     {
-      key: 'lender',
+      id: 'lender',
       header: 'Lender',
       sortable: true,
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'dueDate',
+      id: 'dueDate',
       header: 'Due Date',
       sortable: true,
       render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'daysUntilDue',
+      id: 'daysUntilDue',
       header: 'Days',
       align: 'right' as const,
       render: (row) => (
@@ -613,19 +614,19 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'principal',
+      id: 'principal',
       header: 'Principal',
       align: 'right' as const,
       render: (row) => <span>₹{row.principal.toFixed(2)} Cr</span>,
     },
     {
-      key: 'interest',
+      id: 'interest',
       header: 'Interest',
       align: 'right' as const,
       render: (row) => <span>₹{row.interest.toFixed(2)} Cr</span>,
     },
     {
-      key: 'total',
+      id: 'total',
       header: 'Total',
       align: 'right' as const,
       render: (row) => (
@@ -633,7 +634,7 @@ export default function LoanRepaymentForecastPage() {
       ),
     },
     {
-      key: 'priority',
+      id: 'priority',
       header: 'Priority',
       render: (row) => (
         <Badge variant={row.priority === 'high' ? 'default' : 'secondary'}>
@@ -670,7 +671,7 @@ export default function LoanRepaymentForecastPage() {
         }
       />
 
-      <CashFlowFilters filters={filters} onFiltersChange={setFilters} />
+      <CashFlowFilters initialFilters={filters} onFilterChange={setFilters} />
 
       {/* KPI Grid */}
       <KPIGrid columns={4}>

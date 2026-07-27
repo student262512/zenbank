@@ -510,9 +510,10 @@ export default function CashOutflowIntelligencePage() {
     loanIds: [],
     statusIds: [],
     tagIds: [],
-    scenarioId: 'actual',
-    forecastVersionId: 'current',
+    scenario: 'actual',
+    forecastVersion: 'current',
     forecastHorizon: '3m',
+    datePreset: 'thisMonth',
     dateRange: { startDate: undefined, endDate: undefined },
   });
   const [selectedTransaction, setSelectedTransaction] = useState<typeof outflowTransactions[0] | null>(null);
@@ -520,7 +521,7 @@ export default function CashOutflowIntelligencePage() {
 
   const transactionColumns: Column<typeof outflowTransactions[0]>[] = [
     {
-      key: 'date',
+      id: 'date',
       header: 'Date',
       sortable: true,
       render: (row) => (
@@ -528,7 +529,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'type',
+      id: 'type',
       header: 'Type',
       sortable: true,
       render: (row) => (
@@ -538,24 +539,24 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'vendor',
+      id: 'vendor',
       header: 'Vendor/Payee',
       sortable: true,
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'description',
+      id: 'description',
       header: 'Description',
       render: (row) => (
         <span className="text-sm text-muted-foreground">{row.description}</span>
       ),
     },
     {
-      key: 'amount',
+      id: 'amount',
       header: 'Amount (₹ Cr)',
       align: 'right' as const,
       sortable: true,
@@ -564,7 +565,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'priority',
+      id: 'priority',
       header: 'Priority',
       render: (row) => (
         <Badge
@@ -578,7 +579,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       sortable: true,
       render: (row) => (
@@ -596,7 +597,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -612,7 +613,7 @@ export default function CashOutflowIntelligencePage() {
 
   const vendorColumns: Column<typeof vendorPayments[0]>[] = [
     {
-      key: 'vendorName',
+      id: 'vendorName',
       header: 'Vendor',
       sortable: true,
       render: (row) => (
@@ -623,19 +624,19 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'totalPayable',
+      id: 'totalPayable',
       header: 'Total Payable',
       align: 'right' as const,
       sortable: true,
       render: (row) => <span>₹{row.totalPayable.toFixed(1)} Cr</span>,
     },
     {
-      key: 'paid',
+      id: 'paid',
       header: 'Paid',
       align: 'right' as const,
       sortable: true,
@@ -644,7 +645,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'pending',
+      id: 'pending',
       header: 'Pending',
       align: 'right' as const,
       sortable: true,
@@ -653,7 +654,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'overdue',
+      id: 'overdue',
       header: 'Overdue',
       align: 'right' as const,
       sortable: true,
@@ -664,7 +665,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'relationship',
+      id: 'relationship',
       header: 'Rating',
       render: (row) => (
         <Badge
@@ -678,7 +679,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'trend',
+      id: 'trend',
       header: 'Trend',
       render: (row) => (
         <div className="flex items-center gap-1">
@@ -693,7 +694,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -709,35 +710,35 @@ export default function CashOutflowIntelligencePage() {
 
   const constructionColumns: Column<typeof constructionBills[0]>[] = [
     {
-      key: 'billNumber',
+      id: 'billNumber',
       header: 'Bill #',
       sortable: true,
     },
     {
-      key: 'contractor',
+      id: 'contractor',
       header: 'Contractor',
       sortable: true,
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'workDescription',
+      id: 'workDescription',
       header: 'Work Description',
       render: (row) => (
         <span className="text-sm">{row.workDescription}</span>
       ),
     },
     {
-      key: 'billAmount',
+      id: 'billAmount',
       header: 'Bill Amount',
       align: 'right' as const,
       render: (row) => <span>₹{row.billAmount.toFixed(2)} Cr</span>,
     },
     {
-      key: 'netPayable',
+      id: 'netPayable',
       header: 'Net Payable',
       align: 'right' as const,
       render: (row) => (
@@ -745,7 +746,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'completionPercent',
+      id: 'completionPercent',
       header: 'Progress',
       render: (row) => (
         <div className="flex items-center gap-2">
@@ -760,12 +761,12 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'dueDate',
+      id: 'dueDate',
       header: 'Due Date',
       render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge
@@ -783,17 +784,17 @@ export default function CashOutflowIntelligencePage() {
 
   const loanColumns: Column<typeof loanRepayments[0]>[] = [
     {
-      key: 'lender',
+      id: 'lender',
       header: 'Lender',
       sortable: true,
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'emiAmount',
+      id: 'emiAmount',
       header: 'EMI',
       align: 'right' as const,
       render: (row) => (
@@ -801,30 +802,30 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'principal',
+      id: 'principal',
       header: 'Principal',
       align: 'right' as const,
       render: (row) => <span>₹{row.principal.toFixed(2)} Cr</span>,
     },
     {
-      key: 'interest',
+      id: 'interest',
       header: 'Interest',
       align: 'right' as const,
       render: (row) => <span>₹{row.interest.toFixed(2)} Cr</span>,
     },
     {
-      key: 'dueDate',
+      id: 'dueDate',
       header: 'Due Date',
       render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'outstandingPrincipal',
+      id: 'outstandingPrincipal',
       header: 'Outstanding',
       align: 'right' as const,
       render: (row) => <span>₹{row.outstandingPrincipal.toFixed(1)} Cr</span>,
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge variant={row.status === 'paid' ? 'default' : 'secondary'}>
@@ -836,35 +837,35 @@ export default function CashOutflowIntelligencePage() {
 
   const payrollColumns: Column<typeof payrollData[0]>[] = [
     {
-      key: 'entity',
+      id: 'entity',
       header: 'Entity',
       sortable: true,
     },
     {
-      key: 'employees',
+      id: 'employees',
       header: 'Employees',
       align: 'right' as const,
     },
     {
-      key: 'grossSalary',
+      id: 'grossSalary',
       header: 'Gross Salary',
       align: 'right' as const,
       render: (row) => <span>₹{row.grossSalary.toFixed(2)} Cr</span>,
     },
     {
-      key: 'pf',
+      id: 'pf',
       header: 'PF',
       align: 'right' as const,
       render: (row) => <span>₹{row.pf.toFixed(2)} Cr</span>,
     },
     {
-      key: 'tds',
+      id: 'tds',
       header: 'TDS',
       align: 'right' as const,
       render: (row) => <span>₹{row.tds.toFixed(2)} Cr</span>,
     },
     {
-      key: 'netPayable',
+      id: 'netPayable',
       header: 'Net Payable',
       align: 'right' as const,
       render: (row) => (
@@ -872,7 +873,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge variant={row.status === 'processed' ? 'default' : 'secondary'}>
@@ -881,7 +882,7 @@ export default function CashOutflowIntelligencePage() {
       ),
     },
     {
-      key: 'paymentDate',
+      id: 'paymentDate',
       header: 'Payment Date',
       render: (row) => new Date(row.paymentDate).toLocaleDateString('en-IN'),
     },
@@ -914,7 +915,7 @@ export default function CashOutflowIntelligencePage() {
         }
       />
 
-      <CashFlowFilters filters={filters} onFiltersChange={setFilters} />
+      <CashFlowFilters initialFilters={filters} onFilterChange={setFilters} />
 
       {/* KPI Grid */}
       <KPIGrid columns={4}>

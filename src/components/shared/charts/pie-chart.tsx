@@ -10,7 +10,7 @@ export interface PieChartDataPoint {
   color?: string;
 }
 
-export interface PieChartProps {
+export interface PieChartProps<T extends object> {
   data: PieChartDataPoint[];
   title?: string;
   subtitle?: string;
@@ -37,7 +37,7 @@ const DEFAULT_COLORS = [
   '#6366f1',
 ];
 
-export function PieChart({
+export function PieChart<T extends object>({
   data,
   title,
   subtitle,
@@ -51,7 +51,7 @@ export function PieChart({
   colors = DEFAULT_COLORS,
   centerLabel,
   centerValue,
-}: PieChartProps) {
+}: PieChartProps<T>) {
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
 
   if (!data || data.length === 0) {

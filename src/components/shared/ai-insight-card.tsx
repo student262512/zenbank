@@ -23,7 +23,7 @@ import {
 export interface AIInsightCardProps {
   title: string;
   insight: string;
-  type?: 'recommendation' | 'warning' | 'opportunity' | 'trend' | 'success';
+  type?: 'insight' | 'recommendation' | 'warning' | 'opportunity' | 'trend' | 'success';
   confidence?: number;
   impact?: 'high' | 'medium' | 'low';
   impactValue?: string;

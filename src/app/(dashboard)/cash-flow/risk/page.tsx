@@ -732,6 +732,27 @@ export default function CashRiskIntelligencePage() {
   //   sortBy: 'date',
   //   sortOrder: 'desc',
   // });
+  const [filters, setFilters] = useState<CashFlowFilterState>({
+      companyIds: [],
+      businessUnitIds: [],
+      spvIds: [],
+      projectIds: [],
+      regionIds: [],
+      bankIds: [],
+      accountIds: [],
+      currencyIds: [],
+      costCenterIds: [],
+      customerIds: [],
+      vendorIds: [],
+      loanIds: [],
+      statusIds: [],
+      tagIds: [],
+      scenario: 'actual',
+      forecastVersion: 'current',
+      forecastHorizon: '3m',
+      datePreset: 'thisMonth',
+      dateRange: { startDate: undefined, endDate: undefined },
+    });
   const [selectedRisk, setSelectedRisk] = useState<RiskItem | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<RiskAlert | null>(null);
 
@@ -1317,8 +1338,8 @@ export default function CashRiskIntelligencePage() {
 
       {/* Filters */}
       <CashFlowFilters
-        // filters={filters}
-        // onFilterChange={setFilters}
+        initialFilters={filters}
+        onFilterChange={setFilters}
         // variant="compact"
         // availableFilters={['search', 'dateRange', 'entities', 'projects', 'status']}
       />
@@ -1332,7 +1353,7 @@ export default function CashRiskIntelligencePage() {
           icon={Gauge}
           // icon={<Gauge className="h-5 w-5" />}
           trend={kpiData.overallRiskScore.trend}
-          // trendValue={`${kpiData.overallRiskScore.trendValue} pts`}
+          change={kpiData.overallRiskScore.trendValue}
           className={kpiData.overallRiskScore.value > 70 ? 'border-orange-500/30' : kpiData.overallRiskScore.value > 50 ? 'border-yellow-500/30' : 'border-green-500/30'}
         />
         <KPICard

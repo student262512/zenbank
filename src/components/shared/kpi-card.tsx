@@ -21,6 +21,7 @@ export interface KPICardProps {
   value: string | number;
   subtitle?: string;
   change?: number;
+  changeUnit?: string;
   changeLabel?: string;
   changePeriod?: string;
   trend?: 'up' | 'down' | 'neutral';
@@ -39,11 +40,13 @@ export interface KPICardProps {
 function TrendIndicator({
   trend,
   change,
+  changeUnit = '',
   trendColor,
   period,
 }: {
   trend?: 'up' | 'down' | 'neutral';
   change?: number;
+  changeUnit?: string;
   trendColor?: string;
   period?: string;
 }) {
@@ -85,7 +88,7 @@ function TrendIndicator({
       <Icon className={cn('h-3.5 w-3.5', colorClass)} />
       {changeValue !== null && (
         <span className={cn('text-xs font-medium', colorClass)}>
-          {changeValue.toFixed(1)}%
+          {changeValue.toFixed(1)} {changeUnit}
         </span>
       )}
       {period && <span className="text-xs text-slate-500">{period}</span>}

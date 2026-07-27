@@ -11,7 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { AreaChart, BarChart, PieChart, LineChart } from '@/components/shared/charts';
+import { AreaChart, BarChart, PieChart, LineChart, XAxis, YAxis, Area, ResponsiveContainer, Pie, Tooltip, Legend, CartesianGrid, Bar, Line } from 'recharts';
+// import { AreaChart, BarChart, PieChart, LineChart } from '@/components/shared/charts';
 import { AIInsightCard } from '@/components/shared/ai-insight-card';
 import { cashFlowTabs } from '@/config/cash-flow-navigation';
 import {
@@ -114,27 +115,31 @@ const kpiData = {
   avgDailyInflow: {
     value: 8.45,
     trend: 'up' as const,
-    trendValue: '+12.3%',
+    trendValue: 12.3,
+    changeUnit: '%',
     vsLastMonth: 7.52,
   },
   avgDailyOutflow: {
     value: 6.82,
     trend: 'down' as const,
-    trendValue: '-5.2%',
+    trendValue: -5.2,
+    changeUnit: '%',
     vsLastMonth: 7.19,
   },
   cashConversionCycle: {
     value: 45,
     unit: 'days',
     trend: 'down' as const,
-    trendValue: '-3 days',
+    trendValue: -3,
+    changeUnit: 'days',
     benchmark: 42,
   },
   forecastAccuracy: {
     value: 94.2,
     unit: '%',
     trend: 'up' as const,
-    trendValue: '+2.1%',
+    trendValue: 2.1,
+    changeUnit: '%',
     target: 95.0,
   },
 };
@@ -156,19 +161,19 @@ const weeklyTrendData = [
 ];
 
 const inflowBySource = [
-  { name: 'Customer Collections', value: 45, color: '#3b82f6' },
-  { name: 'Booking Advances', value: 25, color: '#22c55e' },
-  { name: 'Loan Disbursements', value: 18, color: '#f97316' },
-  { name: 'Rental Income', value: 8, color: '#eab308' },
-  { name: 'Other', value: 4, color: '#6b7280' },
+  { name: 'Customer Collections', value: 45, fill: '#3b82f6' },
+  { name: 'Booking Advances', value: 25, fill: '#22c55e' },
+  { name: 'Loan Disbursements', value: 18, fill: '#f97316' },
+  { name: 'Rental Income', value: 8, fill: '#eab308' },
+  { name: 'Other', value: 4, fill: '#6b7280' },
 ];
 
 const outflowByCategory = [
-  { name: 'Construction', value: 42, color: '#ef4444' },
-  { name: 'Vendor Payments', value: 22, color: '#f97316' },
-  { name: 'Loan Repayments', value: 18, color: '#eab308' },
-  { name: 'Payroll', value: 12, color: '#22c55e' },
-  { name: 'Other', value: 6, color: '#6b7280' },
+  { name: 'Construction', value: 42, fill: '#ef4444' },
+  { name: 'Vendor Payments', value: 22, fill: '#f97316' },
+  { name: 'Loan Repayments', value: 18, fill: '#eab308' },
+  { name: 'Payroll', value: 12, fill: '#22c55e' },
+  { name: 'Other', value: 6, fill: '#6b7280' },
 ];
 
 const varianceItems: VarianceItem[] = [
@@ -454,6 +459,7 @@ const aiInsights = [
     description: 'Collection efficiency improved by 3% this month. Early payment incentives contributed ₹4.2 Cr in accelerated collections.',
     action: 'Continue early payment incentive program',
     impact: '₹4.2 Cr accelerated collections',
+    impactLevel: 'medium',
     confidence: 92,
   },
   {
@@ -463,6 +469,7 @@ const aiInsights = [
     description: 'Construction costs exceeded budget by 6% for 3 consecutive months. Material cost inflation identified as primary driver.',
     action: 'Review material procurement strategy',
     impact: '₹7.5 Cr cost overrun YTD',
+    impactLevel: 'high',
     confidence: 88,
   },
   {
@@ -472,6 +479,7 @@ const aiInsights = [
     description: 'Historical data shows Q4 has 25% higher cash inflows. Consider accelerating collections and deferring non-critical payments in Q1-Q2.',
     action: 'Implement seasonal cash strategy',
     impact: '₹15 Cr working capital optimization',
+    impactLevel: 'high',
     confidence: 85,
   },
   {
@@ -481,6 +489,7 @@ const aiInsights = [
     description: 'Analysis shows ₹2.8 Cr in uncaptured early payment discounts. Optimizing payment timing could improve cash efficiency.',
     action: 'Review vendor payment terms',
     impact: '₹2.8 Cr annual savings potential',
+    impactLevel: 'low',
     confidence: 82,
   },
 ];
@@ -550,24 +559,50 @@ export default function CashFlowAnalyticsPage() {
   const [selectedPeriod, setSelectedPeriod] = useState('monthly');
   const [selectedComparison, setSelectedComparison] = useState('mom');
   const [filters, setFilters] = useState<CashFlowFilterState>({
-    search: '',
-    dateRange: { startDate: undefined, endDate: undefined },
-    entities: [],
-    projects: [],
-    banks: [],
-    transactionTypes: [],
-    status: [],
-    minAmount: undefined,
-    maxAmount: undefined,
-    currency: 'INR',
-    groupBy: 'none',
-    sortBy: 'date',
-    sortOrder: 'desc',
+    companyIds: [],
+    businessUnitIds: [],
+    spvIds: [],
+    projectIds: [],
+    regionIds: [],
+    bankIds: [],
+    accountIds: [],
+    currencyIds: [],
+    costCenterIds: [],
+    customerIds: [],
+    vendorIds: [],
+    loanIds: [],
+    scenario: 'base',
+    forecastVersion: 'current',
+    forecastHorizon: '30d',
+    datePreset: 'thisMonth',
+    dateRange: {
+      startDate: (() => {
+        const d = new Date();
+        d.setFullYear(d.getFullYear() - 1);
+        return d;
+      })(), endDate: new Date()
+    },
+    statusIds: [],
+    tagIds: [],
+    // search: '',
+    // dateRange: { startDate: undefined, endDate: undefined },
+    // entities: [],
+    // projects: [],
+    // banks: [],
+    // transactionTypes: [],
+    // status: [],
+    // minAmount: undefined,
+    // maxAmount: undefined,
+    // currency: 'INR',
+    // groupBy: 'none',
+    // sortBy: 'date',
+    // sortOrder: 'desc',
   });
   const [selectedVariance, setSelectedVariance] = useState<VarianceItem | null>(null);
 
   // Get tabs configuration
-  const tabs = cashFlowTabs.analytics || [
+  // const tabs = cashFlowTabs.analytics || [
+  const tabs = [
     { id: 'overview', label: 'Overview' },
     { id: 'trends', label: 'Trend Analysis' },
     { id: 'variance', label: 'Variance Analysis' },
@@ -579,25 +614,25 @@ export default function CashFlowAnalyticsPage() {
   // Column definitions
   const trendColumns: Column<TrendData>[] = [
     {
-      key: 'period',
+      id: 'period',
       header: 'Period',
       cell: (row) => <span className="font-medium">{row.period}</span>,
       sortable: true,
     },
     {
-      key: 'inflow',
+      id: 'inflow',
       header: 'Inflow',
       cell: (row) => <span className="text-green-400">{formatCurrency(row.inflow)}</span>,
       sortable: true,
     },
     {
-      key: 'outflow',
+      id: 'outflow',
       header: 'Outflow',
       cell: (row) => <span className="text-red-400">{formatCurrency(row.outflow)}</span>,
       sortable: true,
     },
     {
-      key: 'netCash',
+      id: 'netCash',
       header: 'Net Cash',
       cell: (row) => (
         <span className={row.netCash >= 0 ? 'text-green-400' : 'text-red-400'}>
@@ -607,7 +642,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'variance',
+      id: 'variance',
       header: 'Variance vs Budget',
       cell: (row) => (
         <div className="flex items-center gap-2">
@@ -624,7 +659,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'variancePercent',
+      id: 'variancePercent',
       header: 'Variance %',
       cell: (row) => (
         <Badge className={row.variancePercent >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
@@ -637,7 +672,7 @@ export default function CashFlowAnalyticsPage() {
 
   const varianceColumns: Column<VarianceItem>[] = [
     {
-      key: 'category',
+      id: 'category',
       header: 'Category',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -647,25 +682,25 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'subcategory',
+      id: 'subcategory',
       header: 'Subcategory',
       cell: (row) => <span className="font-medium">{row.subcategory}</span>,
       sortable: true,
     },
     {
-      key: 'budgeted',
+      id: 'budgeted',
       header: 'Budgeted',
       cell: (row) => formatCurrency(row.budgeted),
       sortable: true,
     },
     {
-      key: 'actual',
+      id: 'actual',
       header: 'Actual',
       cell: (row) => formatCurrency(row.actual),
       sortable: true,
     },
     {
-      key: 'variance',
+      id: 'variance',
       header: 'Variance',
       cell: (row) => (
         <span className={getVarianceColor(row.status)}>
@@ -675,7 +710,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'variancePercent',
+      id: 'variancePercent',
       header: 'Variance %',
       cell: (row) => (
         <Badge className={getVarianceBadgeColor(row.status)}>
@@ -685,7 +720,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       cell: (row) => (
         <Badge className={getVarianceBadgeColor(row.status)}>
@@ -694,7 +729,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'trend',
+      id: 'trend',
       header: 'Trend',
       cell: (row) => (
         <div className="flex items-center gap-1">
@@ -703,7 +738,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       cell: (row) => (
         <Button variant="ghost" size="sm" onClick={() => setSelectedVariance(row)}>
@@ -715,13 +750,13 @@ export default function CashFlowAnalyticsPage() {
 
   const comparisonColumns: Column<ComparisonMetric>[] = [
     {
-      key: 'metric',
+      id: 'metric',
       header: 'Metric',
       cell: (row) => <span className="font-medium">{row.metric}</span>,
       sortable: true,
     },
     {
-      key: 'currentPeriod',
+      id: 'currentPeriod',
       header: 'Current Period',
       cell: (row) => (
         <span>
@@ -733,7 +768,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'previousPeriod',
+      id: 'previousPeriod',
       header: 'Previous Period',
       cell: (row) => (
         <span className="text-slate-400">
@@ -745,7 +780,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'change',
+      id: 'change',
       header: 'Change',
       cell: (row) => (
         <div className="flex items-center gap-1">
@@ -762,7 +797,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'changePercent',
+      id: 'changePercent',
       header: 'Change %',
       cell: (row) => (
         <Badge className={row.changePercent >= 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}>
@@ -772,7 +807,7 @@ export default function CashFlowAnalyticsPage() {
       sortable: true,
     },
     {
-      key: 'benchmark',
+      id: 'benchmark',
       header: 'Benchmark',
       cell: (row) => (
         row.benchmark !== null ? (
@@ -783,7 +818,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'benchmarkVariance',
+      id: 'benchmarkVariance',
       header: 'vs Benchmark',
       cell: (row) => (
         row.benchmarkVariance !== null ? (
@@ -797,13 +832,13 @@ export default function CashFlowAnalyticsPage() {
 
   const reportColumns: Column<ReportItem>[] = [
     {
-      key: 'name',
+      id: 'name',
       header: 'Report Name',
       cell: (row) => <span className="font-medium">{row.name}</span>,
       sortable: true,
     },
     {
-      key: 'type',
+      id: 'type',
       header: 'Type',
       cell: (row) => (
         <Badge className={getReportTypeBadge(row.type)}>
@@ -812,7 +847,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'category',
+      id: 'category',
       header: 'Category',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -821,13 +856,13 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'lastGenerated',
+      id: 'lastGenerated',
       header: 'Last Generated',
       cell: (row) => <span className="text-sm text-slate-400">{row.lastGenerated}</span>,
       sortable: true,
     },
     {
-      key: 'schedule',
+      id: 'schedule',
       header: 'Schedule',
       cell: (row) => row.schedule ? (
         <span className="text-sm">{row.schedule}</span>
@@ -836,7 +871,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'format',
+      id: 'format',
       header: 'Format',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -845,7 +880,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'recipients',
+      id: 'recipients',
       header: 'Recipients',
       cell: (row) => row.recipients > 0 ? (
         <span className="text-sm">{row.recipients}</span>
@@ -854,7 +889,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: 'Actions',
       cell: () => (
         <div className="flex items-center gap-1">
@@ -871,29 +906,29 @@ export default function CashFlowAnalyticsPage() {
 
   const queryColumns: Column<AnalyticsQuery>[] = [
     {
-      key: 'name',
+      id: 'name',
       header: 'Query Name',
       cell: (row) => <span className="font-medium">{row.name}</span>,
       sortable: true,
     },
     {
-      key: 'description',
+      id: 'description',
       header: 'Description',
       cell: (row) => <span className="text-sm text-slate-400">{row.description}</span>,
     },
     {
-      key: 'lastRun',
+      id: 'lastRun',
       header: 'Last Run',
       cell: (row) => <span className="text-sm">{row.lastRun}</span>,
       sortable: true,
     },
     {
-      key: 'savedBy',
+      id: 'savedBy',
       header: 'Saved By',
       cell: (row) => <span className="text-sm">{row.savedBy}</span>,
     },
     {
-      key: 'isShared',
+      id: 'isShared',
       header: 'Shared',
       cell: (row) => row.isShared ? (
         <Badge className="bg-green-500/20 text-green-400">Shared</Badge>
@@ -902,7 +937,7 @@ export default function CashFlowAnalyticsPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: 'Actions',
       cell: () => (
         <div className="flex items-center gap-1">
@@ -915,6 +950,14 @@ export default function CashFlowAnalyticsPage() {
         </div>
       ),
     },
+  ];
+
+  const COLORS = [
+    "#22c55e",
+    "#3b82f6",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6",
   ];
 
   return (
@@ -930,7 +973,7 @@ export default function CashFlowAnalyticsPage() {
         ]}
         actions={
           <div className="flex items-center gap-2">
-            <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+            <Select value={selectedPeriod} onValueChange={(value) => setSelectedPeriod(value ?? "monthly")}>
               <SelectTrigger className="w-[140px] bg-slate-900 border-slate-800">
                 <SelectValue />
               </SelectTrigger>
@@ -960,10 +1003,10 @@ export default function CashFlowAnalyticsPage() {
 
       {/* Filters */}
       <CashFlowFilters
-        filters={filters}
-        onFiltersChange={setFilters}
-        variant="compact"
-        availableFilters={['search', 'dateRange', 'entities', 'projects']}
+        initialFilters={filters}
+        onFilterChange={setFilters}
+      // variant="compact"
+      // availableFilters={['search', 'dateRange', 'entities', 'projects']}
       />
 
       {/* KPI Grid */}
@@ -973,7 +1016,8 @@ export default function CashFlowAnalyticsPage() {
           value={formatCurrency(kpiData.avgDailyInflow.value)}
           icon={ArrowUpRight}
           trend={kpiData.avgDailyInflow.trend}
-          trendValue={kpiData.avgDailyInflow.trendValue}
+          change={kpiData.avgDailyInflow.trendValue}
+          changeUnit={kpiData.avgDailyInflow.changeUnit}
           subtitle={`vs ${formatCurrency(kpiData.avgDailyInflow.vsLastMonth)} last month`}
         />
         <KPICard
@@ -981,25 +1025,26 @@ export default function CashFlowAnalyticsPage() {
           value={formatCurrency(kpiData.avgDailyOutflow.value)}
           icon={ArrowDownRight}
           trend={kpiData.avgDailyOutflow.trend}
-          trendValue={kpiData.avgDailyOutflow.trendValue}
+          change={kpiData.avgDailyOutflow.trendValue}
+          changeUnit={kpiData.avgDailyOutflow.changeUnit}
           subtitle={`vs ${formatCurrency(kpiData.avgDailyOutflow.vsLastMonth)} last month`}
         />
         <KPICard
           title="Cash Conversion Cycle"
           value={kpiData.cashConversionCycle.value}
-          suffix=" days"
           icon={Clock}
           trend={kpiData.cashConversionCycle.trend}
-          trendValue={kpiData.cashConversionCycle.trendValue}
+          change={kpiData.cashConversionCycle.trendValue}
+          changeUnit={kpiData.cashConversionCycle.changeUnit}
           subtitle={`Benchmark: ${kpiData.cashConversionCycle.benchmark} days`}
         />
         <KPICard
           title="Forecast Accuracy"
           value={kpiData.forecastAccuracy.value}
-          suffix="%"
           icon={Target}
           trend={kpiData.forecastAccuracy.trend}
-          trendValue={kpiData.forecastAccuracy.trendValue}
+          change={kpiData.forecastAccuracy.trendValue}
+          changeUnit={kpiData.forecastAccuracy.changeUnit}
           subtitle={`Target: ${kpiData.forecastAccuracy.target}%`}
         />
       </KPIGrid>
@@ -1028,15 +1073,31 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>6-month inflow, outflow, and net cash flow</CardDescription>
               </CardHeader>
               <CardContent>
-                <AreaChart
+                {/* <AreaChart
                   data={monthlyTrendData}
                   xKey="period"
-                  areas={[
+                  series={[
                     { key: 'inflow', name: 'Inflow', color: '#22c55e' },
                     { key: 'outflow', name: 'Outflow', color: '#ef4444' },
                   ]}
                   height={300}
-                />
+                /> */}
+                <AreaChart data={monthlyTrendData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }} height={300}>
+                  <XAxis dataKey="period" />
+                  <YAxis />
+
+                  <Area
+                    dataKey="inflow"
+                    stroke="#22c55e"
+                    fill="#22c55e"
+                  />
+
+                  <Area
+                    dataKey="outflow"
+                    stroke="#ef4444"
+                    fill="#ef4444"
+                  />
+                </AreaChart>
               </CardContent>
             </Card>
 
@@ -1047,12 +1108,27 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Current month breakdown</CardDescription>
               </CardHeader>
               <CardContent>
-                <PieChart
+                {/* <PieChart
                   data={inflowBySource}
                   nameKey="name"
                   valueKey="value"
                   height={250}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={inflowBySource}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius="80%"
+                      label
+                    />
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1063,14 +1139,29 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Monthly trend</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart
+                {/* <BarChart
                   data={monthlyTrendData}
                   xKey="period"
                   bars={[
                     { key: 'netCash', name: 'Net Cash', color: '#3b82f6' },
                   ]}
                   height={250}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={monthlyTrendData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="period" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar
+                      dataKey="netCash"
+                      name="Net Cash"
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1081,12 +1172,27 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Current month breakdown</CardDescription>
               </CardHeader>
               <CardContent>
-                <PieChart
+                {/* <PieChart
                   data={outflowByCategory}
                   nameKey="name"
                   valueKey="value"
                   height={250}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={outflowByCategory}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius="80%"
+                      label
+                    />
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1097,15 +1203,17 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Weekly cash flow breakdown</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart
-                  data={weeklyTrendData}
-                  xKey="week"
-                  bars={[
-                    { key: 'inflow', name: 'Inflow', color: '#22c55e' },
-                    { key: 'outflow', name: 'Outflow', color: '#ef4444' },
-                  ]}
-                  height={250}
-                />
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={weeklyTrendData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="week" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="inflow" name="Inflow" fill="#22c55e" />
+                    <Bar dataKey="outflow" name="Outflow" fill="#ef4444" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1121,9 +1229,10 @@ export default function CashFlowAnalyticsPage() {
                     key={insight.id}
                     type={insight.type}
                     title={insight.title}
-                    description={insight.description}
-                    action={insight.action}
-                    impact={insight.impact}
+                    insight={insight.description}
+                    // actions={insight.action}
+                    impact={insight.impactLevel as 'low' | 'medium' | 'high'}
+                    impactValue={insight.impact}
                     confidence={insight.confidence}
                   />
                 ))}
@@ -1142,7 +1251,7 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Historical average cash flow patterns by month</CardDescription>
               </CardHeader>
               <CardContent>
-                <LineChart
+                {/* <LineChart
                   data={seasonalityData}
                   xKey="month"
                   lines={[
@@ -1150,7 +1259,34 @@ export default function CashFlowAnalyticsPage() {
                     { key: 'avgOutflow', name: 'Avg Outflow', color: '#ef4444' },
                   ]}
                   height={300}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={seasonalityData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                      type="monotone"
+                      dataKey="avgInflow"
+                      name="Avg Inflow"
+                      stroke="#22c55e"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="avgOutflow"
+                      name="Avg Outflow"
+                      stroke="#ef4444"
+                      strokeWidth={2}
+                      dot={{ r: 3 }}
+                      activeDot={{ r: 5 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1245,7 +1381,7 @@ export default function CashFlowAnalyticsPage() {
           <div className="grid grid-cols-12 gap-6">
             {/* Comparison Type Selector */}
             <div className="col-span-12">
-              <Select value={selectedComparison} onValueChange={setSelectedComparison}>
+              <Select value={selectedComparison} onValueChange={(value) => setSelectedComparison(value ?? "mom")}>
                 <SelectTrigger className="w-[200px] bg-slate-900 border-slate-800">
                   <SelectValue />
                 </SelectTrigger>
@@ -1281,7 +1417,7 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Cash flow by legal entity</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart
+                {/* <BarChart
                   data={entityComparison}
                   xKey="entity"
                   bars={[
@@ -1290,7 +1426,19 @@ export default function CashFlowAnalyticsPage() {
                     { key: 'netCash', name: 'Net Cash', color: '#3b82f6' },
                   ]}
                   height={300}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={entityComparison}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="entity" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="inflow" name="Inflow" fill="#22c55e" />
+                    <Bar dataKey="outflow" name="Outflow" fill="#ef4444" />
+                    <Bar dataKey="netCash" name="Net Cash" fill="#3b82f6" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1301,15 +1449,17 @@ export default function CashFlowAnalyticsPage() {
                 <CardDescription>Budget vs Actual by project</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart
-                  data={projectComparison}
-                  xKey="project"
-                  bars={[
-                    { key: 'budgeted', name: 'Budgeted', color: '#6b7280' },
-                    { key: 'actual', name: 'Actual', color: '#3b82f6' },
-                  ]}
-                  height={300}
-                />
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={projectComparison}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="project" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="budgeted" name="Budgeted" fill="#6b7280" />
+                    <Bar dataKey="actual" name="Actual" fill="#3b82f6" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
           </div>

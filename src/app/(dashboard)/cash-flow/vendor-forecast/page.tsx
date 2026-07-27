@@ -343,7 +343,7 @@ export default function VendorPaymentForecastPage() {
 
   const paymentColumns: Column<typeof upcomingPayments[0]>[] = [
     {
-      key: 'vendorName',
+      id: 'vendorName',
       header: 'Vendor',
       sortable: true,
       render: (row) => (
@@ -354,23 +354,23 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'invoiceNumber',
+      id: 'invoiceNumber',
       header: 'Invoice',
       render: (row) => <span className="text-sm">{row.invoiceNumber}</span>,
     },
     {
-      key: 'dueDate',
+      id: 'dueDate',
       header: 'Due Date',
       sortable: true,
       render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'amount',
+      id: 'amount',
       header: 'Amount',
       align: 'right' as const,
       sortable: true,
@@ -379,7 +379,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'priority',
+      id: 'priority',
       header: 'Priority',
       render: (row) => (
         <Badge
@@ -393,7 +393,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       render: (row) => (
         <Badge
@@ -409,14 +409,14 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'recommendation',
+      id: 'recommendation',
       header: 'AI Recommendation',
       render: (row) => (
         <span className="text-sm text-muted-foreground">{row.recommendation}</span>
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -432,19 +432,19 @@ export default function VendorPaymentForecastPage() {
 
   const priorityColumns: Column<typeof priorityMatrix[0]>[] = [
     {
-      key: 'vendorName',
+      id: 'vendorName',
       header: 'Vendor',
       sortable: true,
     },
     {
-      key: 'amount',
+      id: 'amount',
       header: 'Amount',
       align: 'right' as const,
       sortable: true,
       render: (row) => <span className="font-semibold">₹{row.amount.toFixed(2)} Cr</span>,
     },
     {
-      key: 'vendorCriticality',
+      id: 'vendorCriticality',
       header: 'Criticality',
       render: (row) => (
         <Badge
@@ -458,7 +458,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'projectImpact',
+      id: 'projectImpact',
       header: 'Project Impact',
       render: (row) => (
         <Badge variant={row.projectImpact === 'High' ? 'destructive' : 'secondary'}>
@@ -467,7 +467,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'relationshipRisk',
+      id: 'relationshipRisk',
       header: 'Relationship Risk',
       render: (row) => (
         <Badge
@@ -481,7 +481,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'priorityScore',
+      id: 'priorityScore',
       header: 'Score',
       align: 'right' as const,
       sortable: true,
@@ -501,7 +501,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'recommendation',
+      id: 'recommendation',
       header: 'Recommendation',
       render: (row) => <span className="text-sm">{row.recommendation}</span>,
     },
@@ -509,24 +509,24 @@ export default function VendorPaymentForecastPage() {
 
   const exceptionColumns: Column<typeof vendorExceptions[0]>[] = [
     {
-      key: 'vendorName',
+      id: 'vendorName',
       header: 'Vendor',
       sortable: true,
     },
     {
-      key: 'exceptionType',
+      id: 'exceptionType',
       header: 'Type',
       render: (row) => (
         <Badge variant="outline">{row.exceptionType}</Badge>
       ),
     },
     {
-      key: 'description',
+      id: 'description',
       header: 'Description',
       render: (row) => <span className="text-sm">{row.description}</span>,
     },
     {
-      key: 'severity',
+      id: 'severity',
       header: 'Severity',
       render: (row) => (
         <Badge
@@ -540,7 +540,7 @@ export default function VendorPaymentForecastPage() {
       ),
     },
     {
-      key: 'action',
+      id: 'action',
       header: 'Action Required',
       render: (row) => <span className="text-sm text-amber-400">{row.action}</span>,
     },
@@ -573,7 +573,7 @@ export default function VendorPaymentForecastPage() {
         }
       />
 
-      <CashFlowFilters filters={filters} onFiltersChange={setFilters} />
+      <CashFlowFilters initialFilters={filters} onFilterChange={setFilters} />
 
       {/* KPI Grid */}
       <KPIGrid columns={4}>

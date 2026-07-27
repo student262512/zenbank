@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AIInsightCard } from '@/components/shared/ai-insight-card';
-import { cashFlowTabs } from '@/config/cash-flow-navigation';
+import { cashAgentTabs, cashFlowTabs } from '@/config/cash-flow-navigation';
 import {
   Bot,
   Send,
@@ -137,26 +137,26 @@ const kpiData = {
   tasksCompleted: {
     value: 142,
     trend: 'up' as const,
-    trendValue: '+23',
+    trendValue: 23,
     period: 'this week',
   },
   avgResponseTime: {
     value: 2.3,
     unit: 's',
     trend: 'down' as const,
-    trendValue: '-0.5s',
+    trendValue: -0.5,
   },
   accuracyScore: {
     value: 96.8,
     unit: '%',
     trend: 'up' as const,
-    trendValue: '+1.2%',
+    trendValue: 1.2,
   },
   automationsSaved: {
     value: 48,
     unit: 'hrs',
     trend: 'up' as const,
-    trendValue: '+8 hrs',
+    trendValue: 8,
     period: 'this month',
   },
 };
@@ -452,7 +452,8 @@ export default function CashFlowAIAgentPage() {
   const [isTyping, setIsTyping] = useState(false);
 
   // Get tabs configuration
-  const tabs = cashFlowTabs.agent || [
+  // const tabs = cashAgentTabs || [
+  const tabs = [
     { id: 'chat', label: 'AI Chat' },
     { id: 'capabilities', label: 'Capabilities' },
     { id: 'history', label: 'Task History' },
@@ -535,12 +536,12 @@ export default function CashFlowAIAgentPage() {
   // Column definitions
   const historyColumns: Column<TaskHistory>[] = [
     {
-      key: 'query',
+      id: 'query',
       header: 'Query',
       cell: (row) => <span className="font-medium">{row.query}</span>,
     },
     {
-      key: 'category',
+      id: 'category',
       header: 'Category',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -549,17 +550,17 @@ export default function CashFlowAIAgentPage() {
       ),
     },
     {
-      key: 'result',
+      id: 'result',
       header: 'Result',
       cell: (row) => <span className="text-sm text-slate-400 max-w-[300px] truncate block">{row.result}</span>,
     },
     {
-      key: 'duration',
+      id: 'duration',
       header: 'Duration',
       cell: (row) => <span className="text-sm font-mono">{row.duration}</span>,
     },
     {
-      key: 'status',
+      id: 'status',
       header: 'Status',
       cell: (row) => (
         <Badge className={getStatusColor(row.status)}>
@@ -568,12 +569,12 @@ export default function CashFlowAIAgentPage() {
       ),
     },
     {
-      key: 'timestamp',
+      id: 'timestamp',
       header: 'Time',
       cell: (row) => <span className="text-sm text-slate-400">{row.timestamp}</span>,
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       cell: () => (
         <div className="flex items-center gap-1">
@@ -590,7 +591,7 @@ export default function CashFlowAIAgentPage() {
 
   const capabilityColumns: Column<AgentCapability>[] = [
     {
-      key: 'name',
+      id: 'name',
       header: 'Capability',
       cell: (row) => (
         <div className="flex items-center gap-3">
@@ -605,7 +606,7 @@ export default function CashFlowAIAgentPage() {
       ),
     },
     {
-      key: 'category',
+      id: 'category',
       header: 'Category',
       cell: (row) => (
         <Badge variant="outline" className="bg-slate-800/50">
@@ -614,19 +615,19 @@ export default function CashFlowAIAgentPage() {
       ),
     },
     {
-      key: 'usageCount',
+      id: 'usageCount',
       header: 'Usage',
       cell: (row) => <span className="text-sm">{row.usageCount} times</span>,
     },
     {
-      key: 'lastUsed',
+      id: 'lastUsed',
       header: 'Last Used',
       cell: (row) => (
         <span className="text-sm text-slate-400">{row.lastUsed || 'Never'}</span>
       ),
     },
     {
-      key: 'isActive',
+      id: 'isActive',
       header: 'Status',
       cell: (row) => (
         <Badge className={row.isActive ? 'bg-green-500/20 text-green-400' : 'bg-slate-500/20 text-slate-400'}>
@@ -668,32 +669,32 @@ export default function CashFlowAIAgentPage() {
           value={kpiData.tasksCompleted.value}
           icon={CheckCircle2}
           trend={kpiData.tasksCompleted.trend}
-          trendValue={kpiData.tasksCompleted.trendValue}
+          change={(kpiData.tasksCompleted.trendValue)}
           subtitle={kpiData.tasksCompleted.period}
         />
         <KPICard
           title="Avg Response Time"
           value={kpiData.avgResponseTime.value}
-          suffix="s"
+          changeUnit="s"
           icon={Clock}
           trend={kpiData.avgResponseTime.trend}
-          trendValue={kpiData.avgResponseTime.trendValue}
+          change={kpiData.avgResponseTime.trendValue}
         />
         <KPICard
           title="Accuracy Score"
           value={kpiData.accuracyScore.value}
-          suffix="%"
+          changeUnit="%"
           icon={Target}
           trend={kpiData.accuracyScore.trend}
-          trendValue={kpiData.accuracyScore.trendValue}
+          change={kpiData.accuracyScore.trendValue}
         />
         <KPICard
           title="Time Saved"
           value={kpiData.automationsSaved.value}
-          suffix=" hrs"
+          changeUnit=" hrs"
           icon={Zap}
           trend={kpiData.automationsSaved.trend}
-          trendValue={kpiData.automationsSaved.trendValue}
+          change={kpiData.automationsSaved.trendValue}
           subtitle={kpiData.automationsSaved.period}
         />
       </KPIGrid>

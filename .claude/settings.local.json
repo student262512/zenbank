@@ -6,7 +6,15 @@
       "Bash(powershell -Command \"Get-ChildItem -Path ''E:\\apps\\zenbank\\src'' -Recurse | Select-Object FullName\")",
       "Bash(powershell -Command:*)",
       "Bash(wc:*)",
-      "Bash(if not exist \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\\dashboard\" mkdir \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\\dashboard\")"
+      "Bash(if not exist \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\\dashboard\" mkdir \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\\dashboard\")",
+      "Bash(if not exist \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\treasury\\dashboard\" mkdir \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\treasury\\dashboard\")",
+      "Bash(ls -la \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\cash-flow\"\" 2>/dev/null || echo \"Directory not found \")",
+      "Bash(ls:*)",
+      "Bash(ls -la \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\treasury\"\" | grep -E \"page.tsx)",
+      "Bash(.tsx \")",
+      "Bash(find:*)",
+      "Bash(head:*)",
+      "Bash(if not exist \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\treasury\\pooling\" mkdir \"E:\\apps\\zenbank\\src\\app\\(dashboard)\\treasury\\pooling\")"
     ]
   }
 }

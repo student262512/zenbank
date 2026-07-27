@@ -24,13 +24,24 @@ import {
   Sparkles,
   Save,
   ChevronDown,
+  LucideIcon,
 } from 'lucide-react';
+import { BadgeProps } from '../ui';
+
+interface PageHeaderAction {
+  label: string;
+  icon?: LucideIcon;
+  onClick?: () => void;
+  variant?: BadgeProps["variant"];
+  disabled?: boolean;
+}
 
 interface PageHeaderProps {
   title: string;
   description?: string;
   breadcrumbs?: { label: string; href?: string }[];
-  actions?: React.ReactNode;
+  // actions?: React.ReactNode;
+  actions?: React.ReactNode | PageHeaderAction[];
   showRefresh?: boolean;
   showExport?: boolean;
   showImport?: boolean;
@@ -221,7 +232,26 @@ export function PageHeader({
           </DropdownMenu>
 
           {/* Custom Actions */}
-          {actions}
+          {/* {actions} */}
+          {Array.isArray(actions)
+            ? actions.map((action, index) => {
+              const Icon = action.icon;
+
+              return (
+                <Button
+                  key={index}
+                  variant={action.variant ?? "default"}
+                  size="sm"
+                  onClick={action.onClick}
+                  disabled={action.disabled}
+                  className="gap-2"
+                >
+                  {Icon && <Icon className="h-4 w-4" />}
+                  {action.label}
+                </Button>
+              );
+            })
+            : actions}
         </div>
       </div>
     </div>

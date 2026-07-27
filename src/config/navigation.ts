@@ -71,6 +71,13 @@ export const navigation: NavigationGroup[] = [
       { title: 'Treasury Risk', href: '/treasury/risk' },
       { title: 'Treasury AI', href: '/treasury/ai', badge: 'AI', badgeVariant: 'default' },
       { title: 'Treasury Operations', href: '/treasury/operations' },
+      { title: 'Treasury Concentration', href: '/treasury/concentration' },
+      { title: 'Treasury Fx', href: '/treasury/fx' },
+      { title: 'Treasury Intercompany', href: '/treasury/intercompany' },
+      { title: 'Treasury Investments', href: '/treasury/investments' },
+      { title: 'Treasury Pooling', href: '/treasury/pooling' },
+      { title: 'Treasury Simulator', href: '/treasury/simulator' },
+      { title: 'Treasury Analytics', href: '/treasury/analytics' },
     ],
   },
   {

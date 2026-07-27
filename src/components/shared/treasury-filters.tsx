@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import {
   Building2,
-  FolderKanban,
   Wallet,
   Calendar,
   Filter,
@@ -24,18 +23,18 @@ import {
   Briefcase,
   MapPin,
   DollarSign,
-  Users,
-  Truck,
+  Globe,
+  Landmark,
   CreditCard,
-  Target,
+  TrendingUp,
   Tag,
-  Clock,
   GitBranch,
   Layers,
   X,
+  Users,
 } from 'lucide-react';
 
-// Mock data for cash flow filters
+// Mock data for treasury filters
 const companies = [
   { id: 'all', name: 'All Companies', count: 5 },
   { id: 'zenith-infra', name: 'Zenith Infrastructure Ltd', count: 12 },
@@ -66,8 +65,6 @@ const projects = [
   { id: 'highway-nh48', name: 'Highway NH-48 Extension', status: 'active' },
   { id: 'solar-park', name: 'Gujarat Solar Park', status: 'active' },
   { id: 'water-treatment', name: 'Pune Water Treatment', status: 'planning' },
-  { id: 'tower-a', name: 'Zenith Tower A', status: 'active' },
-  { id: 'tower-b', name: 'Zenith Tower B', status: 'planning' },
 ];
 
 const regions = [
@@ -78,18 +75,28 @@ const regions = [
   { id: 'east', name: 'East Region' },
 ];
 
+const treasuryCenters = [
+  { id: 'all', name: 'All Treasury Centers' },
+  { id: 'mumbai', name: 'Mumbai HQ' },
+  { id: 'delhi', name: 'Delhi Regional' },
+  { id: 'bangalore', name: 'Bangalore Regional' },
+  { id: 'chennai', name: 'Chennai Regional' },
+];
+
 const banks = [
-  { id: 'all', name: 'All Banks', count: 8 },
+  { id: 'all', name: 'All Banks', count: 12 },
   { id: 'hdfc', name: 'HDFC Bank' },
   { id: 'icici', name: 'ICICI Bank' },
   { id: 'sbi', name: 'State Bank of India' },
   { id: 'axis', name: 'Axis Bank' },
   { id: 'kotak', name: 'Kotak Mahindra Bank' },
   { id: 'yes', name: 'Yes Bank' },
+  { id: 'citi', name: 'Citibank' },
+  { id: 'hsbc', name: 'HSBC' },
 ];
 
-const accounts = [
-  { id: 'all', name: 'All Accounts', count: 45 },
+const bankAccounts = [
+  { id: 'all', name: 'All Accounts', count: 48 },
   { id: 'hdfc-current', name: 'HDFC Current - 1234', balance: 125000000 },
   { id: 'icici-escrow', name: 'ICICI Escrow - 5678', balance: 450000000 },
   { id: 'sbi-operations', name: 'SBI Operations - 9012', balance: 85000000 },
@@ -106,39 +113,46 @@ const currencies = [
   { id: 'aed', name: 'AED - UAE Dirham', symbol: 'د.إ' },
 ];
 
-const costCenters = [
-  { id: 'all', name: 'All Cost Centers' },
-  { id: 'cc-001', name: 'CC-001: Administration' },
-  { id: 'cc-002', name: 'CC-002: Operations' },
-  { id: 'cc-003', name: 'CC-003: Project Management' },
-  { id: 'cc-004', name: 'CC-004: Finance' },
-  { id: 'cc-005', name: 'CC-005: HR' },
+const countries = [
+  { id: 'all', name: 'All Countries' },
+  { id: 'in', name: 'India' },
+  { id: 'us', name: 'United States' },
+  { id: 'ae', name: 'UAE' },
+  { id: 'sg', name: 'Singapore' },
+  { id: 'uk', name: 'United Kingdom' },
 ];
 
-const customers = [
-  { id: 'all', name: 'All Customers', count: 150 },
-  { id: 'cust-001', name: 'Tata Projects Ltd' },
-  { id: 'cust-002', name: 'L&T Construction' },
-  { id: 'cust-003', name: 'Godrej Properties' },
-  { id: 'cust-004', name: 'Mahindra Lifespaces' },
-  { id: 'cust-005', name: 'DLF Limited' },
+const legalEntities = [
+  { id: 'all', name: 'All Legal Entities' },
+  { id: 'zenith-infra', name: 'Zenith Infrastructure Ltd' },
+  { id: 'zenith-realty', name: 'Zenith Realty Holdings' },
+  { id: 'zenith-energy', name: 'Zenith Energy SPV' },
+  { id: 'zenith-highways', name: 'Zenith Highways Pvt Ltd' },
 ];
 
-const vendors = [
-  { id: 'all', name: 'All Vendors', count: 250 },
-  { id: 'vend-001', name: 'ACC Cement' },
-  { id: 'vend-002', name: 'Tata Steel' },
-  { id: 'vend-003', name: 'UltraTech Cement' },
-  { id: 'vend-004', name: 'JSW Steel' },
-  { id: 'vend-005', name: 'Larsen & Toubro' },
+const counterparties = [
+  { id: 'all', name: 'All Counterparties', count: 25 },
+  { id: 'hdfc', name: 'HDFC Bank', type: 'Bank' },
+  { id: 'icici', name: 'ICICI Bank', type: 'Bank' },
+  { id: 'sbi', name: 'SBI', type: 'Bank' },
+  { id: 'tata', name: 'Tata Projects', type: 'Vendor' },
+  { id: 'lnt', name: 'L&T', type: 'Vendor' },
 ];
 
 const loans = [
-  { id: 'all', name: 'All Loans', count: 15 },
+  { id: 'all', name: 'All Loans', count: 18 },
   { id: 'loan-001', name: 'HDFC Term Loan - ₹500 Cr' },
   { id: 'loan-002', name: 'SBI Project Loan - ₹800 Cr' },
   { id: 'loan-003', name: 'ICICI Working Capital - ₹200 Cr' },
   { id: 'loan-004', name: 'Axis ECB Loan - $50M' },
+];
+
+const investments = [
+  { id: 'all', name: 'All Investments', count: 35 },
+  { id: 'fd-001', name: 'HDFC FD - ₹100 Cr' },
+  { id: 'fd-002', name: 'SBI FD - ₹150 Cr' },
+  { id: 'liquid-001', name: 'HDFC Liquid Fund - ₹200 Cr' },
+  { id: 'gsec-001', name: 'G-Sec 2030 - ₹50 Cr' },
 ];
 
 const scenarios = [
@@ -148,38 +162,24 @@ const scenarios = [
   { id: 'stress', name: 'Stress Test' },
 ];
 
-const forecastVersions = [
-  { id: 'current', name: 'Current (v3.2)', status: 'active' },
-  { id: 'v31', name: 'Version 3.1', status: 'archived' },
-  { id: 'v30', name: 'Version 3.0', status: 'archived' },
-  { id: 'budget', name: 'Budget 2025', status: 'locked' },
-];
-
-const forecastHorizons = [
-  { id: '7d', name: '7 Days' },
-  { id: '30d', name: '30 Days' },
-  { id: '90d', name: '90 Days' },
-  { id: '180d', name: '180 Days' },
-  { id: '365d', name: '365 Days' },
-];
-
 const statuses = [
   { id: 'all', name: 'All Statuses' },
+  { id: 'active', name: 'Active', color: 'green' },
   { id: 'pending', name: 'Pending', color: 'yellow' },
   { id: 'approved', name: 'Approved', color: 'green' },
   { id: 'processing', name: 'Processing', color: 'blue' },
   { id: 'completed', name: 'Completed', color: 'green' },
-  { id: 'rejected', name: 'Rejected', color: 'red' },
-  { id: 'on-hold', name: 'On Hold', color: 'gray' },
+  { id: 'blocked', name: 'Blocked', color: 'red' },
+  { id: 'dormant', name: 'Dormant', color: 'gray' },
 ];
 
 const tags = [
   { id: 'critical', name: 'Critical', color: 'red' },
   { id: 'high-value', name: 'High Value', color: 'purple' },
-  { id: 'recurring', name: 'Recurring', color: 'blue' },
-  { id: 'one-time', name: 'One-time', color: 'gray' },
-  { id: 'urgent', name: 'Urgent', color: 'orange' },
-  { id: 'scheduled', name: 'Scheduled', color: 'cyan' },
+  { id: 'escrow', name: 'Escrow', color: 'blue' },
+  { id: 'operating', name: 'Operating', color: 'cyan' },
+  { id: 'investment', name: 'Investment', color: 'green' },
+  { id: 'payroll', name: 'Payroll', color: 'orange' },
 ];
 
 const datePresets = [
@@ -195,115 +195,107 @@ const datePresets = [
   { id: 'custom', label: 'Custom Range' },
 ];
 
-export interface CashFlowFilterState {
+export interface TreasuryFilterState {
   companyIds: string[];
   businessUnitIds: string[];
   spvIds: string[];
   projectIds: string[];
   regionIds: string[];
+  treasuryCenterIds: string[];
   bankIds: string[];
-  accountIds: string[];
+  bankAccountIds: string[];
   currencyIds: string[];
-  costCenterIds: string[];
-  customerIds: string[];
-  vendorIds: string[];
+  countryIds: string[];
+  legalEntityIds: string[];
+  counterpartyIds: string[];
   loanIds: string[];
+  investmentIds: string[];
   scenario: string;
-  forecastVersion: string;
-  forecastHorizon: string;
   datePreset: string;
   dateRange: { startDate?: Date; endDate?: Date };
   statusIds: string[];
   tagIds: string[];
 }
 
-export interface CashFlowFiltersProps {
-  initialFilters?: CashFlowFilterState;
+export interface TreasuryFiltersProps {
   className?: string;
   showCompany?: boolean;
   showBusinessUnit?: boolean;
   showSPV?: boolean;
   showProject?: boolean;
   showRegion?: boolean;
+  showTreasuryCenter?: boolean;
   showBank?: boolean;
-  showAccount?: boolean;
+  showBankAccount?: boolean;
   showCurrency?: boolean;
-  showCostCenter?: boolean;
-  showCustomer?: boolean;
-  showVendor?: boolean;
+  showCountry?: boolean;
+  showLegalEntity?: boolean;
+  showCounterparty?: boolean;
   showLoan?: boolean;
+  showInvestment?: boolean;
   showScenario?: boolean;
-  showForecastVersion?: boolean;
-  showForecastHorizon?: boolean;
   showDateRange?: boolean;
   showStatus?: boolean;
   showTags?: boolean;
   compact?: boolean;
-  onFilterChange?: (filters: CashFlowFilterState) => void;
+  onFilterChange?: (filters: TreasuryFilterState) => void;
 }
 
-const defaultFilters: CashFlowFilterState = {
+const defaultFilters: TreasuryFilterState = {
   companyIds: [],
   businessUnitIds: [],
   spvIds: [],
   projectIds: [],
   regionIds: [],
+  treasuryCenterIds: [],
   bankIds: [],
-  accountIds: [],
+  bankAccountIds: [],
   currencyIds: [],
-  costCenterIds: [],
-  customerIds: [],
-  vendorIds: [],
+  countryIds: [],
+  legalEntityIds: [],
+  counterpartyIds: [],
   loanIds: [],
+  investmentIds: [],
   scenario: 'base',
-  forecastVersion: 'current',
-  forecastHorizon: '30d',
   datePreset: 'thisMonth',
-  dateRange: {
-    startDate: (() => {
-      const d = new Date();
-      d.setFullYear(d.getFullYear() - 1);
-      return d;
-    })(), endDate: new Date()
-  },
+  dateRange: {},
   statusIds: [],
   tagIds: [],
 };
 
-export function CashFlowFilters({
-  initialFilters = defaultFilters,
+export function TreasuryFilters({
   className,
   showCompany = true,
   showBusinessUnit = false,
   showSPV = false,
-  showProject = true,
+  showProject = false,
   showRegion = false,
+  showTreasuryCenter = false,
   showBank = true,
-  showAccount = false,
-  showCurrency = false,
-  showCostCenter = false,
-  showCustomer = false,
-  showVendor = false,
+  showBankAccount = false,
+  showCurrency = true,
+  showCountry = false,
+  showLegalEntity = false,
+  showCounterparty = false,
   showLoan = false,
+  showInvestment = false,
   showScenario = false,
-  showForecastVersion = false,
-  showForecastHorizon = false,
   showDateRange = true,
   showStatus = false,
   showTags = false,
   compact = false,
   onFilterChange,
-}: CashFlowFiltersProps) {
-  const [filters, setFilters] = React.useState<CashFlowFilterState>(initialFilters);
+}: TreasuryFiltersProps) {
+  const [filters, setFilters] = React.useState<TreasuryFilterState>(defaultFilters);
 
-  const updateFilters = (updates: Partial<CashFlowFilterState>) => {
+  const updateFilters = (updates: Partial<TreasuryFilterState>) => {
     const newFilters = { ...filters, ...updates };
     setFilters(newFilters);
     onFilterChange?.(newFilters);
   };
 
   const toggleArrayFilter = (
-    key: keyof CashFlowFilterState,
+    key: keyof TreasuryFilterState,
     value: string,
     currentValues: string[]
   ) => {
@@ -328,24 +320,22 @@ export function CashFlowFilters({
     filters.spvIds.length +
     filters.projectIds.length +
     filters.regionIds.length +
+    filters.treasuryCenterIds.length +
     filters.bankIds.length +
-    filters.accountIds.length +
+    filters.bankAccountIds.length +
     filters.currencyIds.length +
-    filters.costCenterIds.length +
-    filters.customerIds.length +
-    filters.vendorIds.length +
+    filters.countryIds.length +
+    filters.legalEntityIds.length +
+    filters.counterpartyIds.length +
     filters.loanIds.length +
+    filters.investmentIds.length +
     filters.statusIds.length +
     filters.tagIds.length +
     (filters.scenario !== 'base' ? 1 : 0) +
-    (filters.forecastVersion !== 'current' ? 1 : 0) +
-    (filters.forecastHorizon !== '30d' ? 1 : 0) +
     (filters.datePreset !== 'thisMonth' ? 1 : 0);
 
   const selectedDatePreset = datePresets.find((d) => d.id === filters.datePreset);
   const selectedScenario = scenarios.find((s) => s.id === filters.scenario);
-  const selectedVersion = forecastVersions.find((v) => v.id === filters.forecastVersion);
-  const selectedHorizon = forecastHorizons.find((h) => h.id === filters.forecastHorizon);
 
   return (
     <div className={cn('flex flex-wrap items-center gap-2', className)}>
@@ -389,7 +379,7 @@ export function CashFlowFilters({
       {showProject && (
         <MultiSelectFilter
           label="Project"
-          icon={FolderKanban}
+          icon={Briefcase}
           options={projects}
           selectedIds={filters.projectIds}
           onToggle={(id) => toggleArrayFilter('projectIds', id, filters.projectIds)}
@@ -410,6 +400,18 @@ export function CashFlowFilters({
         />
       )}
 
+      {/* Treasury Center Filter */}
+      {showTreasuryCenter && (
+        <MultiSelectFilter
+          label="Treasury Center"
+          icon={Landmark}
+          options={treasuryCenters}
+          selectedIds={filters.treasuryCenterIds}
+          onToggle={(id) => toggleArrayFilter('treasuryCenterIds', id, filters.treasuryCenterIds)}
+          compact={compact}
+        />
+      )}
+
       {/* Bank Filter */}
       {showBank && (
         <MultiSelectFilter
@@ -422,14 +424,14 @@ export function CashFlowFilters({
         />
       )}
 
-      {/* Account Filter */}
-      {showAccount && (
+      {/* Bank Account Filter */}
+      {showBankAccount && (
         <MultiSelectFilter
           label="Account"
           icon={Wallet}
-          options={accounts}
-          selectedIds={filters.accountIds}
-          onToggle={(id) => toggleArrayFilter('accountIds', id, filters.accountIds)}
+          options={bankAccounts}
+          selectedIds={filters.bankAccountIds}
+          onToggle={(id) => toggleArrayFilter('bankAccountIds', id, filters.bankAccountIds)}
           compact={compact}
           showBalance
         />
@@ -447,38 +449,38 @@ export function CashFlowFilters({
         />
       )}
 
-      {/* Cost Center Filter */}
-      {showCostCenter && (
+      {/* Country Filter */}
+      {showCountry && (
         <MultiSelectFilter
-          label="Cost Center"
-          icon={Target}
-          options={costCenters}
-          selectedIds={filters.costCenterIds}
-          onToggle={(id) => toggleArrayFilter('costCenterIds', id, filters.costCenterIds)}
+          label="Country"
+          icon={Globe}
+          options={countries}
+          selectedIds={filters.countryIds}
+          onToggle={(id) => toggleArrayFilter('countryIds', id, filters.countryIds)}
           compact={compact}
         />
       )}
 
-      {/* Customer Filter */}
-      {showCustomer && (
+      {/* Legal Entity Filter */}
+      {showLegalEntity && (
         <MultiSelectFilter
-          label="Customer"
+          label="Legal Entity"
+          icon={Building2}
+          options={legalEntities}
+          selectedIds={filters.legalEntityIds}
+          onToggle={(id) => toggleArrayFilter('legalEntityIds', id, filters.legalEntityIds)}
+          compact={compact}
+        />
+      )}
+
+      {/* Counterparty Filter */}
+      {showCounterparty && (
+        <MultiSelectFilter
+          label="Counterparty"
           icon={Users}
-          options={customers}
-          selectedIds={filters.customerIds}
-          onToggle={(id) => toggleArrayFilter('customerIds', id, filters.customerIds)}
-          compact={compact}
-        />
-      )}
-
-      {/* Vendor Filter */}
-      {showVendor && (
-        <MultiSelectFilter
-          label="Vendor"
-          icon={Truck}
-          options={vendors}
-          selectedIds={filters.vendorIds}
-          onToggle={(id) => toggleArrayFilter('vendorIds', id, filters.vendorIds)}
+          options={counterparties}
+          selectedIds={filters.counterpartyIds}
+          onToggle={(id) => toggleArrayFilter('counterpartyIds', id, filters.counterpartyIds)}
           compact={compact}
         />
       )}
@@ -491,6 +493,18 @@ export function CashFlowFilters({
           options={loans}
           selectedIds={filters.loanIds}
           onToggle={(id) => toggleArrayFilter('loanIds', id, filters.loanIds)}
+          compact={compact}
+        />
+      )}
+
+      {/* Investment Filter */}
+      {showInvestment && (
+        <MultiSelectFilter
+          label="Investment"
+          icon={TrendingUp}
+          options={investments}
+          selectedIds={filters.investmentIds}
+          onToggle={(id) => toggleArrayFilter('investmentIds', id, filters.investmentIds)}
           compact={compact}
         />
       )}
@@ -514,65 +528,6 @@ export function CashFlowFilters({
               >
                 <span>{scenario.name}</span>
                 {filters.scenario === scenario.id && <Check className="h-4 w-4 text-blue-400" />}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
-
-      {/* Forecast Version Filter */}
-      {showForecastVersion && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
-              <GitBranch className="h-4 w-4 text-slate-400" />
-              <span className="hidden sm:inline">{selectedVersion?.name || 'Version'}</span>
-              <ChevronDown className="h-4 w-4 text-slate-400" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
-            {forecastVersions.map((version) => (
-              <DropdownMenuItem
-                key={version.id}
-                onClick={() => updateFilters({ forecastVersion: version.id })}
-                className="justify-between"
-              >
-                <div className="flex items-center gap-2">
-                  <span>{version.name}</span>
-                  <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">
-                    {version.status}
-                  </Badge>
-                </div>
-                {filters.forecastVersion === version.id && (
-                  <Check className="h-4 w-4 text-blue-400" />
-                )}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
-
-      {/* Forecast Horizon Filter */}
-      {showForecastHorizon && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
-              <Clock className="h-4 w-4 text-slate-400" />
-              <span className="hidden sm:inline">{selectedHorizon?.name || 'Horizon'}</span>
-              <ChevronDown className="h-4 w-4 text-slate-400" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-40">
-            {forecastHorizons.map((horizon) => (
-              <DropdownMenuItem
-                key={horizon.id}
-                onClick={() => updateFilters({ forecastHorizon: horizon.id })}
-                className="justify-between"
-              >
-                <span>{horizon.name}</span>
-                {filters.forecastHorizon === horizon.id && (
-                  <Check className="h-4 w-4 text-blue-400" />
-                )}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -608,7 +563,7 @@ export function CashFlowFilters({
       {showStatus && (
         <MultiSelectFilter
           label="Status"
-          icon={Target}
+          icon={Filter}
           options={statuses}
           selectedIds={filters.statusIds}
           onToggle={(id) => toggleArrayFilter('statusIds', id, filters.statusIds)}
@@ -640,16 +595,15 @@ export function CashFlowFilters({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuItem>Business Unit</DropdownMenuItem>
-          <DropdownMenuItem>SPV</DropdownMenuItem>
-          <DropdownMenuItem>Region</DropdownMenuItem>
-          <DropdownMenuItem>Currency</DropdownMenuItem>
-          <DropdownMenuItem>Cost Center</DropdownMenuItem>
+          <DropdownMenuItem>Treasury Center</DropdownMenuItem>
+          <DropdownMenuItem>Legal Entity</DropdownMenuItem>
+          <DropdownMenuItem>Counterparty</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Customer</DropdownMenuItem>
-          <DropdownMenuItem>Vendor</DropdownMenuItem>
           <DropdownMenuItem>Loan</DropdownMenuItem>
+          <DropdownMenuItem>Investment</DropdownMenuItem>
           <DropdownMenuSeparator />
+          <DropdownMenuItem>Country</DropdownMenuItem>
+          <DropdownMenuItem>Scenario</DropdownMenuItem>
           <DropdownMenuItem>Status</DropdownMenuItem>
           <DropdownMenuItem>Tags</DropdownMenuItem>
         </DropdownMenuContent>
@@ -681,6 +635,7 @@ interface FilterOption {
   balance?: number;
   color?: string;
   symbol?: string;
+  type?: string;
 }
 
 interface MultiSelectFilterProps {
@@ -758,7 +713,7 @@ function MultiSelectFilter({
                 )}
                 {showStatus && option.status && (
                   <Badge
-                    variant={option.status === 'active' ? 'success' : 'secondary'}
+                    variant={option.status === 'active' ? 'default' : 'secondary'}
                     className="h-5 px-1.5"
                   >
                     {option.status}
@@ -778,75 +733,4 @@ function MultiSelectFilter({
   );
 }
 
-// Active filter chips display
-export function CashFlowFilterChips({
-  filters,
-  onRemove,
-  className,
-}: {
-  filters: CashFlowFilterState;
-  onRemove: (key: keyof CashFlowFilterState, value?: string) => void;
-  className?: string;
-}) {
-  const getFilterLabel = (key: string, value: string): string => {
-    const lookups: Record<string, FilterOption[]> = {
-      companyIds: companies,
-      projectIds: projects,
-      bankIds: banks,
-      accountIds: accounts,
-    };
-    const list = lookups[key];
-    if (list) {
-      const item = list.find((i) => i.id === value);
-      return item?.name || value;
-    }
-    return value;
-  };
-
-  const chips: { key: keyof CashFlowFilterState; label: string; value: string }[] = [];
-
-  // Build chips from array filters
-  const arrayKeys: (keyof CashFlowFilterState)[] = [
-    'companyIds',
-    'projectIds',
-    'bankIds',
-    'accountIds',
-    'statusIds',
-    'tagIds',
-  ];
-
-  arrayKeys.forEach((key) => {
-    const values = filters[key] as string[];
-    values.forEach((value) => {
-      chips.push({
-        key,
-        label: key.replace('Ids', '').replace(/([A-Z])/g, ' $1').trim(),
-        value: getFilterLabel(key, value),
-      });
-    });
-  });
-
-  if (chips.length === 0) return null;
-
-  return (
-    <div className={cn('flex flex-wrap gap-2', className)}>
-      {chips.map((chip, index) => (
-        <div
-          key={`${chip.key}-${index}`}
-          className="inline-flex items-center gap-1.5 rounded-full bg-slate-800 px-3 py-1 text-xs"
-        >
-          <span className="text-slate-400">{chip.label}:</span>
-          <span className="font-medium text-white">{chip.value}</span>
-          <button
-            onClick={() => onRemove(chip.key, chip.value)}
-            className="ml-1 rounded-full p-0.5 hover:bg-slate-700"
-          >
-            <X className="h-3 w-3 text-slate-400" />
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export default CashFlowFilters;
+export default TreasuryFilters;

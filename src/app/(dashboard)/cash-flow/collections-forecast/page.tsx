@@ -423,9 +423,10 @@ export default function CollectionsForecastPage() {
     loanIds: [],
     statusIds: [],
     tagIds: [],
-    scenarioId: 'actual',
-    forecastVersionId: 'current',
+    scenario: 'actual',
+    forecastVersion: 'current',
     forecastHorizon: '3m',
+    datePreset: 'thisMonth',
     dateRange: { startDate: undefined, endDate: undefined },
   });
   const [selectedCustomer, setSelectedCustomer] = useState<typeof customerAging[0] | null>(null);
@@ -433,7 +434,7 @@ export default function CollectionsForecastPage() {
 
   const agingColumns: Column<typeof customerAging[0]>[] = [
     {
-      key: 'customerName',
+      id: 'customerName',
       header: 'Customer',
       sortable: true,
       render: (row) => (
@@ -444,7 +445,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'current',
+      id: 'current',
       header: 'Current',
       align: 'right' as const,
       sortable: true,
@@ -453,7 +454,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'overdue030',
+      id: 'overdue030',
       header: '0-30 Days',
       align: 'right' as const,
       sortable: true,
@@ -464,7 +465,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'overdue3160',
+      id: 'overdue3160',
       header: '31-60 Days',
       align: 'right' as const,
       sortable: true,
@@ -475,7 +476,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'overdue6190',
+      id: 'overdue6190',
       header: '61-90 Days',
       align: 'right' as const,
       sortable: true,
@@ -486,7 +487,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'overdue90Plus',
+      id: 'overdue90Plus',
       header: '90+ Days',
       align: 'right' as const,
       sortable: true,
@@ -497,14 +498,14 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'total',
+      id: 'total',
       header: 'Total',
       align: 'right' as const,
       sortable: true,
       render: (row) => <span className="font-semibold">₹{row.total.toFixed(1)} Cr</span>,
     },
     {
-      key: 'creditScore',
+      id: 'creditScore',
       header: 'Score',
       render: (row) => (
         <Badge
@@ -518,7 +519,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -534,12 +535,12 @@ export default function CollectionsForecastPage() {
 
   const forecastColumns: Column<typeof collectionForecast[0]>[] = [
     {
-      key: 'period',
+      id: 'period',
       header: 'Period',
       sortable: true,
     },
     {
-      key: 'projectedAmount',
+      id: 'projectedAmount',
       header: 'Projected',
       align: 'right' as const,
       sortable: true,
@@ -548,7 +549,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'confidenceLevel',
+      id: 'confidenceLevel',
       header: 'Confidence',
       render: (row) => (
         <div className="flex items-center gap-2">
@@ -566,12 +567,12 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'customerCount',
+      id: 'customerCount',
       header: 'Customers',
       align: 'right' as const,
     },
     {
-      key: 'aiAdjustment',
+      id: 'aiAdjustment',
       header: 'AI Adj.',
       align: 'right' as const,
       render: (row) => (
@@ -581,7 +582,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'trend',
+      id: 'trend',
       header: 'Trend',
       render: (row) => (
         <div className="flex items-center gap-1">
@@ -599,7 +600,7 @@ export default function CollectionsForecastPage() {
 
   const overdueColumns: Column<typeof overdueAccounts[0]>[] = [
     {
-      key: 'customerName',
+      id: 'customerName',
       header: 'Customer',
       sortable: true,
       render: (row) => (
@@ -610,12 +611,12 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'project',
+      id: 'project',
       header: 'Project',
       sortable: true,
     },
     {
-      key: 'amount',
+      id: 'amount',
       header: 'Amount',
       align: 'right' as const,
       sortable: true,
@@ -624,7 +625,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'daysOverdue',
+      id: 'daysOverdue',
       header: 'Days Overdue',
       align: 'right' as const,
       sortable: true,
@@ -639,7 +640,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'agingBucket',
+      id: 'agingBucket',
       header: 'Bucket',
       render: (row) => (
         <Badge
@@ -654,17 +655,17 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'collectionStatus',
+      id: 'collectionStatus',
       header: 'Status',
       render: (row) => <span className="text-sm">{row.collectionStatus}</span>,
     },
     {
-      key: 'nextAction',
+      id: 'nextAction',
       header: 'Next Action',
       render: (row) => <span className="text-sm text-muted-foreground">{row.nextAction}</span>,
     },
     {
-      key: 'priority',
+      id: 'priority',
       header: 'Priority',
       render: (row) => (
         <Badge
@@ -681,7 +682,7 @@ export default function CollectionsForecastPage() {
 
   const ptpColumns: Column<typeof promiseToPay[0]>[] = [
     {
-      key: 'customerName',
+      id: 'customerName',
       header: 'Customer',
       sortable: true,
       render: (row) => (
@@ -692,13 +693,13 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'promiseDate',
+      id: 'promiseDate',
       header: 'Promise Date',
       sortable: true,
       render: (row) => new Date(row.promiseDate).toLocaleDateString('en-IN'),
     },
     {
-      key: 'promiseAmount',
+      id: 'promiseAmount',
       header: 'PTP Amount',
       align: 'right' as const,
       sortable: true,
@@ -707,13 +708,13 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'overdueAmount',
+      id: 'overdueAmount',
       header: 'Overdue',
       align: 'right' as const,
       render: (row) => <span className="text-red-400">₹{row.overdueAmount.toFixed(1)} Cr</span>,
     },
     {
-      key: 'percentCovered',
+      id: 'percentCovered',
       header: 'Coverage',
       render: (row) => (
         <div className="flex items-center gap-2">
@@ -731,7 +732,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'confidence',
+      id: 'confidence',
       header: 'Confidence',
       render: (row) => (
         <Badge
@@ -745,7 +746,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'ptpStatus',
+      id: 'ptpStatus',
       header: 'Status',
       render: (row) => (
         <Badge variant={row.ptpStatus === 'Fulfilled' ? 'default' : 'outline'}>
@@ -754,7 +755,7 @@ export default function CollectionsForecastPage() {
       ),
     },
     {
-      key: 'actions',
+      id: 'actions',
       header: '',
       render: (row) => (
         <Button
@@ -795,7 +796,7 @@ export default function CollectionsForecastPage() {
         }
       />
 
-      <CashFlowFilters filters={filters} onFiltersChange={setFilters} />
+      <CashFlowFilters initialFilters={filters} onFilterChange={setFilters} />
 
       {/* KPI Grid */}
       <KPIGrid columns={4}>
