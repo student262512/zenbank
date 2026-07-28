@@ -94,3 +94,27 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+.horizontal-scrollbar {
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(71 85 105) transparent;
+}
+
+.horizontal-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.horizontal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.horizontal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(71 85 105);
+  border-radius: 9999px;
+}
+
+.horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgb(100 116 139);
+}
