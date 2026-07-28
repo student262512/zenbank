@@ -124,7 +124,7 @@ export function PieChart<T extends object>({
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-start">
+      <div className="flex flex-col items-center gap-4 lg:items-start">
         {/* Pie Chart */}
         <div className="relative" style={{ width: size, height: size }}>
           <svg viewBox={`0 0 ${size} ${size}`} className="h-full w-full">

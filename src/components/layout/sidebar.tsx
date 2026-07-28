@@ -119,16 +119,48 @@ function SidebarGroup({ group, collapsed }: { group: NavigationGroup; collapsed?
 }
 
 export function Sidebar({ className, collapsed = false, onCollapse }: SidebarProps) {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const isExpanded = !collapsed || isHovered;
+
+  const hoverTimer = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (!collapsed) return;
+
+    hoverTimer.current = setTimeout(() => {
+      setIsHovered(true);
+    }, 150);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+    }
+
+    setIsHovered(false);
+  };
+
   return (
     <aside
+      // onMouseEnter={() => {
+      //   if (collapsed) {
+      //     setIsHovered(true);
+      //   }
+      // }}
+      // onMouseLeave={() => {
+      //   setIsHovered(false);
+      // }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className={cn(
-        'fixed flex h-[calc(100vh-4rem)] flex-col border-r border-slate-800 bg-slate-950 transition-all duration-300',
-        collapsed ? 'w-16' : 'w-64',
+        'fixed z-60 flex h-[calc(100vh-4rem)] flex-col border-r border-slate-800 bg-slate-950 transition-all duration-300',
+        isExpanded ? 'w-64' : 'w-16',
         className
       )}
     >
       {/* AI Copilot Quick Access */}
-      {!collapsed && (
+      {isExpanded && (
         <div className="border-b border-slate-800 p-4">
           <button className="flex w-full items-center gap-3 rounded-lg bg-gradient-to-r from-blue-600/20 to-cyan-600/20 px-3 py-2.5 text-sm font-medium text-white transition-colors hover:from-blue-600/30 hover:to-cyan-600/30">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500">
@@ -149,26 +181,29 @@ export function Sidebar({ className, collapsed = false, onCollapse }: SidebarPro
       <ScrollArea className="flex-1 px-3 py-4">
         <nav className="space-y-2">
           {navigation.map((group) => (
-            <SidebarGroup key={group.title} group={group} collapsed={collapsed} />
+            <SidebarGroup key={group.title} group={group} collapsed={!isExpanded} />
           ))}
         </nav>
 
         <Separator className="my-4" />
 
         {/* Settings */}
-        <SidebarGroup group={settingsNavigation} collapsed={collapsed} />
+        <SidebarGroup group={settingsNavigation} collapsed={!isExpanded} />
       </ScrollArea>
 
       {/* Collapse Toggle */}
       <div className="border-t border-slate-800 p-3">
         <button
-          onClick={() => onCollapse?.(!collapsed)}
+          onClick={() => {
+            onCollapse?.(!collapsed);
+            setIsHovered(false);
+          }}
           className={cn(
             'flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-400 transition-colors hover:bg-slate-800 hover:text-white',
-            collapsed && 'justify-center'
+            !isExpanded && 'justify-center'
           )}
         >
-          {collapsed ? (
+          {!isExpanded ? (
             <ChevronRight className="h-4 w-4" />
           ) : (
             <>
