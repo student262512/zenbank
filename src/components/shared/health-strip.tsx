@@ -249,7 +249,7 @@ export function HealthStrip({
   onItemClick,
 }: HealthStripProps) {
   return (
-    <div className={cn('grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6', className)}>
+    <div className={cn('grid grid-cols-2 gap-4 sm:grid-cols-3 2xl:grid-cols-6', className)}>
       {items.map((item) => (
         <HealthScoreCard key={item.id} item={item} onClick={() => onItemClick?.(item)} />
       ))}

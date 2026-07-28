@@ -27,6 +27,7 @@ import {
   RotateCcw,
   Check,
 } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 // Mock data for filters
 const companies = [
@@ -181,7 +182,8 @@ export function ExecutiveFilters({
   const buttonSize = compact ? 'sm' : 'default';
 
   return (
-    <div className={cn('flex flex-wrap items-center gap-2', className)}>
+    <ScrollArea orientation="horizontal" className={cn("w-full whitespace-nowrap", className)}>
+    <div className={cn('flex items-center gap-2', className)}>
       {/* Company Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -455,6 +457,7 @@ export function ExecutiveFilters({
         </div>
       )}
     </div>
+    </ScrollArea>
   );
 }
 

@@ -339,7 +339,7 @@ export default function ExecutiveDashboardPage() {
         {/* </div> */}
 
         {/* Section Navigation */}
-        <SectionNavigation sections={executiveDashboardSections} className="-mx-6 mb-6" />
+        <SectionNavigation sections={executiveDashboardSections} className="mt-2" />
       </div>
 
       {/* SECTION 1: Executive Health Strip */}

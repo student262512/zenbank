@@ -133,7 +133,9 @@ export function TopNav({ className }: TopNavProps) {
           className="flex h-10 w-full max-w-md items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/50 px-4 text-sm text-slate-400 transition-colors hover:border-slate-700 hover:bg-slate-900"
         >
           <Search className="h-4 w-4" />
-          <span className="flex-1 text-left">Search transactions, reports, commands...</span>
+          <span className="flex-1 text-left whitespace-nowrap overflow-hidden text-ellipsis">
+            Search transactions, reports, commands...
+          </span>
           <div className="flex items-center gap-1">
             <kbd className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">⌘</kbd>
             <kbd className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">K</kbd>

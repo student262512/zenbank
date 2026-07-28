@@ -17,6 +17,7 @@ import {
   Activity,
   type LucideIcon,
 } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export interface SectionItem {
   id: string;
@@ -103,30 +104,33 @@ export function SectionNavigation({
         className
       )}
     >
-      <div className="scrollbar-hide flex items-center gap-1 overflow-x-auto px-1 py-2">
-        {sections.map((section) => {
-          const Icon = section.icon;
-          const isActive = active === section.id;
+      <ScrollArea orientation="horizontal" className="w-full whitespace-nowrap">
+  <div className="flex items-center gap-1 px-1 py-2">
+    {sections.map((section) => {
+      const Icon = section.icon;
+      const isActive = active === section.id;
 
-          return (
-            <Button
-              key={section.id}
-              variant="ghost"
-              size="sm"
-              onClick={() => handleSectionClick(section.id)}
-              className={cn(
-                'flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all',
-                isActive
-                  ? 'bg-slate-800 text-white'
-                  : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'
-              )}
-            >
-              {Icon && <Icon className="h-4 w-4" />}
-              <span>{section.label}</span>
-            </Button>
-          );
-        })}
-      </div>
+      return (
+        <Button
+          key={section.id}
+          variant="ghost"
+          size="sm"
+          onClick={() => handleSectionClick(section.id)}
+          className={cn(
+            "flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all",
+            isActive
+              ? "bg-slate-800 text-white"
+              : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
+          )}
+        >
+          {Icon && <Icon className="h-4 w-4" />}
+          <span>{section.label}</span>
+        </Button>
+      );
+    })}
+  </div>
+
+</ScrollArea>
     </div>
   );
 }

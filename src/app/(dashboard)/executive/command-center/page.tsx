@@ -250,9 +250,9 @@ const initialMessages: ChatMessage[] = [
     content: 'Good morning! I\'ve analyzed your overnight positions. Key highlights:\n\n• Cash position is ₹847.5 Cr, up 12.4% from last week\n• 3 pending approvals require attention (2 urgent)\n• DSCR covenant is at 1.32x, approaching the 1.25x threshold\n\nWould you like me to elaborate on any of these?',
     timestamp: new Date(Date.now() - 1000 * 60 * 30),
     actions: [
-      { label: 'Show Cash Details', onClick: () => {} },
-      { label: 'View Approvals', onClick: () => {} },
-      { label: 'Covenant Analysis', onClick: () => {} },
+      { label: 'Show Cash Details', onClick: () => { } },
+      { label: 'View Approvals', onClick: () => { } },
+      { label: 'Covenant Analysis', onClick: () => { } },
     ],
   },
 ];
@@ -310,8 +310,8 @@ export default function CommandCenterPage() {
         content: `I'm analyzing your request: "${message}"\n\nBased on current data, here's what I found...\n\nThis is a simulated response. In production, this would connect to the AI backend.`,
         timestamp: new Date(),
         actions: [
-          { label: 'View Details', onClick: () => {} },
-          { label: 'Export Report', onClick: () => {} },
+          { label: 'View Details', onClick: () => { } },
+          { label: 'Export Report', onClick: () => { } },
         ],
       };
       setMessages((prev) => [...prev, aiResponse]);
@@ -334,17 +334,19 @@ export default function CommandCenterPage() {
         />
 
         {/* Executive Filters */}
-              <div className="sticky top-0 z-50 -mx-6 bg-slate-950/95 px-6 py-4 backdrop-blur-sm">
-                <ExecutiveFilters compact />
-                {/* </div> */}
-        
-                {/* Section Navigation */}
-                <SectionNavigation sections={executiveCommandCenterSections} className="-mx-6 mb-6" />
-              </div>
+        <div className="sticky top-0 z-50 -mx-6 bg-slate-950/95 px-6 py-4 backdrop-blur-sm">
+          {/* <div className="mb-2"> */}
+          <ExecutiveFilters compact />
+          {/* </div> */}
+          {/* </div> */}
 
-{/* SECTION 1: AI Chat */}
-      <Section id="chat" className="mb-8">
-        {/* Top: AI Chat */}
+          {/* Section Navigation */}
+          <SectionNavigation sections={executiveCommandCenterSections} className="mt-2" />
+        </div>
+
+        {/* SECTION 1: AI Chat */}
+        <Section id="chat" className="mb-8">
+          {/* Top: AI Chat */}
           <div className="w-full">
             <ChatInterface
               messages={messages}
@@ -353,19 +355,19 @@ export default function CommandCenterPage() {
               suggestions={messages.length <= 1 ? chatSuggestions : undefined}
               placeholder="Ask AI CFO..."
               className="mb-8"
-              // className="max-h-[700px]"
+            // className="max-h-[700px]"
             />
           </div>
-        {/* <h2 className="mb-4 text-lg font-semibold text-white">AI Chat</h2> */}
-      </Section>
+          {/* <h2 className="mb-4 text-lg font-semibold text-white">AI Chat</h2> */}
+        </Section>
 
-{/* SECTION 2: Decision Center */}
-      <Section id="decision-center" className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">Decision Center</h2>
+        {/* SECTION 2: Decision Center */}
+        <Section id="decision-center" className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold text-white">Decision Center</h2>
           {/* Main Content */}
-        <div className="w-full">
-          {/* Left: AI Chat */}
-          {/* <div className="lg:col-span-1">
+          <div className="w-full">
+            {/* Left: AI Chat */}
+            {/* <div className="lg:col-span-1">
             <ChatInterface
               messages={messages}
               onSendMessage={handleSendMessage}
@@ -376,262 +378,264 @@ export default function CommandCenterPage() {
             />
           </div> */}
 
-          {/* Right: Main Workspace */}
-          <div className="w-full">
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <div className="mb-4 flex items-center justify-between">
-                <TabsList className="flex-wrap">
-                  <TabsTrigger value="decisions" className="gap-2">
-                    <AlertTriangle className="h-4 w-4" />
-                    Decisions
-                    <Badge variant="danger" className="ml-1">
-                      {mockDecisions.filter((d) => d.severity === 'critical' || d.severity === 'high').length}
-                    </Badge>
-                  </TabsTrigger>
-                  <TabsTrigger value="recommendations" className="gap-2">
-                    <Lightbulb className="h-4 w-4" />
-                    Recommendations
-                  </TabsTrigger>
-                  <TabsTrigger value="risks" className="gap-2">
-                    <Shield className="h-4 w-4" />
-                    Risks
-                  </TabsTrigger>
-                  <TabsTrigger value="opportunities" className="gap-2">
-                    <ArrowUpRight className="h-4 w-4" />
-                    Opportunities
-                  </TabsTrigger>
-                  <TabsTrigger value="intelligence" className="gap-2">
-                    <Globe className="h-4 w-4" />
-                    Intelligence
-                  </TabsTrigger>
-                  <TabsTrigger value="agents" className="gap-2">
-                    <Bot className="h-4 w-4" />
-                    Agents
-                    <Badge variant="secondary" className="ml-1">
-                      {agents.filter((a) => a.status === 'running').length}
-                    </Badge>
-                  </TabsTrigger>
-                  <TabsTrigger value="modeling" className="gap-2">
-                    <Calculator className="h-4 w-4" />
-                    Modeling
-                  </TabsTrigger>
-                </TabsList>
+            {/* Right: Main Workspace */}
+            <div className="w-full">
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <div className="mb-4 flex items-center justify-between">
+                    <TabsList className="w-4/5">
+                  <ScrollArea orientation='horizontal' className="w-full whitespace-nowrap">
+                      <TabsTrigger value="decisions" className="gap-2">
+                        <AlertTriangle className="h-4 w-4" />
+                        Decisions
+                        <Badge variant="danger" className="ml-1">
+                          {mockDecisions.filter((d) => d.severity === 'critical' || d.severity === 'high').length}
+                        </Badge>
+                      </TabsTrigger>
+                      <TabsTrigger value="recommendations" className="gap-2">
+                        <Lightbulb className="h-4 w-4" />
+                        Recommendations
+                      </TabsTrigger>
+                      <TabsTrigger value="risks" className="gap-2">
+                        <Shield className="h-4 w-4" />
+                        Risks
+                      </TabsTrigger>
+                      <TabsTrigger value="opportunities" className="gap-2">
+                        <ArrowUpRight className="h-4 w-4" />
+                        Opportunities
+                      </TabsTrigger>
+                      <TabsTrigger value="intelligence" className="gap-2">
+                        <Globe className="h-4 w-4" />
+                        Intelligence
+                      </TabsTrigger>
+                      <TabsTrigger value="agents" className="gap-2">
+                        <Bot className="h-4 w-4" />
+                        Agents
+                        <Badge variant="secondary" className="ml-1">
+                          {agents.filter((a) => a.status === 'running').length}
+                        </Badge>
+                      </TabsTrigger>
+                      <TabsTrigger value="modeling" className="gap-2">
+                        <Calculator className="h-4 w-4" />
+                        Modeling
+                      </TabsTrigger>
+                  </ScrollArea>
+                    </TabsList>
 
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm">
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Refresh
-                  </Button>
-                </div>
-              </div>
-
-              {/* Priority Decision Center */}
-              <TabsContent value="decisions" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Priority Decision Center</h3>
-                      <p className="text-sm text-slate-400">AI-identified decisions requiring executive action</p>
-                    </div>
-                    <Badge className="bg-blue-500/10 text-blue-400">
-                      <Sparkles className="mr-1 h-3 w-3" />
-                      AI Prioritized
-                    </Badge>
-                  </div>
-                  <DecisionList
-                    decisions={mockDecisions}
-                    onSimulate={(d) => console.log('Simulate', d.id)}
-                    onApprove={(d) => console.log('Approve', d.id)}
-                    onReject={(d) => console.log('Reject', d.id)}
-                    onViewDetails={(d) => console.log('View', d.id)}
-                  />
-                </ScrollArea>
-              </TabsContent>
-
-              {/* Global Recommendations */}
-              <TabsContent value="recommendations" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Global AI Recommendations</h3>
-                      <p className="text-sm text-slate-400">Strategic recommendations across all modules</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">
-                        {mockRecommendations.filter((r) => r.status === 'pending').length} Pending
-                      </Badge>
-                      <Badge className="bg-emerald-500/10 text-emerald-400">
-                        {mockRecommendations.filter((r) => r.status === 'approved').length} Approved
-                      </Badge>
-                    </div>
-                  </div>
-                  <AIRecommendationList
-                    recommendations={mockRecommendations}
-                    onSimulate={(r) => console.log('Simulate', r.id)}
-                    onApprove={(r) => console.log('Approve', r.id)}
-                    onReject={(r) => console.log('Reject', r.id)}
-                    onAssign={(r) => console.log('Assign', r.id)}
-                    onViewDetails={(r) => console.log('View', r.id)}
-                  />
-                </ScrollArea>
-              </TabsContent>
-
-              {/* Risk Intelligence */}
-              <TabsContent value="risks" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Risk Intelligence</h3>
-                      <p className="text-sm text-slate-400">AI-monitored risks across the enterprise</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="danger">
-                        {mockRisks.filter((r) => r.severity === 'critical').length} Critical
-                      </Badge>
-                      <Badge variant="outline" className="text-orange-400">
-                        {mockRisks.filter((r) => r.severity === 'high').length} High
-                      </Badge>
-                    </div>
-                  </div>
-                  <RiskList
-                    risks={mockRisks}
-                    onViewDetails={(r) => console.log('View', r.id)}
-                    onToggleMonitoring={(r) => console.log('Toggle', r.id)}
-                    onEscalate={(r) => console.log('Escalate', r.id)}
-                  />
-                </ScrollArea>
-              </TabsContent>
-
-              {/* Opportunity Detection */}
-              <TabsContent value="opportunities" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Opportunity Detection</h3>
-                      <p className="text-sm text-slate-400">AI-identified value creation opportunities</p>
-                    </div>
-                    <Badge className="bg-emerald-500/10 text-emerald-400">
-                      <TrendingUp className="mr-1 h-3 w-3" />
-                      ₹{mockOpportunities.reduce((acc, o) => {
-                        const match = o.expectedValue.match(/₹([\d.]+)/);
-                        return acc + (match ? parseFloat(match[1]) : 0);
-                      }, 0).toFixed(1)} Cr Potential
-                    </Badge>
-                  </div>
-                  <OpportunityList
-                    opportunities={mockOpportunities}
-                    onPursue={(o) => console.log('Pursue', o.id)}
-                    onDismiss={(o) => console.log('Dismiss', o.id)}
-                    onAnalyze={(o) => console.log('Analyze', o.id)}
-                    onViewDetails={(o) => console.log('View', o.id)}
-                  />
-                </ScrollArea>
-              </TabsContent>
-
-              {/* Business Intelligence */}
-              <TabsContent value="intelligence" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">Business Intelligence</h3>
-                      <p className="text-sm text-slate-400">Market and business intelligence insights</p>
-                    </div>
-                    <Badge variant="outline">
-                      {mockIntelligence.filter((i) => i.actionRequired).length} Action Required
-                    </Badge>
-                  </div>
-                  <IntelligenceList
-                    items={mockIntelligence}
-                    onViewDetails={(i) => console.log('View', i.id)}
-                    onBookmark={(i) => console.log('Bookmark', i.id)}
-                    onShare={(i) => console.log('Share', i.id)}
-                    onTakeAction={(i) => console.log('Action', i.id)}
-                  />
-                </ScrollArea>
-              </TabsContent>
-
-              {/* AI Agents */}
-              <TabsContent value="agents" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white">AI Agents</h3>
-                      <p className="text-sm text-slate-400">Autonomous AI agents monitoring your enterprise</p>
-                    </div>
-                    <Button size="sm" className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-600">
-                      <Play className="h-4 w-4" />
-                      Run All Agents
+                  <div className="flex items-center gap-2">
+                    <Button variant="outline" size="sm">
+                      <RefreshCw className="mr-2 h-4 w-4" />
+                      Refresh
                     </Button>
                   </div>
-                  <AgentGrid>
-                    {agents.map((agent) => (
-                      <AgentCard
-                        key={agent.id}
-                        {...agent}
-                        onStart={() => console.log('Start', agent.id)}
-                        onPause={() => console.log('Pause', agent.id)}
-                        onStop={() => console.log('Stop', agent.id)}
-                        onConfigure={() => console.log('Configure', agent.id)}
-                      />
-                    ))}
-                  </AgentGrid>
-                </ScrollArea>
-              </TabsContent>
+                </div>
 
-              {/* Financial Modeling */}
-              <TabsContent value="modeling" className="mt-0">
-                <ScrollArea className="h-[600px] pr-4">
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-white">Financial Modeling</h3>
-                    <p className="text-sm text-slate-400">Scenario planning and financial simulations</p>
-                  </div>
-                  <Tabs defaultValue="scenario" className="w-full">
-                    <TabsList className="mb-4">
-                      <TabsTrigger value="scenario">Scenario Builder</TabsTrigger>
-                      <TabsTrigger value="simulator">Financial Simulator</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="scenario">
-                      <ScenarioBuilder
-                        onRun={(s) => console.log('Run scenario', s)}
-                        onSave={(s) => console.log('Save scenario', s)}
-                        onReset={() => console.log('Reset')}
-                      />
-                    </TabsContent>
-                    <TabsContent value="simulator">
-                      <FinancialSimulator
-                        onStart={() => console.log('Start simulation')}
-                        onPause={() => console.log('Pause simulation')}
-                        onReset={() => console.log('Reset simulation')}
-                        onExport={() => console.log('Export results')}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                </ScrollArea>
-              </TabsContent>
-            </Tabs>
+                {/* Priority Decision Center */}
+                <TabsContent value="decisions" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Priority Decision Center</h3>
+                        <p className="text-sm text-slate-400">AI-identified decisions requiring executive action</p>
+                      </div>
+                      <Badge className="bg-blue-500/10 text-blue-400">
+                        <Sparkles className="mr-1 h-3 w-3" />
+                        AI Prioritized
+                      </Badge>
+                    </div>
+                    <DecisionList
+                      decisions={mockDecisions}
+                      onSimulate={(d) => console.log('Simulate', d.id)}
+                      onApprove={(d) => console.log('Approve', d.id)}
+                      onReject={(d) => console.log('Reject', d.id)}
+                      onViewDetails={(d) => console.log('View', d.id)}
+                    />
+                  </ScrollArea>
+                </TabsContent>
+
+                {/* Global Recommendations */}
+                <TabsContent value="recommendations" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Global AI Recommendations</h3>
+                        <p className="text-sm text-slate-400">Strategic recommendations across all modules</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline">
+                          {mockRecommendations.filter((r) => r.status === 'pending').length} Pending
+                        </Badge>
+                        <Badge className="bg-emerald-500/10 text-emerald-400">
+                          {mockRecommendations.filter((r) => r.status === 'approved').length} Approved
+                        </Badge>
+                      </div>
+                    </div>
+                    <AIRecommendationList
+                      recommendations={mockRecommendations}
+                      onSimulate={(r) => console.log('Simulate', r.id)}
+                      onApprove={(r) => console.log('Approve', r.id)}
+                      onReject={(r) => console.log('Reject', r.id)}
+                      onAssign={(r) => console.log('Assign', r.id)}
+                      onViewDetails={(r) => console.log('View', r.id)}
+                    />
+                  </ScrollArea>
+                </TabsContent>
+
+                {/* Risk Intelligence */}
+                <TabsContent value="risks" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Risk Intelligence</h3>
+                        <p className="text-sm text-slate-400">AI-monitored risks across the enterprise</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="danger">
+                          {mockRisks.filter((r) => r.severity === 'critical').length} Critical
+                        </Badge>
+                        <Badge variant="outline" className="text-orange-400">
+                          {mockRisks.filter((r) => r.severity === 'high').length} High
+                        </Badge>
+                      </div>
+                    </div>
+                    <RiskList
+                      risks={mockRisks}
+                      onViewDetails={(r) => console.log('View', r.id)}
+                      onToggleMonitoring={(r) => console.log('Toggle', r.id)}
+                      onEscalate={(r) => console.log('Escalate', r.id)}
+                    />
+                  </ScrollArea>
+                </TabsContent>
+
+                {/* Opportunity Detection */}
+                <TabsContent value="opportunities" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Opportunity Detection</h3>
+                        <p className="text-sm text-slate-400">AI-identified value creation opportunities</p>
+                      </div>
+                      <Badge className="bg-emerald-500/10 text-emerald-400">
+                        <TrendingUp className="mr-1 h-3 w-3" />
+                        ₹{mockOpportunities.reduce((acc, o) => {
+                          const match = o.expectedValue.match(/₹([\d.]+)/);
+                          return acc + (match ? parseFloat(match[1]) : 0);
+                        }, 0).toFixed(1)} Cr Potential
+                      </Badge>
+                    </div>
+                    <OpportunityList
+                      opportunities={mockOpportunities}
+                      onPursue={(o) => console.log('Pursue', o.id)}
+                      onDismiss={(o) => console.log('Dismiss', o.id)}
+                      onAnalyze={(o) => console.log('Analyze', o.id)}
+                      onViewDetails={(o) => console.log('View', o.id)}
+                    />
+                  </ScrollArea>
+                </TabsContent>
+
+                {/* Business Intelligence */}
+                <TabsContent value="intelligence" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Business Intelligence</h3>
+                        <p className="text-sm text-slate-400">Market and business intelligence insights</p>
+                      </div>
+                      <Badge variant="outline">
+                        {mockIntelligence.filter((i) => i.actionRequired).length} Action Required
+                      </Badge>
+                    </div>
+                    <IntelligenceList
+                      items={mockIntelligence}
+                      onViewDetails={(i) => console.log('View', i.id)}
+                      onBookmark={(i) => console.log('Bookmark', i.id)}
+                      onShare={(i) => console.log('Share', i.id)}
+                      onTakeAction={(i) => console.log('Action', i.id)}
+                    />
+                  </ScrollArea>
+                </TabsContent>
+
+                {/* AI Agents */}
+                <TabsContent value="agents" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">AI Agents</h3>
+                        <p className="text-sm text-slate-400">Autonomous AI agents monitoring your enterprise</p>
+                      </div>
+                      <Button size="sm" className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-600">
+                        <Play className="h-4 w-4" />
+                        Run All Agents
+                      </Button>
+                    </div>
+                    <AgentGrid>
+                      {agents.map((agent) => (
+                        <AgentCard
+                          key={agent.id}
+                          {...agent}
+                          onStart={() => console.log('Start', agent.id)}
+                          onPause={() => console.log('Pause', agent.id)}
+                          onStop={() => console.log('Stop', agent.id)}
+                          onConfigure={() => console.log('Configure', agent.id)}
+                        />
+                      ))}
+                    </AgentGrid>
+                  </ScrollArea>
+                </TabsContent>
+
+                {/* Financial Modeling */}
+                <TabsContent value="modeling" className="mt-0">
+                  <ScrollArea className=" pr-4">
+                    <div className="mb-4">
+                      <h3 className="text-lg font-semibold text-white">Financial Modeling</h3>
+                      <p className="text-sm text-slate-400">Scenario planning and financial simulations</p>
+                    </div>
+                    <Tabs defaultValue="scenario" className="w-full">
+                      <TabsList className="mb-4">
+                        <TabsTrigger value="scenario">Scenario Builder</TabsTrigger>
+                        <TabsTrigger value="simulator">Financial Simulator</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="scenario">
+                        <ScenarioBuilder
+                          onRun={(s) => console.log('Run scenario', s)}
+                          onSave={(s) => console.log('Save scenario', s)}
+                          onReset={() => console.log('Reset')}
+                        />
+                      </TabsContent>
+                      <TabsContent value="simulator">
+                        <FinancialSimulator
+                          onStart={() => console.log('Start simulation')}
+                          onPause={() => console.log('Pause simulation')}
+                          onReset={() => console.log('Reset simulation')}
+                          onExport={() => console.log('Export results')}
+                        />
+                      </TabsContent>
+                    </Tabs>
+                  </ScrollArea>
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
-        </div>
-      </Section>
+        </Section>
 
-      
-{/* SECTION 3: AI Command */}
-      <Section id="ai-command" className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">AI Command</h2>
-      {/* Command Sidebar */}
-      {showSidebar && (
-        <CommandCenterSection
-          agents={sidebarAgents}
-          recentActivities={mockRecentActivities}
-          onQuickAction={(action) => console.log('Quick action', action.id)}
-          onAgentControl={(agentId, action) => console.log('Agent control', agentId, action)}
-          onActivityClick={(activity) => console.log('Activity click', activity.id)}
-        />
-      )}
-      </Section>
 
-      {/* SECTION 4: AI Agentic KPIs */}
-      <Section id="agentic-kpis" className="mb-8">
-        <h2 className="mb-4 text-lg font-semibold text-white">Agentic KPIs</h2>
+        {/* SECTION 3: AI Command */}
+        <Section id="ai-command" className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold text-white">AI Command</h2>
+          {/* Command Sidebar */}
+          {showSidebar && (
+            <CommandCenterSection
+              agents={sidebarAgents}
+              recentActivities={mockRecentActivities}
+              onQuickAction={(action) => console.log('Quick action', action.id)}
+              onAgentControl={(agentId, action) => console.log('Agent control', agentId, action)}
+              onActivityClick={(activity) => console.log('Activity click', activity.id)}
+            />
+          )}
+        </Section>
+
+        {/* SECTION 4: AI Agentic KPIs */}
+        <Section id="agentic-kpis" className="mb-8">
+          <h2 className="mb-4 text-lg font-semibold text-white">Agentic KPIs</h2>
           <KPIGrid columns={8}>
             <KPICard
               title="Active Agents"
@@ -756,7 +760,7 @@ export default function CommandCenterPage() {
           </KPIGrid>
         </Section>
 
-        
+
       </PageContainer>
 
     </div>
