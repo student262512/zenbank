@@ -33,7 +33,7 @@ export interface HealthScoreItem {
 }
 
 export interface HealthStripProps {
-  items: HealthScoreItem[];
+  items?: HealthScoreItem[];
   className?: string;
   onItemClick?: (item: HealthScoreItem) => void;
 }

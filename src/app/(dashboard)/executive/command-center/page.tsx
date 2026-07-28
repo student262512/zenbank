@@ -48,6 +48,18 @@ import {
   ArrowUpRight,
   Percent,
 } from 'lucide-react';
+import SectionNavigation, { SectionItem } from '@/components/shared/section-navigation';
+import ExecutiveFilters from '@/components/shared/executive-filters';
+import CommandCenterSection from '@/components/features/ai/command-center';
+
+// Default executive command center sections
+export const executiveCommandCenterSections: SectionItem[] = [
+  { id: 'chat', label: 'AI Chat', icon: Sparkles },
+  { id: 'decision-center', label: 'Decision Center', icon: TrendingUp },
+  { id: 'ai-command', label: 'AI Command', icon: Brain },
+  { id: 'agentic-kpis', label: 'Agentic KPIs', icon: Activity },
+];
+
 
 // Extended agents data (12 total)
 const agents = [
@@ -321,136 +333,39 @@ export default function CommandCenterPage() {
           showRefresh
         />
 
-        {/* Primary KPIs Row */}
-        <Section className="mb-4">
-          <KPIGrid columns={8}>
-            <KPICard
-              title="Active Agents"
-              value={`${commandStats.activeAgents}/${commandStats.totalAgents}`}
-              icon={Bot}
-              iconColor="bg-blue-500/10 text-blue-400"
-              size="sm"
-            />
-            <KPICard
-              title="Pending Decisions"
-              value={commandStats.pendingDecisions}
-              icon={AlertCircle}
-              iconColor="bg-orange-500/10 text-orange-400"
-              size="sm"
-            />
-            <KPICard
-              title="Critical Alerts"
-              value={commandStats.criticalAlerts}
-              icon={AlertTriangle}
-              iconColor="bg-red-500/10 text-red-400"
-              size="sm"
-            />
-            <KPICard
-              title="Opportunities"
-              value={commandStats.opportunitiesIdentified}
-              icon={ArrowUpRight}
-              iconColor="bg-emerald-500/10 text-emerald-400"
-              size="sm"
-            />
-            <KPICard
-              title="Risk Score"
-              value={`${commandStats.riskScore}/100`}
-              icon={Shield}
-              iconColor="bg-purple-500/10 text-purple-400"
-              size="sm"
-            />
-            <KPICard
-              title="AI Confidence"
-              value={`${commandStats.confidenceAvg}%`}
-              icon={Sparkles}
-              iconColor="bg-blue-500/10 text-blue-400"
-              size="sm"
-            />
-            <KPICard
-              title="Savings Found"
-              value={`₹${commandStats.savingsIdentified} Cr`}
-              icon={DollarSign}
-              iconColor="bg-green-500/10 text-green-400"
-              size="sm"
-            />
-            <KPICard
-              title="Forecast Accuracy"
-              value={`${commandStats.forecastAccuracy}%`}
-              icon={Target}
-              iconColor="bg-cyan-500/10 text-cyan-400"
-              size="sm"
-            />
-          </KPIGrid>
-        </Section>
+        {/* Executive Filters */}
+              <div className="sticky top-0 z-50 -mx-6 bg-slate-950/95 px-6 py-4 backdrop-blur-sm">
+                <ExecutiveFilters compact />
+                {/* </div> */}
+        
+                {/* Section Navigation */}
+                <SectionNavigation sections={executiveCommandCenterSections} className="-mx-6 mb-6" />
+              </div>
 
-        {/* Secondary KPIs Row */}
-        <Section className="mb-6">
-          <KPIGrid columns={8}>
-            <KPICard
-              title="Insights Today"
-              value={commandStats.insightsGenerated}
-              change={12}
-              trend="up"
-              icon={Lightbulb}
-              iconColor="bg-yellow-500/10 text-yellow-400"
-              size="sm"
+{/* SECTION 1: AI Chat */}
+      <Section id="chat" className="mb-8">
+        {/* Top: AI Chat */}
+          <div className="w-full">
+            <ChatInterface
+              messages={messages}
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+              suggestions={messages.length <= 1 ? chatSuggestions : undefined}
+              placeholder="Ask AI CFO..."
+              className="mb-8"
+              // className="max-h-[700px]"
             />
-            <KPICard
-              title="Actions Completed"
-              value={commandStats.actionsCompleted}
-              icon={CheckCircle2}
-              iconColor="bg-green-500/10 text-green-400"
-              size="sm"
-            />
-            <KPICard
-              title="Alerts Resolved"
-              value={commandStats.alertsResolved}
-              icon={Bell}
-              iconColor="bg-yellow-500/10 text-yellow-400"
-              size="sm"
-            />
-            <KPICard
-              title="Automation Rate"
-              value={`${commandStats.automationRate}%`}
-              icon={Zap}
-              iconColor="bg-violet-500/10 text-violet-400"
-              size="sm"
-            />
-            <KPICard
-              title="Avg Response"
-              value={`${commandStats.responseTime}s`}
-              icon={Clock}
-              iconColor="bg-slate-500/10 text-slate-400"
-              size="sm"
-            />
-            <KPICard
-              title="System Uptime"
-              value={`${commandStats.uptime}%`}
-              icon={Activity}
-              iconColor="bg-teal-500/10 text-teal-400"
-              size="sm"
-            />
-            <KPICard
-              title="Models Active"
-              value={commandStats.modelsActive}
-              icon={Brain}
-              iconColor="bg-purple-500/10 text-purple-400"
-              size="sm"
-            />
-            <KPICard
-              title="System Health"
-              value="98.5%"
-              icon={Eye}
-              iconColor="bg-cyan-500/10 text-cyan-400"
-              size="sm"
-            />
-          </KPIGrid>
-        </Section>
+          </div>
+        {/* <h2 className="mb-4 text-lg font-semibold text-white">AI Chat</h2> */}
+      </Section>
 
-        {/* Main Content */}
-        <div className="grid gap-6 lg:grid-cols-3">
+{/* SECTION 2: Decision Center */}
+      <Section id="decision-center" className="mb-8">
+        <h2 className="mb-4 text-lg font-semibold text-white">Decision Center</h2>
+          {/* Main Content */}
+        <div className="w-full">
           {/* Left: AI Chat */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <ChatInterface
               messages={messages}
               onSendMessage={handleSendMessage}
@@ -459,10 +374,10 @@ export default function CommandCenterPage() {
               placeholder="Ask AI CFO..."
               className="h-[700px]"
             />
-          </div>
+          </div> */}
 
           {/* Right: Main Workspace */}
-          <div className="lg:col-span-2">
+          <div className="w-full">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <div className="mb-4 flex items-center justify-between">
                 <TabsList className="flex-wrap">
@@ -696,19 +611,154 @@ export default function CommandCenterPage() {
             </Tabs>
           </div>
         </div>
-      </PageContainer>
+      </Section>
 
+      
+{/* SECTION 3: AI Command */}
+      <Section id="ai-command" className="mb-8">
+        <h2 className="mb-4 text-lg font-semibold text-white">AI Command</h2>
       {/* Command Sidebar */}
       {showSidebar && (
-        <CommandSidebar
+        <CommandCenterSection
           agents={sidebarAgents}
           recentActivities={mockRecentActivities}
           onQuickAction={(action) => console.log('Quick action', action.id)}
           onAgentControl={(agentId, action) => console.log('Agent control', agentId, action)}
           onActivityClick={(activity) => console.log('Activity click', activity.id)}
-          defaultCollapsed={false}
         />
       )}
+      </Section>
+
+      {/* SECTION 4: AI Agentic KPIs */}
+      <Section id="agentic-kpis" className="mb-8">
+        <h2 className="mb-4 text-lg font-semibold text-white">Agentic KPIs</h2>
+          <KPIGrid columns={8}>
+            <KPICard
+              title="Active Agents"
+              value={`${commandStats.activeAgents}/${commandStats.totalAgents}`}
+              icon={Bot}
+              iconColor="bg-blue-500/10 text-blue-400"
+              size="sm"
+            />
+            <KPICard
+              title="Pending Decisions"
+              value={commandStats.pendingDecisions}
+              icon={AlertCircle}
+              iconColor="bg-orange-500/10 text-orange-400"
+              size="sm"
+            />
+            <KPICard
+              title="Critical Alerts"
+              value={commandStats.criticalAlerts}
+              icon={AlertTriangle}
+              iconColor="bg-red-500/10 text-red-400"
+              size="sm"
+            />
+            <KPICard
+              title="Opportunities"
+              value={commandStats.opportunitiesIdentified}
+              icon={ArrowUpRight}
+              iconColor="bg-emerald-500/10 text-emerald-400"
+              size="sm"
+            />
+            <KPICard
+              title="Risk Score"
+              value={`${commandStats.riskScore}/100`}
+              icon={Shield}
+              iconColor="bg-purple-500/10 text-purple-400"
+              size="sm"
+            />
+            <KPICard
+              title="AI Confidence"
+              value={`${commandStats.confidenceAvg}%`}
+              icon={Sparkles}
+              iconColor="bg-blue-500/10 text-blue-400"
+              size="sm"
+            />
+            <KPICard
+              title="Savings Found"
+              value={`₹${commandStats.savingsIdentified} Cr`}
+              icon={DollarSign}
+              iconColor="bg-green-500/10 text-green-400"
+              size="sm"
+            />
+            <KPICard
+              title="Forecast Accuracy"
+              value={`${commandStats.forecastAccuracy}%`}
+              icon={Target}
+              iconColor="bg-cyan-500/10 text-cyan-400"
+              size="sm"
+            />
+          </KPIGrid>
+        </Section>
+
+        {/* Secondary KPIs Row */}
+        <Section className="mb-6">
+          <KPIGrid columns={8}>
+            <KPICard
+              title="Insights Today"
+              value={commandStats.insightsGenerated}
+              change={12}
+              trend="up"
+              icon={Lightbulb}
+              iconColor="bg-yellow-500/10 text-yellow-400"
+              size="sm"
+            />
+            <KPICard
+              title="Actions Completed"
+              value={commandStats.actionsCompleted}
+              icon={CheckCircle2}
+              iconColor="bg-green-500/10 text-green-400"
+              size="sm"
+            />
+            <KPICard
+              title="Alerts Resolved"
+              value={commandStats.alertsResolved}
+              icon={Bell}
+              iconColor="bg-yellow-500/10 text-yellow-400"
+              size="sm"
+            />
+            <KPICard
+              title="Automation Rate"
+              value={`${commandStats.automationRate}%`}
+              icon={Zap}
+              iconColor="bg-violet-500/10 text-violet-400"
+              size="sm"
+            />
+            <KPICard
+              title="Avg Response"
+              value={`${commandStats.responseTime}s`}
+              icon={Clock}
+              iconColor="bg-slate-500/10 text-slate-400"
+              size="sm"
+            />
+            <KPICard
+              title="System Uptime"
+              value={`${commandStats.uptime}%`}
+              icon={Activity}
+              iconColor="bg-teal-500/10 text-teal-400"
+              size="sm"
+            />
+            <KPICard
+              title="Models Active"
+              value={commandStats.modelsActive}
+              icon={Brain}
+              iconColor="bg-purple-500/10 text-purple-400"
+              size="sm"
+            />
+            <KPICard
+              title="System Health"
+              value="98.5%"
+              icon={Eye}
+              iconColor="bg-cyan-500/10 text-cyan-400"
+              size="sm"
+            />
+          </KPIGrid>
+        </Section>
+
+        
+      </PageContainer>
+
     </div>
   );
 }

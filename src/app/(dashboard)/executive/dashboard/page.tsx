@@ -10,7 +10,7 @@ import { PieChart } from '@/components/shared/charts/pie-chart';
 import { AreaChart } from '@/components/shared/charts/area-chart';
 import { DataTable, type Column } from '@/components/shared/data-table/data-table';
 import { AIInsightsPanel } from '@/components/shared/ai-insight-card';
-import { SectionNavigation } from '@/components/shared/section-navigation';
+import { SectionItem, SectionNavigation } from '@/components/shared/section-navigation';
 import { ExecutiveFilters } from '@/components/shared/executive-filters';
 import { HealthStrip } from '@/components/shared/health-strip';
 import { AlertFeed, mockExecutiveAlerts } from '@/components/shared/alert-feed';
@@ -43,9 +43,28 @@ import {
   Landmark,
   ArrowUpRight,
   ArrowDownRight,
+  Brain,
+  CheckSquare,
+  Activity,
 } from 'lucide-react';
 
 // ===== MOCK DATA =====
+
+// Default executive dashboard sections
+export const executiveDashboardSections: SectionItem[] = [
+  { id: 'overview', label: 'Overview', icon: BarChart3 },
+  { id: 'financials', label: 'Financials', icon: DollarSign },
+  { id: 'liquidity', label: 'Liquidity', icon: Droplets },
+  { id: 'debt', label: 'Debt', icon: CreditCard },
+  { id: 'projects', label: 'Projects', icon: FolderKanban },
+  { id: 'revenue', label: 'Revenue', icon: Receipt },
+  { id: 'risk', label: 'Risk', icon: TrendingUp },
+  { id: 'forecast', label: 'Forecast', icon: LineChartIcon },
+  { id: 'ai', label: 'AI', icon: Brain },
+  { id: 'approvals', label: 'Approvals', icon: CheckSquare },
+  { id: 'activity', label: 'Activity', icon: Activity },
+];
+
 
 // Section 2: Enterprise KPI Overview
 const enterpriseKPIs = {
@@ -278,17 +297,21 @@ const approvalColumns: Column<PendingApproval>[] = [
   { id: 'amount', header: 'Amount', accessor: (row) => `₹${(row.amount / 10000000).toFixed(2)} Cr`, align: 'right' },
   { id: 'requestedBy', header: 'Requested By', accessor: 'requestedBy' },
   { id: 'priority', header: 'Priority', accessor: 'priority', cell: (row) => <Badge variant={row.priority === 'high' ? 'danger' : row.priority === 'medium' ? 'warning' : 'secondary'}>{row.priority}</Badge> },
-  { id: 'sla', header: 'SLA', accessor: (row) => `${row.slaHours}h`, cell: (row) => (
-    <div className={`flex items-center gap-1 ${row.slaHours <= 2 ? 'text-red-400' : row.slaHours <= 8 ? 'text-yellow-400' : 'text-slate-400'}`}>
-      <Clock className="h-3 w-3" />
-      {row.slaHours}h
-    </div>
-  )},
-  { id: 'status', header: 'Status', accessor: 'status', cell: (row) => row.status === 'urgent' ? (
-    <div className="flex items-center gap-1 text-red-400"><AlertTriangle className="h-4 w-4" />Urgent</div>
-  ) : (
-    <div className="flex items-center gap-1 text-yellow-400"><Clock className="h-4 w-4" />Pending</div>
-  )},
+  {
+    id: 'sla', header: 'SLA', accessor: (row) => `${row.slaHours}h`, cell: (row) => (
+      <div className={`flex items-center gap-1 ${row.slaHours <= 2 ? 'text-red-400' : row.slaHours <= 8 ? 'text-yellow-400' : 'text-slate-400'}`}>
+        <Clock className="h-3 w-3" />
+        {row.slaHours}h
+      </div>
+    )
+  },
+  {
+    id: 'status', header: 'Status', accessor: 'status', cell: (row) => row.status === 'urgent' ? (
+      <div className="flex items-center gap-1 text-red-400"><AlertTriangle className="h-4 w-4" />Urgent</div>
+    ) : (
+      <div className="flex items-center gap-1 text-yellow-400"><Clock className="h-4 w-4" />Pending</div>
+    )
+  },
 ];
 
 // ===== COMPONENT =====
@@ -313,10 +336,11 @@ export default function ExecutiveDashboardPage() {
       {/* Executive Filters */}
       <div className="sticky top-0 z-50 -mx-6 bg-slate-950/95 px-6 py-4 backdrop-blur-sm">
         <ExecutiveFilters compact />
-      </div>
+        {/* </div> */}
 
-      {/* Section Navigation */}
-      <SectionNavigation className="-mx-6 mb-6" />
+        {/* Section Navigation */}
+        <SectionNavigation sections={executiveDashboardSections} className="-mx-6 mb-6" />
+      </div>
 
       {/* SECTION 1: Executive Health Strip */}
       <Section id="overview" className="mb-8">
@@ -543,9 +567,9 @@ export default function ExecutiveDashboardPage() {
         </div>
       }>
         <DataTable data={pendingApprovals} columns={approvalColumns} actions={[
-          { label: 'Approve', onClick: () => {} },
-          { label: 'Reject', onClick: () => {}, variant: 'danger' },
-          { label: 'Delegate', onClick: () => {} },
+          { label: 'Approve', onClick: () => { } },
+          { label: 'Reject', onClick: () => { }, variant: 'danger' },
+          { label: 'Delegate', onClick: () => { } },
         ]} hoverable compact />
       </Section>
 

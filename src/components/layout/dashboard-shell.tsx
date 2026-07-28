@@ -126,6 +126,7 @@ export function GridItem({
 
 // Section wrapper
 interface SectionProps {
+  id?: string;
   children: React.ReactNode;
   className?: string;
   title?: string;
@@ -134,6 +135,7 @@ interface SectionProps {
 }
 
 export function Section({
+  id,
   children,
   className,
   title,
@@ -141,7 +143,7 @@ export function Section({
   actions,
 }: SectionProps) {
   return (
-    <section className={cn('space-y-4', className)}>
+    <section id={id} className={cn('space-y-4', className)}>
       {(title || description || actions) && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>

@@ -32,23 +32,24 @@ export interface SectionNavigationProps {
   sticky?: boolean;
 }
 
-// Default executive dashboard sections
-export const executiveDashboardSections: SectionItem[] = [
-  { id: 'overview', label: 'Overview', icon: BarChart3 },
-  { id: 'financials', label: 'Financials', icon: DollarSign },
-  { id: 'liquidity', label: 'Liquidity', icon: Droplets },
-  { id: 'debt', label: 'Debt', icon: CreditCard },
-  { id: 'projects', label: 'Projects', icon: FolderKanban },
-  { id: 'revenue', label: 'Revenue', icon: Receipt },
-  { id: 'risk', label: 'Risk', icon: TrendingUp },
-  { id: 'forecast', label: 'Forecast', icon: LineChart },
-  { id: 'ai', label: 'AI', icon: Brain },
-  { id: 'approvals', label: 'Approvals', icon: CheckSquare },
-  { id: 'activity', label: 'Activity', icon: Activity },
-];
+// // Default executive dashboard sections
+// export const executiveDashboardSections: SectionItem[] = [
+//   { id: 'overview', label: 'Overview', icon: BarChart3 },
+//   { id: 'financials', label: 'Financials', icon: DollarSign },
+//   { id: 'liquidity', label: 'Liquidity', icon: Droplets },
+//   { id: 'debt', label: 'Debt', icon: CreditCard },
+//   { id: 'projects', label: 'Projects', icon: FolderKanban },
+//   { id: 'revenue', label: 'Revenue', icon: Receipt },
+//   { id: 'risk', label: 'Risk', icon: TrendingUp },
+//   { id: 'forecast', label: 'Forecast', icon: LineChart },
+//   { id: 'ai', label: 'AI', icon: Brain },
+//   { id: 'approvals', label: 'Approvals', icon: CheckSquare },
+//   { id: 'activity', label: 'Activity', icon: Activity },
+// ];
 
 export function SectionNavigation({
-  sections = executiveDashboardSections,
+  sections = [],
+  // sections = executiveDashboardSections,
   activeSection,
   onSectionChange,
   className,
