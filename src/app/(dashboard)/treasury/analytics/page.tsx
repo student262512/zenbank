@@ -169,7 +169,7 @@ const aiInsights = [
     id: '1',
     type: 'insight' as const,
     title: 'Liquidity Improvement',
-    description: 'Net liquidity has improved by 8.7% over the past quarter. Primary drivers: improved collections (+12%) and optimized payment timing.',
+    insight: 'Net liquidity has improved by 8.7% over the past quarter. Primary drivers: improved collections (+12%) and optimized payment timing.',
     impact: 'high' as const,
     confidence: 92,
     category: 'Liquidity',
@@ -178,16 +178,16 @@ const aiInsights = [
     id: '2',
     type: 'recommendation' as const,
     title: 'CCC Optimization',
-    description: 'Cash Conversion Cycle at 45 days is 5 days above target. Focus on DSO reduction: implement early payment discounts for top 10 customers.',
+    insight: 'Cash Conversion Cycle at 45 days is 5 days above target. Focus on DSO reduction: implement early payment discounts for top 10 customers.',
     impact: 'medium' as const,
     confidence: 85,
     category: 'Working Capital',
   },
   {
     id: '3',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'Forecast Accuracy Gap',
-    description: 'Forecast accuracy at 92% vs 95% target. Primary variance driver: unplanned CapEx in Q4. Recommend CapEx pipeline integration.',
+    insight: 'Forecast accuracy at 92% vs 95% target. Primary variance driver: unplanned CapEx in Q4. Recommend CapEx pipeline integration.',
     impact: 'medium' as const,
     confidence: 88,
     category: 'Forecasting',
@@ -225,7 +225,7 @@ const kpiColumns: Column<KPIRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'On Track' ? 'default' : row.status === 'At Risk' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'On Track' ? 'default' : row.status === 'At Risk' ? 'secondary' : 'danger'}>
         {row.status === 'On Track' && <CheckCircle2 className="mr-1 h-3 w-3" />}
         {row.status === 'At Risk' && <AlertCircle className="mr-1 h-3 w-3" />}
         {row.status}
@@ -304,7 +304,7 @@ export default function TreasuryAnalyticsPage() {
         <KPICard
           title="KPIs On Track"
           value="9"
-          unit="/12"
+          changeUnit="/12"
           change={8.3}
           trend="up"
           icon={CheckCircle2}
@@ -313,7 +313,7 @@ export default function TreasuryAnalyticsPage() {
         <KPICard
           title="KPIs At Risk"
           value="3"
-          unit=""
+          changeUnit=""
           change={-25}
           trend="down"
           icon={AlertCircle}
@@ -322,7 +322,7 @@ export default function TreasuryAnalyticsPage() {
         <KPICard
           title="Avg Variance"
           value="+3.2"
-          unit="%"
+          changeUnit="%"
           change={1.5}
           trend="up"
           icon={TrendingUp}
@@ -331,7 +331,7 @@ export default function TreasuryAnalyticsPage() {
         <KPICard
           title="Reports Generated"
           value="28"
-          unit=""
+          changeUnit=""
           change={12}
           trend="up"
           icon={FileText}
@@ -352,7 +352,7 @@ export default function TreasuryAnalyticsPage() {
         {/* KPI Dashboard Tab */}
         <TabsContent value="kpis" className="space-y-6">
           <Section title="Treasury KPIs" description="All key performance indicators">
-            <DataTable data={kpiDashboardData} columns={kpiColumns} searchable pageSize={12} />
+            <DataTable data={kpiDashboardData} columns={kpiColumns} searchable />
           </Section>
 
           <AIInsightsPanel title="KPI Insights" insights={aiInsights} />
@@ -370,7 +370,7 @@ export default function TreasuryAnalyticsPage() {
                 <CardDescription>Net liquidity and current ratio trend</CardDescription>
               </CardHeader>
               <CardContent>
-                <LineChart data={liquidityTrendData} height={280} showGrid showTooltip color="#3b82f6" />
+                <LineChart data={liquidityTrendData} height={280} showGrid showTooltip />
               </CardContent>
             </Card>
             <Card>
@@ -382,7 +382,7 @@ export default function TreasuryAnalyticsPage() {
                 <CardDescription>Days trend (lower is better)</CardDescription>
               </CardHeader>
               <CardContent>
-                <LineChart data={cashConversionData} height={280} showGrid showTooltip color="#10b981" />
+                <LineChart data={cashConversionData} height={280} showGrid showTooltip />
               </CardContent>
             </Card>
           </div>
@@ -397,7 +397,7 @@ export default function TreasuryAnalyticsPage() {
                 <CardDescription>Service quality scores</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart data={bankPerformanceData} height={280} showGrid showTooltip color="#8b5cf6" horizontal />
+                <BarChart data={bankPerformanceData} height={280} showGrid />
               </CardContent>
             </Card>
             <Card>
@@ -409,7 +409,7 @@ export default function TreasuryAnalyticsPage() {
                 <CardDescription>Weighted average yield %</CardDescription>
               </CardHeader>
               <CardContent>
-                <AreaChart data={investmentReturnsData} height={280} showGrid showTooltip color="#f59e0b" />
+                <AreaChart data={investmentReturnsData} height={280} showGrid showTooltip />
               </CardContent>
             </Card>
           </div>
@@ -474,7 +474,7 @@ export default function TreasuryAnalyticsPage() {
               <CardDescription>Outstanding debt over 12 months</CardDescription>
             </CardHeader>
             <CardContent>
-              <AreaChart data={debtTrendData} height={300} showGrid showTooltip color="#ef4444" />
+              <AreaChart data={debtTrendData} height={300} showGrid showTooltip />
             </CardContent>
           </Card>
         </TabsContent>
@@ -604,7 +604,7 @@ export default function TreasuryAnalyticsPage() {
           </Card>
 
           <Section title="Scheduled Reports" description="Automated report generation">
-            <DataTable data={reportTemplates} columns={reportColumns} searchable pageSize={10} />
+            <DataTable data={reportTemplates} columns={reportColumns} searchable />
           </Section>
         </TabsContent>
       </Tabs>

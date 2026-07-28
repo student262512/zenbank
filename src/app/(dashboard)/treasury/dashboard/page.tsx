@@ -238,7 +238,7 @@ const aiInsights = [
   {
     title: 'FX Hedging Strategy',
     insight: 'Current USD exposure of $1.5M unhedged. With INR volatility, recommend 60% forward cover for 3-month horizon.',
-    type: 'alert' as const,
+    type: 'warning' as const,
     confidence: 85,
     impact: 'medium' as const,
   },
@@ -480,7 +480,7 @@ export default function TreasuryDashboardPage() {
               data={bankDistributionData}
               title="Bank Balance Distribution"
               subtitle="Balance by banking partner"
-              height={300}
+              // height={300}
               formatValue={(v) => `₹${v} Cr`}
             />
           </div>
@@ -570,7 +570,7 @@ export default function TreasuryDashboardPage() {
             data={entityPositionData}
             title="Liquidity by Entity"
             subtitle="Cash position distribution"
-            height={300}
+            // height={300}
             formatValue={(v) => `₹${v} Cr`}
           />
         </TabsContent>

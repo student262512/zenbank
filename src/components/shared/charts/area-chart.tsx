@@ -22,6 +22,7 @@ export interface AreaChartProps<T extends object> {
   stacked?: boolean;
   showGrid?: boolean;
   showLabels?: boolean;
+  showTooltip?: boolean;
   colors?: string[];
   className?: string;
   formatValue?: (value: number) => string;
@@ -41,6 +42,7 @@ export function AreaChart<T extends object>({
   stacked = false,
   showGrid = true,
   showLabels = true,
+  showTooltip = true,
   colors = DEFAULT_COLORS,
   className,
   formatValue = (v) => (v ?? 0).toLocaleString(),

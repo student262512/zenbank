@@ -207,16 +207,16 @@ const aiInsights = [
     id: '1',
     type: 'recommendation' as const,
     title: 'Reinvestment Opportunity',
-    description: 'INR 180 Cr maturing in 30 days. Recommend reinvesting in 1-year FDs at HDFC (7.5%) and ICICI (7.4%) to lock in current high rates before expected RBI rate cuts.',
+    insight: 'INR 180 Cr maturing in 30 days. Recommend reinvesting in 1-year FDs at HDFC (7.5%) and ICICI (7.4%) to lock in current high rates before expected RBI rate cuts.',
     impact: 'high' as const,
     confidence: 88,
     category: 'Reinvestment',
   },
   {
     id: '2',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'Concentration Risk',
-    description: 'HDFC Bank exposure at INR 280 Cr (19%) exceeds policy limit of 15%. Consider diversifying INR 60 Cr to SBI or Kotak on next maturity.',
+    insight: 'HDFC Bank exposure at INR 280 Cr (19%) exceeds policy limit of 15%. Consider diversifying INR 60 Cr to SBI or Kotak on next maturity.',
     impact: 'high' as const,
     confidence: 95,
     category: 'Risk Management',
@@ -225,7 +225,7 @@ const aiInsights = [
     id: '3',
     type: 'insight' as const,
     title: 'Yield Optimization',
-    description: 'Liquid fund allocation (INR 280 Cr) earning 6.5% yield. Short-term FDs offering 7.2%. Consider moving INR 100 Cr to 3-month FDs for additional INR 70 Lakhs annual return.',
+    insight: 'Liquid fund allocation (INR 280 Cr) earning 6.5% yield. Short-term FDs offering 7.2%. Consider moving INR 100 Cr to 3-month FDs for additional INR 70 Lakhs annual return.',
     impact: 'medium' as const,
     confidence: 82,
     category: 'Yield Enhancement',
@@ -234,7 +234,7 @@ const aiInsights = [
     id: '4',
     type: 'recommendation' as const,
     title: 'Duration Extension',
-    description: 'With inverted yield curve normalizing, consider extending duration on INR 200 Cr from 6-month to 12-month instruments for 50 bps yield pickup.',
+    insight: 'With inverted yield curve normalizing, consider extending duration on INR 200 Cr from 6-month to 12-month instruments for 50 bps yield pickup.',
     impact: 'medium' as const,
     confidence: 75,
     category: 'Strategy',
@@ -388,7 +388,7 @@ export default function TreasuryInvestmentsPage() {
         <KPICard
           title="Portfolio Value"
           value={kpiData.portfolioValue.value}
-          unit={kpiData.portfolioValue.unit}
+          changeUnit={kpiData.portfolioValue.unit}
           change={kpiData.portfolioValue.change}
           trend={kpiData.portfolioValue.trend}
           icon={Wallet}
@@ -398,7 +398,7 @@ export default function TreasuryInvestmentsPage() {
         <KPICard
           title="Average Yield"
           value={kpiData.averageYield.value}
-          unit={kpiData.averageYield.unit}
+          changeUnit={kpiData.averageYield.unit}
           change={kpiData.averageYield.change}
           trend={kpiData.averageYield.trend}
           icon={Percent}
@@ -408,7 +408,7 @@ export default function TreasuryInvestmentsPage() {
         <KPICard
           title="Expected Return"
           value={kpiData.expectedReturn.value}
-          unit={kpiData.expectedReturn.unit}
+          changeUnit={kpiData.expectedReturn.unit}
           change={kpiData.expectedReturn.change}
           trend={kpiData.expectedReturn.trend}
           icon={TrendingUp}
@@ -417,7 +417,7 @@ export default function TreasuryInvestmentsPage() {
         <KPICard
           title="Maturing in 30 Days"
           value={kpiData.maturingIn30Days.value}
-          unit={kpiData.maturingIn30Days.unit}
+          changeUnit={kpiData.maturingIn30Days.unit}
           change={kpiData.maturingIn30Days.change}
           trend={kpiData.maturingIn30Days.trend}
           icon={Clock}
@@ -426,7 +426,7 @@ export default function TreasuryInvestmentsPage() {
         <KPICard
           title="Investment Score"
           value={kpiData.investmentScore.value}
-          unit={kpiData.investmentScore.unit}
+          changeUnit={kpiData.investmentScore.unit}
           change={kpiData.investmentScore.change}
           trend={kpiData.investmentScore.trend}
           icon={Star}
@@ -436,7 +436,7 @@ export default function TreasuryInvestmentsPage() {
         <KPICard
           title="Unrealized Gain"
           value={kpiData.unrealizedGain.value}
-          unit={kpiData.unrealizedGain.unit}
+          changeUnit={kpiData.unrealizedGain.unit}
           change={kpiData.unrealizedGain.change}
           trend={kpiData.unrealizedGain.trend}
           icon={ArrowUpRight}
@@ -463,7 +463,7 @@ export default function TreasuryInvestmentsPage() {
             <Card className="col-span-1">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5 text-muted-foreground" />
+                  {/* <PieChart className="h-5 w-5 text-muted-foreground" /> */}
                   Allocation
                 </CardTitle>
                 <CardDescription>By investment type</CardDescription>
@@ -471,9 +471,9 @@ export default function TreasuryInvestmentsPage() {
               <CardContent>
                 <PieChart
                   data={portfolioAllocationData}
-                  height={250}
+                  // height={250}
                   showLegend
-                  showTooltip
+                  // showTooltip
                 />
               </CardContent>
             </Card>
@@ -490,8 +490,8 @@ export default function TreasuryInvestmentsPage() {
                   data={maturityLadderData}
                   height={250}
                   showGrid
-                  showTooltip
-                  color="#3b82f6"
+                  // showTooltip
+                  // color="#3b82f6"
                 />
               </CardContent>
             </Card>
@@ -508,9 +508,9 @@ export default function TreasuryInvestmentsPage() {
                   data={institutionExposureData.slice(0, 6)}
                   height={250}
                   showGrid
-                  showTooltip
-                  color="#10b981"
-                  horizontal
+                  // showTooltip
+                  // color="#10b981"
+                  // horizontal
                 />
               </CardContent>
             </Card>
@@ -523,7 +523,7 @@ export default function TreasuryInvestmentsPage() {
               columns={investmentColumns}
               searchable
               searchPlaceholder="Search investments..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
 
@@ -560,7 +560,7 @@ export default function TreasuryInvestmentsPage() {
               data={investmentTableData.filter(i => i.type === 'Fixed Deposit')}
               columns={investmentColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
 
@@ -672,7 +672,7 @@ export default function TreasuryInvestmentsPage() {
               data={investmentTableData.filter(i => i.type === 'Liquid Fund')}
               columns={investmentColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -707,7 +707,7 @@ export default function TreasuryInvestmentsPage() {
               data={investmentTableData.filter(i => ['G-Sec', 'T-Bill', 'Commercial Paper', 'Corporate Bond', 'Money Market'].includes(i.type))}
               columns={investmentColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -728,7 +728,7 @@ export default function TreasuryInvestmentsPage() {
                 height={300}
                 showGrid
                 showTooltip
-                color="#8b5cf6"
+                // color="#8b5cf6"
               />
             </CardContent>
           </Card>
@@ -738,7 +738,7 @@ export default function TreasuryInvestmentsPage() {
               data={maturityCalendarData}
               columns={maturityColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -760,7 +760,7 @@ export default function TreasuryInvestmentsPage() {
                   height={280}
                   showGrid
                   showTooltip
-                  color="#10b981"
+                  // color="#10b981"
                 />
               </CardContent>
             </Card>

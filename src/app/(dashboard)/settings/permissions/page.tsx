@@ -324,7 +324,7 @@ export default function PermissionsPage() {
                           >
                             <Checkbox
                               checked={matrix[perm.id]?.[role.id] ?? false}
-                              onCheckedChange={() => togglePermission(perm.id, role.id)}
+                              onChange={() => togglePermission(perm.id, role.id)}
                             />
                           </div>
                         ))}

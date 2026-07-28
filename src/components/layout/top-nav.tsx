@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar } from '@/components/ui/avatar2';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -103,7 +103,7 @@ export function TopNav({ className }: TopNavProps) {
 
         {/* Global Entity Filter */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size="sm" className="ml-4 gap-2">
               <Filter className="h-4 w-4" />
               <span className="hidden sm:inline">{selectedEntity.name}</span>
@@ -171,7 +171,7 @@ export function TopNav({ className }: TopNavProps) {
 
         {/* Notifications */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5" />
               {unreadCount > 0 && (
@@ -234,7 +234,7 @@ export function TopNav({ className }: TopNavProps) {
 
         {/* User Menu */}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <button className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-800">
               <Avatar
                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop"

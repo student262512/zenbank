@@ -113,7 +113,7 @@ const recommendationColumns: Column<RecommendationRecord>[] = [
     header: 'Priority',
     accessor: 'priority',
     cell: (row) => (
-      <Badge variant={row.priority === 'Critical' ? 'destructive' : row.priority === 'High' ? 'secondary' : 'outline'}>
+      <Badge variant={row.priority === 'Critical' ? 'danger' : row.priority === 'High' ? 'secondary' : 'outline'}>
         {row.priority}
       </Badge>
     ),
@@ -137,7 +137,7 @@ const recommendationColumns: Column<RecommendationRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Implemented' ? 'default' : row.status === 'Approved' ? 'secondary' : row.status === 'Rejected' ? 'destructive' : 'outline'}>
+      <Badge variant={row.status === 'Implemented' ? 'default' : row.status === 'Approved' ? 'secondary' : row.status === 'Rejected' ? 'danger' : 'outline'}>
         {row.status === 'Implemented' && <CheckCircle2 className="mr-1 h-3 w-3" />}
         {row.status === 'Pending' && <Clock className="mr-1 h-3 w-3" />}
         {row.status}
@@ -187,7 +187,7 @@ export default function TreasuryAIAgentPage() {
           { label: 'AI Agent', href: '/treasury/ai' },
         ]}
         actions={[
-          { label: 'Settings', icon: <Settings className="h-4 w-4" />, onClick: () => {}, variant: 'outline' },
+          { label: 'Settings', icon: Settings, onClick: () => {}, variant: 'outline' },
         ]}
       />
 
@@ -296,7 +296,7 @@ export default function TreasuryAIAgentPage() {
             <Card className="p-4"><div className="text-sm text-muted-foreground">Est. Impact</div><div className="text-2xl font-bold">₹12 Cr</div></Card>
           </div>
           <Section title="AI Recommendations" description="Actionable recommendations">
-            <DataTable data={recommendationsData} columns={recommendationColumns} searchable pageSize={10} />
+            <DataTable data={recommendationsData} columns={recommendationColumns} searchable />
           </Section>
         </TabsContent>
 

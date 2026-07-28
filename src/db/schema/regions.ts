@@ -9,9 +9,9 @@ import {
   uniqueIndex,
   int,
 } from "drizzle-orm/mysql-core";
-import { auditFieldsWithoutRegion } from "@/db/schema/shared/audit";
+import { auditFieldsWithoutRegion } from "@/db/schema/shared/auditWithoutRegion";
 // import { auditFields, auditFieldsWithoutRegion } from "./shared/types";
-import { countries } from "@/db/schema/addresses";
+// import { countries } from "@/db/schema/addresses";
 
 export const dataRegions = mysqlTable(
   "data_regions",
@@ -50,27 +50,27 @@ export const dataRegions = mysqlTable(
   ]
 );
 
-export const countryRegionMap = mysqlTable(
-  "country_region_map",
-  {
-    country_id: int("country_id", { unsigned: true })
-      .notNull()
-      .references(() => countries.countryId, { onDelete: "restrict" }),
+// export const countryRegionMap = mysqlTable(
+//   "country_region_map",
+//   {
+//     country_id: int("country_id", { unsigned: true })
+//       .notNull()
+//       .references(() => countries.countryId, { onDelete: "restrict" }),
 
-    // region_id: smallint("region_id")
-    //   .notNull()
-    //   .references(() => dataRegions.id, { onDelete: "restrict" }),
+//     // region_id: smallint("region_id")
+//     //   .notNull()
+//     //   .references(() => dataRegions.id, { onDelete: "restrict" }),
 
-    // ...auditFields,
-    // ...auditFieldsWithoutRegion,
-    ...auditFieldsWithoutRegion(),
-    region_id: smallint("region_id", { unsigned: true })
-      .notNull()
-      .references(() => dataRegions.id, { onDelete: "restrict" }),
-    // ...auditFields(),
-  },
-  (t) => [
-    uniqueIndex("uq_country_region").on(t.country_id),
-    index("idx_country_region_region").on(t.region_id),
-  ]
-);
+//     // ...auditFields,
+//     // ...auditFieldsWithoutRegion,
+//     ...auditFieldsWithoutRegion(),
+//     region_id: smallint("region_id", { unsigned: true })
+//       .notNull()
+//       .references(() => dataRegions.id, { onDelete: "restrict" }),
+//     // ...auditFields(),
+//   },
+//   (t) => [
+//     uniqueIndex("uq_country_region").on(t.country_id),
+//     index("idx_country_region_region").on(t.region_id),
+//   ]
+// );

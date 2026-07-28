@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { timestamp, varchar, int, smallint, boolean, text, decimal, json, mysqlTable, unique } from 'drizzle-orm/mysql-core';
 import { customType } from "drizzle-orm/mysql-core";
-import { dataRegions } from '@/db/schema/regions';
+// import { dataRegions } from '@/db/schema/regions';
 import { uuidBinary, uuidv7 } from '@/db/uuid';
 import { datetimeUtc } from './datetimeUtc';
 
@@ -49,23 +49,23 @@ export const auditFieldsWithoutRegion = {
   createdAt: datetimeUtc('created_at').notNull().default(sql`CURRENT_TIMESTAMP(3)`),
   updatedAt: datetimeUtc('updated_at').notNull().default(sql`CURRENT_TIMESTAMP(3)`).onUpdateNow(),
   updatedBy: uuidBinary("updated_by").notNull(),
-//   updatedBy: uuidBinary("updated_by").notNull().references(() => actors.id, { onDelete: 'restrict' }),
+//   updatedBy: uuidBinary("updated_by").notNull().references(() => users.id, { onDelete: 'restrict' }),
   isDeleted: boolean('is_deleted').default(false).notNull(),
   deletedAt: datetimeUtc('deleted_at'),
   version: int("version").notNull().default(1),
   tenant_id: int("tenant_id", { unsigned: true }),
 };
 
-export const auditFields = {
-  createdAt: datetimeUtc('created_at').notNull().default(sql`CURRENT_TIMESTAMP(3)`),
-  updatedAt: datetimeUtc('updated_at').notNull().default(sql`CURRENT_TIMESTAMP(3)`).onUpdateNow(),
-  updatedBy: uuidBinary("updated_by").notNull(),
-//   updatedBy: uuidBinary("updated_by").notNull().references(() => actors.id, { onDelete: 'restrict' }),
-  isDeleted: boolean('is_deleted').default(false).notNull(),
-  deletedAt: datetimeUtc('deleted_at'),
-  version: int("version").notNull().default(1),
-  region_id: smallint("region_id", { unsigned: true })
-        .notNull()
-        .references(() => dataRegions.id, { onDelete: "restrict" }),
-  tenant_id: int("tenant_id", { unsigned: true }),
-};
+// export const auditFields = {
+//   createdAt: datetimeUtc('created_at').notNull().default(sql`CURRENT_TIMESTAMP(3)`),
+//   updatedAt: datetimeUtc('updated_at').notNull().default(sql`CURRENT_TIMESTAMP(3)`).onUpdateNow(),
+//   updatedBy: uuidBinary("updated_by").notNull(),
+// //   updatedBy: uuidBinary("updated_by").notNull().references(() => actors.id, { onDelete: 'restrict' }),
+//   isDeleted: boolean('is_deleted').default(false).notNull(),
+//   deletedAt: datetimeUtc('deleted_at'),
+//   version: int("version").notNull().default(1),
+//   region_id: smallint("region_id", { unsigned: true })
+//         .notNull()
+//         .references(() => dataRegions.id, { onDelete: "restrict" }),
+//   tenant_id: int("tenant_id", { unsigned: true }),
+// };

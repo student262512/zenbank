@@ -460,12 +460,12 @@ const inflowTrendData = [
 
 // Mock data for inflow by type
 const inflowByTypeData = [
-  { name: 'Customer Collections', value: 523.4, color: '#3b82f6' },
-  { name: 'Booking Advances', value: 156.2, color: '#10b981' },
-  { name: 'Loan Disbursements', value: 89.6, color: '#f59e0b' },
-  { name: 'Rental Income', value: 34.8, color: '#8b5cf6' },
-  { name: 'Interest Income', value: 12.4, color: '#ec4899' },
-  { name: 'Refunds & Other', value: 31.1, color: '#6b7280' },
+  { label: 'Customer Collections', value: 523.4, color: '#3b82f6' },
+  { label: 'Booking Advances', value: 156.2, color: '#10b981' },
+  { label: 'Loan Disbursements', value: 89.6, color: '#f59e0b' },
+  { label: 'Rental Income', value: 34.8, color: '#8b5cf6' },
+  { label: 'Interest Income', value: 12.4, color: '#ec4899' },
+  { label: 'Refunds & Other', value: 31.1, color: '#6b7280' },
 ];
 
 // AI Insights
@@ -476,6 +476,7 @@ const aiInsights = [
     title: 'Collection Acceleration Opportunity',
     description: 'Early payment discounts could accelerate ₹45.6 Cr in pending collections by 15 days on average.',
     impact: '+₹2.3 Cr interest savings',
+    impactLevel: 'medium',
     confidence: 89,
     action: 'Review Discount Strategy',
   },
@@ -485,6 +486,7 @@ const aiInsights = [
     title: 'Lodha Developers Payment Risk',
     description: 'Customer shows declining payment pattern. ₹28.75 Cr overdue with increasing trend.',
     impact: 'High collection risk',
+    impactLevel: 'high',
     confidence: 92,
     action: 'Escalate to Collections',
   },
@@ -494,6 +496,7 @@ const aiInsights = [
     title: 'Booking Velocity Increase',
     description: 'Green Valley Villas showing 35% higher booking rate this month. Consider increasing advance percentage.',
     impact: '+₹12.4 Cr potential',
+    impactLevel: 'medium',
     confidence: 78,
     action: 'Review Pricing',
   },
@@ -530,7 +533,7 @@ export default function CashInflowIntelligencePage() {
       id: 'date',
       header: 'Date',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-sm">{new Date(row.date).toLocaleDateString('en-IN')}</span>
       ),
     },
@@ -538,7 +541,7 @@ export default function CashInflowIntelligencePage() {
       id: 'type',
       header: 'Type',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <Badge variant="outline" className="font-normal">
           {row.type}
         </Badge>
@@ -557,7 +560,7 @@ export default function CashInflowIntelligencePage() {
     {
       id: 'description',
       header: 'Description',
-      render: (row) => (
+      cell: (row) => (
         <span className="text-sm text-muted-foreground">{row.description}</span>
       ),
     },
@@ -566,7 +569,7 @@ export default function CashInflowIntelligencePage() {
       header: 'Amount (₹ Cr)',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-emerald-400">+₹{row.amount.toFixed(2)} Cr</span>
       ),
     },
@@ -574,11 +577,11 @@ export default function CashInflowIntelligencePage() {
       id: 'status',
       header: 'Status',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.status === 'received' ? 'default' :
-            row.status === 'pending' ? 'secondary' : 'destructive'
+            row.status === 'pending' ? 'secondary' : 'danger'
           }
         >
           {row.status === 'received' ? 'Received' :
@@ -589,7 +592,7 @@ export default function CashInflowIntelligencePage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -606,7 +609,7 @@ export default function CashInflowIntelligencePage() {
       id: 'customerName',
       header: 'Customer',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.customerName}</div>
           <div className="text-xs text-muted-foreground">{row.customerType}</div>
@@ -623,14 +626,14 @@ export default function CashInflowIntelligencePage() {
       header: 'Total Receivable',
       align: 'right' as const,
       sortable: true,
-      render: (row) => <span>₹{row.totalReceivable.toFixed(1)} Cr</span>,
+      cell: (row) => <span>₹{row.totalReceivable.toFixed(1)} Cr</span>,
     },
     {
       id: 'collected',
       header: 'Collected',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-emerald-400">₹{row.collected.toFixed(1)} Cr</span>
       ),
     },
@@ -639,7 +642,7 @@ export default function CashInflowIntelligencePage() {
       header: 'Pending',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-amber-400">₹{row.pending.toFixed(1)} Cr</span>
       ),
     },
@@ -648,7 +651,7 @@ export default function CashInflowIntelligencePage() {
       header: 'Overdue',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.overdue > 0 ? 'text-red-400' : 'text-muted-foreground'}>
           ₹{row.overdue.toFixed(1)} Cr
         </span>
@@ -657,11 +660,11 @@ export default function CashInflowIntelligencePage() {
     {
       id: 'creditScore',
       header: 'Credit',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.creditScore.startsWith('A') ? 'default' :
-            row.creditScore.startsWith('B') ? 'secondary' : 'destructive'
+            row.creditScore.startsWith('B') ? 'secondary' : 'danger'
           }
         >
           {row.creditScore}
@@ -671,7 +674,7 @@ export default function CashInflowIntelligencePage() {
     {
       id: 'trend',
       header: 'Trend',
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-1">
           {row.trend === 'improving' ? (
             <TrendingUp className="h-4 w-4 text-emerald-400" />
@@ -686,7 +689,7 @@ export default function CashInflowIntelligencePage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -703,7 +706,7 @@ export default function CashInflowIntelligencePage() {
       id: 'bookingDate',
       header: 'Date',
       sortable: true,
-      render: (row) => new Date(row.bookingDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.bookingDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'customerName',
@@ -723,13 +726,13 @@ export default function CashInflowIntelligencePage() {
       id: 'unitValue',
       header: 'Unit Value',
       align: 'right' as const,
-      render: (row) => <span>₹{row.unitValue.toFixed(2)} Cr</span>,
+      cell: (row) => <span>₹{row.unitValue.toFixed(2)} Cr</span>,
     },
     {
       id: 'advanceAmount',
       header: 'Advance',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-emerald-400">₹{row.advanceAmount.toFixed(2)} Cr</span>
       ),
     },
@@ -737,12 +740,12 @@ export default function CashInflowIntelligencePage() {
       id: 'advancePercent',
       header: '%',
       align: 'right' as const,
-      render: (row) => <span>{row.advancePercent}%</span>,
+      cell: (row) => <span>{row.advancePercent}%</span>,
     },
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant={row.status === 'confirmed' ? 'default' : 'secondary'}>
           {row.status === 'confirmed' ? 'Confirmed' : 'Pending'}
         </Badge>
@@ -755,7 +758,7 @@ export default function CashInflowIntelligencePage() {
       id: 'disbursementDate',
       header: 'Date',
       sortable: true,
-      render: (row) => new Date(row.disbursementDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.disbursementDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'lender',
@@ -771,13 +774,13 @@ export default function CashInflowIntelligencePage() {
       id: 'sanctionedAmount',
       header: 'Sanctioned',
       align: 'right' as const,
-      render: (row) => <span>₹{row.sanctionedAmount.toFixed(0)} Cr</span>,
+      cell: (row) => <span>₹{row.sanctionedAmount.toFixed(0)} Cr</span>,
     },
     {
       id: 'currentDisbursement',
       header: 'Current',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-emerald-400">₹{row.currentDisbursement.toFixed(0)} Cr</span>
       ),
     },
@@ -789,12 +792,12 @@ export default function CashInflowIntelligencePage() {
       id: 'interestRate',
       header: 'Rate',
       align: 'right' as const,
-      render: (row) => <span>{row.interestRate}%</span>,
+      cell: (row) => <span>{row.interestRate}%</span>,
     },
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant={row.status === 'received' ? 'default' : 'secondary'}>
           {row.status === 'received' ? 'Received' : 'Expected'}
         </Badge>
@@ -821,13 +824,13 @@ export default function CashInflowIntelligencePage() {
       id: 'area',
       header: 'Area (sq ft)',
       align: 'right' as const,
-      render: (row) => row.area.toLocaleString('en-IN'),
+      cell: (row) => row.area.toLocaleString('en-IN'),
     },
     {
       id: 'monthlyRent',
       header: 'Monthly Rent',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-emerald-400">₹{row.monthlyRent.toFixed(2)} Cr</span>
       ),
     },
@@ -835,18 +838,18 @@ export default function CashInflowIntelligencePage() {
       id: 'escalation',
       header: 'Esc %',
       align: 'right' as const,
-      render: (row) => <span>{row.escalation}%</span>,
+      cell: (row) => <span>{row.escalation}%</span>,
     },
     {
       id: 'leaseEnd',
       header: 'Lease End',
-      render: (row) => new Date(row.leaseEnd).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.leaseEnd).toLocaleDateString('en-IN'),
     },
     {
       id: 'paymentStatus',
       header: 'Payment',
-      render: (row) => (
-        <Badge variant={row.paymentStatus === 'current' ? 'default' : 'destructive'}>
+      cell: (row) => (
+        <Badge variant={row.paymentStatus === 'current' ? 'default' : 'danger'}>
           {row.paymentStatus === 'current' ? 'Current' : 'Overdue'}
         </Badge>
       ),
@@ -995,7 +998,7 @@ export default function CashInflowIntelligencePage() {
               <CardContent>
                 <PieChart
                   data={inflowByTypeData}
-                  height={280}
+                  // height={280}
                   showLegend
                 />
               </CardContent>
@@ -1012,7 +1015,7 @@ export default function CashInflowIntelligencePage() {
                 data={inflowTransactions}
                 columns={transactionColumns}
                 searchable
-                searchKeys={['customer', 'project', 'description']}
+                // searchKeys={['customer', 'project', 'description']}
               />
             </CardContent>
           </Card>
@@ -1024,10 +1027,11 @@ export default function CashInflowIntelligencePage() {
                 key={insight.id}
                 type={insight.type}
                 title={insight.title}
-                description={insight.description}
-                impact={insight.impact}
+                insight={insight.description}
+                impactValue={insight.impact}
+                impact={insight.impactLevel as 'low' | 'medium' | 'high'}
                 confidence={insight.confidence}
-                action={insight.action}
+                // action={insight.action}
               />
             ))}
           </div>
@@ -1092,7 +1096,7 @@ export default function CashInflowIntelligencePage() {
                 data={customerCollections}
                 columns={customerColumns}
                 searchable
-                searchKeys={['customerName', 'project']}
+                // searchKeys={['customerName', 'project']}
               />
             </CardContent>
           </Card>
@@ -1157,7 +1161,7 @@ export default function CashInflowIntelligencePage() {
                 data={bookingAdvances}
                 columns={bookingColumns}
                 searchable
-                searchKeys={['customerName', 'project', 'unit']}
+                // searchKeys={['customerName', 'project', 'unit']}
               />
             </CardContent>
           </Card>
@@ -1222,7 +1226,7 @@ export default function CashInflowIntelligencePage() {
                 data={loanDisbursements}
                 columns={loanColumns}
                 searchable
-                searchKeys={['lender', 'project']}
+                // searchKeys={['lender', 'project']}
               />
             </CardContent>
           </Card>
@@ -1287,7 +1291,7 @@ export default function CashInflowIntelligencePage() {
                 data={rentalIncome}
                 columns={rentalColumns}
                 searchable
-                searchKeys={['tenant', 'property']}
+                // searchKeys={['tenant', 'property']}
               />
             </CardContent>
           </Card>

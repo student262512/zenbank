@@ -226,16 +226,16 @@ const aiInsights = [
     id: '1',
     type: 'recommendation' as const,
     title: 'Optimal Funding Structure',
-    description: 'Consider restructuring ICL-003 (Project Alpha) from single lump-sum to milestone-based disbursement. This would reduce idle cash cost by INR 1.2 Cr annually.',
+    insight: 'Consider restructuring ICL-003 (Project Alpha) from single lump-sum to milestone-based disbursement. This would reduce idle cash cost by INR 1.2 Cr annually.',
     impact: 'high' as const,
     confidence: 88,
     category: 'Funding Optimization',
   },
   {
     id: '2',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'Transfer Pricing Review',
-    description: 'ICL-005 (ZenBank Delhi) interest rate of 8.5% is marginally below arm\'s length benchmark (8.75%). Recommend rate adjustment to maintain compliance.',
+    insight: 'ICL-005 (ZenBank Delhi) interest rate of 8.5% is marginally below arm\'s length benchmark (8.75%). Recommend rate adjustment to maintain compliance.',
     impact: 'high' as const,
     confidence: 92,
     category: 'Compliance',
@@ -244,7 +244,7 @@ const aiInsights = [
     id: '3',
     type: 'insight' as const,
     title: 'Interest Rate Optimization',
-    description: 'Current blended IC lending rate is 8.4%. Based on MCLR trends, consider locking new loans at fixed rates to protect against expected 25-50 bps increase.',
+    insight: 'Current blended IC lending rate is 8.4%. Based on MCLR trends, consider locking new loans at fixed rates to protect against expected 25-50 bps increase.',
     impact: 'medium' as const,
     confidence: 75,
     category: 'Rate Strategy',
@@ -253,7 +253,7 @@ const aiInsights = [
     id: '4',
     type: 'recommendation' as const,
     title: 'Funding Request Priority',
-    description: 'Approve FR-001 (ZenBank Pune) at 8.5% rate. Entity has strong repayment history and the working capital need aligns with seasonal business pattern.',
+    insight: 'Approve FR-001 (ZenBank Pune) at 8.5% rate. Entity has strong repayment history and the working capital need aligns with seasonal business pattern.',
     impact: 'medium' as const,
     confidence: 85,
     category: 'Funding Approval',
@@ -302,7 +302,7 @@ const loanColumns: Column<ICLoanRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Active' ? 'default' : row.status === 'Due Soon' ? 'secondary' : row.status === 'Overdue' ? 'destructive' : 'outline'}>
+      <Badge variant={row.status === 'Active' ? 'default' : row.status === 'Due Soon' ? 'secondary' : row.status === 'Overdue' ? 'danger' : 'outline'}>
         {row.status}
       </Badge>
     ),
@@ -312,7 +312,7 @@ const loanColumns: Column<ICLoanRecord>[] = [
     header: 'Compliance',
     accessor: 'compliance',
     cell: (row) => (
-      <Badge variant={row.compliance === 'Compliant' ? 'default' : row.compliance === 'Review' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.compliance === 'Compliant' ? 'default' : row.compliance === 'Review' ? 'secondary' : 'danger'}>
         {row.compliance === 'Compliant' && <CheckCircle2 className="mr-1 h-3 w-3" />}
         {row.compliance === 'Review' && <Clock className="mr-1 h-3 w-3" />}
         {row.compliance === 'Non-Compliant' && <AlertCircle className="mr-1 h-3 w-3" />}
@@ -353,7 +353,7 @@ const requestColumns: Column<FundingRequest>[] = [
     header: 'Priority',
     accessor: 'priority',
     cell: (row) => (
-      <Badge variant={row.priority === 'High' ? 'destructive' : row.priority === 'Medium' ? 'secondary' : 'outline'}>
+      <Badge variant={row.priority === 'High' ? 'danger' : row.priority === 'Medium' ? 'secondary' : 'outline'}>
         {row.priority}
       </Badge>
     ),
@@ -363,7 +363,7 @@ const requestColumns: Column<FundingRequest>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Approved' ? 'default' : row.status === 'Pending' ? 'secondary' : row.status === 'Under Review' ? 'outline' : 'destructive'}>
+      <Badge variant={row.status === 'Approved' ? 'default' : row.status === 'Pending' ? 'secondary' : row.status === 'Under Review' ? 'outline' : 'danger'}>
         {row.status}
       </Badge>
     ),
@@ -401,7 +401,7 @@ const interestColumns: Column<InterestRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Paid' ? 'default' : row.status === 'Due' ? 'secondary' : row.status === 'Upcoming' ? 'outline' : 'destructive'}>
+      <Badge variant={row.status === 'Paid' ? 'default' : row.status === 'Due' ? 'secondary' : row.status === 'Upcoming' ? 'outline' : 'danger'}>
         {row.status}
       </Badge>
     ),
@@ -449,7 +449,7 @@ export default function IntercompanyFundingPage() {
         <KPICard
           title="Total IC Loans"
           value={kpiData.totalICLoans.value}
-          unit={kpiData.totalICLoans.unit}
+          changeUnit={kpiData.totalICLoans.unit}
           change={kpiData.totalICLoans.change}
           trend={kpiData.totalICLoans.trend}
           icon={Building2}
@@ -459,7 +459,7 @@ export default function IntercompanyFundingPage() {
         <KPICard
           title="Active Loans"
           value={kpiData.activeLoans.value}
-          unit={kpiData.activeLoans.unit}
+          changeUnit={kpiData.activeLoans.unit}
           change={kpiData.activeLoans.change}
           trend={kpiData.activeLoans.trend}
           icon={FileText}
@@ -468,7 +468,7 @@ export default function IntercompanyFundingPage() {
         <KPICard
           title="Interest Income (YTD)"
           value={kpiData.interestIncomeYTD.value}
-          unit={kpiData.interestIncomeYTD.unit}
+          changeUnit={kpiData.interestIncomeYTD.unit}
           change={kpiData.interestIncomeYTD.change}
           trend={kpiData.interestIncomeYTD.trend}
           icon={Percent}
@@ -478,7 +478,7 @@ export default function IntercompanyFundingPage() {
         <KPICard
           title="Pending Requests"
           value={kpiData.pendingRequests.value}
-          unit={kpiData.pendingRequests.unit}
+          changeUnit={kpiData.pendingRequests.unit}
           change={kpiData.pendingRequests.change}
           trend={kpiData.pendingRequests.trend}
           icon={Clock}
@@ -487,7 +487,7 @@ export default function IntercompanyFundingPage() {
         <KPICard
           title="Due This Month"
           value={kpiData.dueThisMonth.value}
-          unit={kpiData.dueThisMonth.unit}
+          changeUnit={kpiData.dueThisMonth.unit}
           change={kpiData.dueThisMonth.change}
           trend={kpiData.dueThisMonth.trend}
           icon={Calendar}
@@ -496,7 +496,7 @@ export default function IntercompanyFundingPage() {
         <KPICard
           title="Compliance Score"
           value={kpiData.complianceScore.value}
-          unit={kpiData.complianceScore.unit}
+          changeUnit={kpiData.complianceScore.unit}
           change={kpiData.complianceScore.change}
           trend={kpiData.complianceScore.trend}
           icon={Shield}
@@ -533,7 +533,7 @@ export default function IntercompanyFundingPage() {
                   height={280}
                   showGrid
                   showTooltip
-                  color="#3b82f6"
+                  // color="#3b82f6"
                 />
               </CardContent>
             </Card>
@@ -550,8 +550,8 @@ export default function IntercompanyFundingPage() {
                   data={interestIncomeData}
                   height={280}
                   showGrid
-                  showTooltip
-                  color="#10b981"
+                  // showTooltip
+                  // color="#10b981"
                 />
               </CardContent>
             </Card>
@@ -657,7 +657,7 @@ export default function IntercompanyFundingPage() {
               columns={requestColumns}
               searchable
               searchPlaceholder="Search requests..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
 
@@ -676,7 +676,7 @@ export default function IntercompanyFundingPage() {
               columns={loanColumns}
               searchable
               searchPlaceholder="Search loans..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -707,7 +707,7 @@ export default function IntercompanyFundingPage() {
               data={interestScheduleData}
               columns={interestColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -728,7 +728,7 @@ export default function IntercompanyFundingPage() {
                 height={300}
                 showGrid
                 showTooltip
-                color="#8b5cf6"
+                // color="#8b5cf6"
               />
             </CardContent>
           </Card>

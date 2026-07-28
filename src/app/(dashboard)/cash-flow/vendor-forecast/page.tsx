@@ -37,7 +37,7 @@ import {
   KPIGrid,
   DataTable,
   Column,
-  BarChart,
+  // BarChart,
   AreaChart,
   PieChart,
   AIInsightCard,
@@ -51,6 +51,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { vendorForecastTabs } from '@/config/cash-flow-navigation';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // Mock data for KPIs
 const kpiData = {
@@ -279,11 +280,11 @@ const vendorExceptions = [
 
 // Mock data for payment by category
 const paymentByCategory = [
-  { name: 'Construction', value: 156.8, color: '#3b82f6' },
-  { name: 'Materials', value: 89.4, color: '#10b981' },
-  { name: 'Services', value: 45.2, color: '#f59e0b' },
-  { name: 'Utilities', value: 12.5, color: '#8b5cf6' },
-  { name: 'Other', value: 18.4, color: '#6b7280' },
+  { label: 'Construction', value: 156.8, color: '#3b82f6' },
+  { label: 'Materials', value: 89.4, color: '#10b981' },
+  { label: 'Services', value: 45.2, color: '#f59e0b' },
+  { label: 'Utilities', value: 12.5, color: '#8b5cf6' },
+  { label: 'Other', value: 18.4, color: '#6b7280' },
 ];
 
 // AI Insights
@@ -294,6 +295,7 @@ const aiInsights = [
     title: 'Early Payment Savings',
     description: 'Processing 3 vendor payments early can save ₹45.6 Lakhs in discounts. Available cash: ₹78.4 Cr.',
     impact: '+₹45.6 Lakhs',
+    impactLevel: 'medium',
     confidence: 95,
     action: 'Process Early',
   },
@@ -303,6 +305,7 @@ const aiInsights = [
     title: 'Cash Shortfall Alert',
     description: 'Week of Aug 15-21 shows tight buffer of ₹33.2 Cr. Consider deferring non-critical payments.',
     impact: 'Liquidity risk',
+    impactLevel: 'high',
     confidence: 88,
     action: 'Review Schedule',
   },
@@ -312,6 +315,7 @@ const aiInsights = [
     title: 'Payment Consolidation',
     description: 'Consolidating payments on 25th and 30th can reduce bank charges by 18%.',
     impact: '₹8.4 Lakhs/month',
+    impactLevel: 'low',
     confidence: 82,
     action: 'Optimize Schedule',
   },
@@ -334,9 +338,10 @@ export default function VendorPaymentForecastPage() {
     loanIds: [],
     statusIds: [],
     tagIds: [],
-    scenarioId: 'actual',
-    forecastVersionId: 'current',
+    scenario: 'actual',
+    forecastVersion: 'current',
     forecastHorizon: '3m',
+    datePreset: 'this_month',
     dateRange: { startDate: undefined, endDate: undefined },
   });
   const [selectedPayment, setSelectedPayment] = useState<typeof upcomingPayments[0] | null>(null);
@@ -346,7 +351,7 @@ export default function VendorPaymentForecastPage() {
       id: 'vendorName',
       header: 'Vendor',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.vendorName}</div>
           <div className="text-xs text-muted-foreground">{row.vendorType}</div>
@@ -361,30 +366,30 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'invoiceNumber',
       header: 'Invoice',
-      render: (row) => <span className="text-sm">{row.invoiceNumber}</span>,
+      cell: (row) => <span className="text-sm">{row.invoiceNumber}</span>,
     },
     {
       id: 'dueDate',
       header: 'Due Date',
       sortable: true,
-      render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'amount',
       header: 'Amount',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold">₹{row.amount.toFixed(2)} Cr</span>
       ),
     },
     {
       id: 'priority',
       header: 'Priority',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
-            row.priority === 'critical' ? 'destructive' :
+            row.priority === 'critical' ? 'danger' :
             row.priority === 'high' ? 'default' : 'secondary'
           }
         >
@@ -395,10 +400,10 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
-            row.status === 'overdue' ? 'destructive' :
+            row.status === 'overdue' ? 'danger' :
             row.status === 'due_today' ? 'default' : 'outline'
           }
         >
@@ -411,14 +416,14 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'recommendation',
       header: 'AI Recommendation',
-      render: (row) => (
+      cell: (row) => (
         <span className="text-sm text-muted-foreground">{row.recommendation}</span>
       ),
     },
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -441,15 +446,15 @@ export default function VendorPaymentForecastPage() {
       header: 'Amount',
       align: 'right' as const,
       sortable: true,
-      render: (row) => <span className="font-semibold">₹{row.amount.toFixed(2)} Cr</span>,
+      cell: (row) => <span className="font-semibold">₹{row.amount.toFixed(2)} Cr</span>,
     },
     {
       id: 'vendorCriticality',
       header: 'Criticality',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
-            row.vendorCriticality === 'Critical' ? 'destructive' :
+            row.vendorCriticality === 'Critical' ? 'danger' :
             row.vendorCriticality === 'High' ? 'default' : 'secondary'
           }
         >
@@ -460,8 +465,8 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'projectImpact',
       header: 'Project Impact',
-      render: (row) => (
-        <Badge variant={row.projectImpact === 'High' ? 'destructive' : 'secondary'}>
+      cell: (row) => (
+        <Badge variant={row.projectImpact === 'High' ? 'danger' : 'secondary'}>
           {row.projectImpact}
         </Badge>
       ),
@@ -469,10 +474,10 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'relationshipRisk',
       header: 'Relationship Risk',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
-            row.relationshipRisk === 'High' ? 'destructive' :
+            row.relationshipRisk === 'High' ? 'danger' :
             row.relationshipRisk === 'Medium' ? 'default' : 'secondary'
           }
         >
@@ -485,7 +490,7 @@ export default function VendorPaymentForecastPage() {
       header: 'Score',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-12 h-2 bg-slate-700 rounded-full overflow-hidden">
             <div
@@ -503,7 +508,7 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'recommendation',
       header: 'Recommendation',
-      render: (row) => <span className="text-sm">{row.recommendation}</span>,
+      cell: (row) => <span className="text-sm">{row.recommendation}</span>,
     },
   ];
 
@@ -516,22 +521,22 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'exceptionType',
       header: 'Type',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant="outline">{row.exceptionType}</Badge>
       ),
     },
     {
       id: 'description',
       header: 'Description',
-      render: (row) => <span className="text-sm">{row.description}</span>,
+      cell: (row) => <span className="text-sm">{row.description}</span>,
     },
     {
       id: 'severity',
       header: 'Severity',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
-            row.severity === 'critical' ? 'destructive' :
+            row.severity === 'critical' ? 'danger' :
             row.severity === 'high' ? 'default' : 'secondary'
           }
         >
@@ -542,7 +547,7 @@ export default function VendorPaymentForecastPage() {
     {
       id: 'action',
       header: 'Action Required',
-      render: (row) => <span className="text-sm text-amber-400">{row.action}</span>,
+      cell: (row) => <span className="text-sm text-amber-400">{row.action}</span>,
     },
   ];
 
@@ -633,7 +638,7 @@ export default function VendorPaymentForecastPage() {
                 data={upcomingPayments}
                 columns={paymentColumns}
                 searchable
-                searchKeys={['vendorName', 'project', 'invoiceNumber']}
+                // searchKeys={['vendorName', 'project', 'invoiceNumber']}
               />
             </CardContent>
           </Card>
@@ -645,10 +650,11 @@ export default function VendorPaymentForecastPage() {
                 key={insight.id}
                 type={insight.type}
                 title={insight.title}
-                description={insight.description}
-                impact={insight.impact}
+                insight={insight.description}
+                impactValue={insight.impact}
+                impact={insight.impactLevel as 'low' | 'medium' | 'high'}
                 confidence={insight.confidence}
-                action={insight.action}
+                // action={insight.action}
               />
             ))}
           </div>
@@ -674,7 +680,7 @@ export default function VendorPaymentForecastPage() {
                           {day.payments} payments
                         </p>
                         {day.critical > 0 && (
-                          <Badge variant="destructive" className="mt-2">
+                          <Badge variant="danger" className="mt-2">
                             {day.critical} critical
                           </Badge>
                         )}
@@ -695,7 +701,7 @@ export default function VendorPaymentForecastPage() {
                 <CardDescription>Outflow forecast for next 5 weeks</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart
+                {/* <BarChart
                   data={cashImpactData}
                   xKey="week"
                   series={[
@@ -703,7 +709,18 @@ export default function VendorPaymentForecastPage() {
                     { key: 'buffer', name: 'Buffer', color: '#10b981' },
                   ]}
                   height={300}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={250}>
+                                  <BarChart data={cashImpactData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="week" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar dataKey="inflow" name="Inflow" fill="#22c55e" />
+                                    <Bar dataKey="outflow" name="Outflow" fill="#ef4444" />
+                                  </BarChart>
+                                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -715,7 +732,7 @@ export default function VendorPaymentForecastPage() {
               <CardContent>
                 <PieChart
                   data={paymentByCategory}
-                  height={280}
+                  // height={280}
                   showLegend
                 />
               </CardContent>
@@ -735,7 +752,7 @@ export default function VendorPaymentForecastPage() {
                 data={priorityMatrix}
                 columns={priorityColumns}
                 searchable
-                searchKeys={['vendorName']}
+                // searchKeys={['vendorName']}
               />
             </CardContent>
           </Card>
@@ -857,7 +874,7 @@ export default function VendorPaymentForecastPage() {
                 data={vendorExceptions}
                 columns={exceptionColumns}
                 searchable
-                searchKeys={['vendorName', 'exceptionType']}
+                // searchKeys={['vendorName', 'exceptionType']}
               />
             </CardContent>
           </Card>

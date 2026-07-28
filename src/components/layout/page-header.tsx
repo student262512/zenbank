@@ -26,13 +26,13 @@ import {
   ChevronDown,
   LucideIcon,
 } from 'lucide-react';
-import { BadgeProps } from '../ui';
+// import { ButtonProps } from '@base-ui/react';
 
 interface PageHeaderAction {
   label: string;
   icon?: LucideIcon;
   onClick?: () => void;
-  variant?: BadgeProps["variant"];
+  variant?: "default" | "secondary" | "outline" | "link" | "ghost" | "destructive" | null | undefined;
   disabled?: boolean;
 }
 
@@ -125,7 +125,7 @@ export function PageHeader({
           {/* Saved Views Dropdown */}
           {showSavedViews && (
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger>
                 <Button variant="outline" size="sm" className="gap-2">
                   <Save className="h-4 w-4" />
                   <span className="hidden sm:inline">
@@ -186,7 +186,7 @@ export function PageHeader({
 
           {/* More Actions */}
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+            <DropdownMenuTrigger>
               <Button variant="ghost" size="icon">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>

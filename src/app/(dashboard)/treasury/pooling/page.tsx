@@ -287,16 +287,16 @@ const aiInsights = [
     id: '1',
     type: 'recommendation' as const,
     title: 'Optimize Pool Structure',
-    description: 'Consider merging Regional Pool - North and Regional Pool - South into a single regional pool to reduce operational complexity and improve efficiency by 8%.',
+    insight: 'Consider merging Regional Pool - North and Regional Pool - South into a single regional pool to reduce operational complexity and improve efficiency by 8%.',
     impact: 'high' as const,
     confidence: 87,
     category: 'Pool Optimization',
   },
   {
     id: '2',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'Reactivate Subsidiary Pool',
-    description: 'Subsidiary Pool has been paused for 5 days. Reactivating would capture INR 1.2 Cr in idle cash currently sitting in participant accounts.',
+    insight: 'Subsidiary Pool has been paused for 5 days. Reactivating would capture INR 1.2 Cr in idle cash currently sitting in participant accounts.',
     impact: 'medium' as const,
     confidence: 92,
     category: 'Pool Management',
@@ -305,7 +305,7 @@ const aiInsights = [
     id: '3',
     type: 'insight' as const,
     title: 'Sweep Timing Optimization',
-    description: 'Moving sweep execution from 6:00 AM to 5:30 AM would capture additional INR 45 Lakhs daily in early morning receipts.',
+    insight: 'Moving sweep execution from 6:00 AM to 5:30 AM would capture additional INR 45 Lakhs daily in early morning receipts.',
     impact: 'medium' as const,
     confidence: 78,
     category: 'Sweep Optimization',
@@ -314,7 +314,7 @@ const aiInsights = [
     id: '4',
     type: 'recommendation' as const,
     title: 'Add New Participant',
-    description: 'ZenBank Hyderabad (new entity) should be added to Regional Pool - South. Projected annual interest savings: INR 32 Lakhs.',
+    insight: 'ZenBank Hyderabad (new entity) should be added to Regional Pool - South. Projected annual interest savings: INR 32 Lakhs.',
     impact: 'medium' as const,
     confidence: 85,
     category: 'Pool Expansion',
@@ -449,7 +449,7 @@ const transferColumns: Column<TransferRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Completed' ? 'default' : row.status === 'Pending' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'Completed' ? 'default' : row.status === 'Pending' ? 'secondary' : 'danger'}>
         {row.status === 'Completed' && <CheckCircle2 className="mr-1 h-3 w-3" />}
         {row.status === 'Pending' && <Clock className="mr-1 h-3 w-3" />}
         {row.status === 'Failed' && <AlertCircle className="mr-1 h-3 w-3" />}
@@ -500,7 +500,7 @@ export default function CashPoolingPage() {
         <KPICard
           title="Total Pool Balance"
           value={kpiData.totalPoolBalance.value}
-          unit={kpiData.totalPoolBalance.unit}
+          changeUnit={kpiData.totalPoolBalance.unit}
           change={kpiData.totalPoolBalance.change}
           trend={kpiData.totalPoolBalance.trend}
           icon={Wallet}
@@ -510,7 +510,7 @@ export default function CashPoolingPage() {
         <KPICard
           title="Active Pools"
           value={kpiData.activePools.value}
-          unit={kpiData.activePools.unit}
+          changeUnit={kpiData.activePools.unit}
           change={kpiData.activePools.change}
           trend={kpiData.activePools.trend}
           icon={Layers}
@@ -519,7 +519,7 @@ export default function CashPoolingPage() {
         <KPICard
           title="Participants"
           value={kpiData.participants.value}
-          unit={kpiData.participants.unit}
+          changeUnit={kpiData.participants.unit}
           change={kpiData.participants.change}
           trend={kpiData.participants.trend}
           icon={Users}
@@ -528,7 +528,7 @@ export default function CashPoolingPage() {
         <KPICard
           title="Today's Sweeps"
           value={kpiData.todaysSweeps.value}
-          unit={kpiData.todaysSweeps.unit}
+          changeUnit={kpiData.todaysSweeps.unit}
           change={kpiData.todaysSweeps.change}
           trend={kpiData.todaysSweeps.trend}
           icon={ArrowRightLeft}
@@ -537,7 +537,7 @@ export default function CashPoolingPage() {
         <KPICard
           title="Interest Saved"
           value={kpiData.interestSaved.value}
-          unit={kpiData.interestSaved.unit}
+          changeUnit={kpiData.interestSaved.unit}
           change={kpiData.interestSaved.change}
           trend={kpiData.interestSaved.trend}
           icon={TrendingUp}
@@ -547,7 +547,7 @@ export default function CashPoolingPage() {
         <KPICard
           title="Pool Efficiency"
           value={kpiData.poolEfficiency.value}
-          unit={kpiData.poolEfficiency.unit}
+          changeUnit={kpiData.poolEfficiency.unit}
           change={kpiData.poolEfficiency.change}
           trend={kpiData.poolEfficiency.trend}
           icon={Target}
@@ -585,7 +585,7 @@ export default function CashPoolingPage() {
                   height={280}
                   showGrid
                   showTooltip
-                  color="#3b82f6"
+                  // color="#3b82f6"
                 />
               </CardContent>
             </Card>
@@ -602,8 +602,8 @@ export default function CashPoolingPage() {
                   data={transferActivityData}
                   height={280}
                   showGrid
-                  showTooltip
-                  color="#10b981"
+                  // showTooltip
+                  // color="#10b981"
                 />
               </CardContent>
             </Card>
@@ -613,7 +613,7 @@ export default function CashPoolingPage() {
             <Card className="col-span-1">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5 text-muted-foreground" />
+                  {/* <PieChart className="h-5 w-5 text-muted-foreground" /> */}
                   Pool Utilization
                 </CardTitle>
                 <CardDescription>Balance distribution by pool</CardDescription>
@@ -621,9 +621,9 @@ export default function CashPoolingPage() {
               <CardContent>
                 <PieChart
                   data={poolUtilizationData}
-                  height={250}
+                  // height={250}
                   showLegend
-                  showTooltip
+                  // showTooltip
                 />
               </CardContent>
             </Card>
@@ -641,7 +641,7 @@ export default function CashPoolingPage() {
                   height={250}
                   showGrid
                   showTooltip
-                  color="#8b5cf6"
+                  // color="#8b5cf6"
                 />
               </CardContent>
             </Card>
@@ -654,7 +654,7 @@ export default function CashPoolingPage() {
               columns={poolColumns}
               searchable
               searchPlaceholder="Search pools..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
 
@@ -698,7 +698,7 @@ export default function CashPoolingPage() {
                 data={poolTableData.filter(p => p.poolType === 'Physical')}
                 columns={poolColumns}
                 searchable
-                pageSize={5}
+                // pageSize={5}
               />
             </CardContent>
           </Card>
@@ -737,7 +737,7 @@ export default function CashPoolingPage() {
                 data={poolTableData.filter(p => p.poolType === 'Notional')}
                 columns={poolColumns}
                 searchable
-                pageSize={5}
+                // pageSize={5}
               />
             </CardContent>
           </Card>
@@ -799,7 +799,7 @@ export default function CashPoolingPage() {
                 data={recentTransfersData.filter(t => t.transferType === 'Zero Balance')}
                 columns={transferColumns}
                 searchable
-                pageSize={5}
+                // pageSize={5}
               />
             </CardContent>
           </Card>
@@ -839,7 +839,7 @@ export default function CashPoolingPage() {
                 columns={participantColumns}
                 searchable
                 searchPlaceholder="Search participants..."
-                pageSize={10}
+                // pageSize={10}
               />
             </CardContent>
           </Card>
@@ -934,7 +934,7 @@ export default function CashPoolingPage() {
               columns={transferColumns}
               searchable
               searchPlaceholder="Search transfers..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>

@@ -131,7 +131,7 @@ export function GlobalFilters({
       {/* Entity Filter */}
       {showEntity && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <Building2 className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">{selectedEntity?.name || 'Entity'}</span>
@@ -165,7 +165,7 @@ export function GlobalFilters({
       {/* Project Filter */}
       {showProject && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <FolderKanban className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">
@@ -220,7 +220,7 @@ export function GlobalFilters({
       {/* Bank Account Filter */}
       {showBankAccount && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <Wallet className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">
@@ -272,7 +272,7 @@ export function GlobalFilters({
       {/* Date Range Filter */}
       {showDateRange && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <Calendar className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">{selectedDatePreset?.label || 'Date Range'}</span>

@@ -37,7 +37,7 @@ import {
   DataTable,
   Column,
   LineChart,
-  BarChart,
+  // BarChart,
   AreaChart,
   PieChart,
   AIInsightCard,
@@ -51,6 +51,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { loanForecastTabs } from '@/config/cash-flow-navigation';
+import { ResponsiveContainer, Bar, CartesianGrid, BarChart, Tooltip, XAxis, YAxis, Legend } from 'recharts';
 
 // Mock data for KPIs
 const kpiData = {
@@ -320,11 +321,11 @@ const debtOutlookData = [
 
 // Mock data for debt by lender
 const debtByLender = [
-  { name: 'ICICI Bank', value: 285.0, color: '#3b82f6' },
-  { name: 'SBI', value: 198.5, color: '#10b981' },
-  { name: 'HDFC Bank', value: 156.8, color: '#f59e0b' },
-  { name: 'PNB', value: 89.4, color: '#8b5cf6' },
-  { name: 'Axis Bank', value: 45.8, color: '#ec4899' },
+  { label: 'ICICI Bank', value: 285.0, color: '#3b82f6' },
+  { label: 'SBI', value: 198.5, color: '#10b981' },
+  { label: 'HDFC Bank', value: 156.8, color: '#f59e0b' },
+  { label: 'PNB', value: 89.4, color: '#8b5cf6' },
+  { label: 'Axis Bank', value: 45.8, color: '#ec4899' },
 ];
 
 // AI Insights
@@ -335,6 +336,7 @@ const aiInsights = [
     title: 'Refinancing Opportunity',
     description: 'HDFC loan at 9.5% can be refinanced at 8.75%. Potential savings of ₹1.17 Cr over remaining tenure.',
     impact: '+₹1.17 Cr savings',
+    impactLevel: 'high',
     confidence: 92,
     action: 'Explore Refinance',
   },
@@ -344,6 +346,7 @@ const aiInsights = [
     title: 'Covenant Watch',
     description: 'Axis Bank WC facility showing DSCR at 1.12x against covenant of 1.15x. Action needed.',
     impact: 'Covenant breach risk',
+    impactLevel: 'high',
     confidence: 88,
     action: 'Review Covenant',
   },
@@ -353,6 +356,7 @@ const aiInsights = [
     title: 'Prepayment Analysis',
     description: 'Prepaying ₹25 Cr on PNB loan can save ₹2.8 Cr in interest. No prepayment penalty applicable.',
     impact: '+₹2.8 Cr savings',
+    impactLevel: 'low',
     confidence: 95,
     action: 'Evaluate Prepay',
   },
@@ -388,7 +392,7 @@ export default function LoanRepaymentForecastPage() {
       id: 'lender',
       header: 'Lender',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.lender}</div>
           <div className="text-xs text-muted-foreground">{row.loanId}</div>
@@ -398,7 +402,7 @@ export default function LoanRepaymentForecastPage() {
     {
       id: 'loanType',
       header: 'Type',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant="outline">{row.loanType}</Badge>
       ),
     },
@@ -411,14 +415,14 @@ export default function LoanRepaymentForecastPage() {
       id: 'sanctionedAmount',
       header: 'Sanctioned',
       align: 'right' as const,
-      render: (row) => <span>₹{row.sanctionedAmount.toFixed(0)} Cr</span>,
+      cell: (row) => <span>₹{row.sanctionedAmount.toFixed(0)} Cr</span>,
     },
     {
       id: 'outstanding',
       header: 'Outstanding',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-red-400">₹{row.outstanding.toFixed(1)} Cr</span>
       ),
     },
@@ -426,25 +430,25 @@ export default function LoanRepaymentForecastPage() {
       id: 'interestRate',
       header: 'Rate',
       align: 'right' as const,
-      render: (row) => <span>{row.interestRate}%</span>,
+      cell: (row) => <span>{row.interestRate}%</span>,
     },
     {
       id: 'emiAmount',
       header: 'EMI',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span>{row.emiAmount > 0 ? `₹${row.emiAmount.toFixed(2)} Cr` : 'Moratorium'}</span>
       ),
     },
     {
       id: 'nextEmiDate',
       header: 'Next EMI',
-      render: (row) => new Date(row.nextEmiDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.nextEmiDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.status === 'active' ? 'default' :
@@ -458,11 +462,11 @@ export default function LoanRepaymentForecastPage() {
     {
       id: 'covenantStatus',
       header: 'Covenant',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.covenantStatus === 'compliant' ? 'default' :
-            row.covenantStatus === 'watch' ? 'secondary' : 'destructive'
+            row.covenantStatus === 'watch' ? 'secondary' : 'danger'
           }
         >
           {row.covenantStatus}
@@ -472,7 +476,7 @@ export default function LoanRepaymentForecastPage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -503,31 +507,31 @@ export default function LoanRepaymentForecastPage() {
       id: 'principalOutstanding',
       header: 'Principal O/S',
       align: 'right' as const,
-      render: (row) => <span>₹{row.principalOutstanding.toFixed(1)} Cr</span>,
+      cell: (row) => <span>₹{row.principalOutstanding.toFixed(1)} Cr</span>,
     },
     {
       id: 'interestRate',
       header: 'Rate',
       align: 'right' as const,
-      render: (row) => <span>{row.interestRate}%</span>,
+      cell: (row) => <span>{row.interestRate}%</span>,
     },
     {
       id: 'interestAmount',
       header: 'Interest Due',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-amber-400">₹{row.interestAmount.toFixed(2)} Cr</span>
       ),
     },
     {
       id: 'dueDate',
       header: 'Due Date',
-      render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant={row.status === 'due_soon' ? 'default' : 'secondary'}>
           {row.status === 'due_soon' ? 'Due Soon' : 'Upcoming'}
         </Badge>
@@ -554,7 +558,7 @@ export default function LoanRepaymentForecastPage() {
       id: 'principalDue',
       header: 'Principal Due',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-red-400">₹{row.principalDue.toFixed(2)} Cr</span>
       ),
     },
@@ -562,23 +566,23 @@ export default function LoanRepaymentForecastPage() {
       id: 'totalEmi',
       header: 'Total EMI',
       align: 'right' as const,
-      render: (row) => <span>₹{row.totalEmi.toFixed(2)} Cr</span>,
+      cell: (row) => <span>₹{row.totalEmi.toFixed(2)} Cr</span>,
     },
     {
       id: 'principalAfterPayment',
       header: 'After Payment',
       align: 'right' as const,
-      render: (row) => <span>₹{row.principalAfterPayment.toFixed(2)} Cr</span>,
+      cell: (row) => <span>₹{row.principalAfterPayment.toFixed(2)} Cr</span>,
     },
     {
       id: 'dueDate',
       header: 'Due Date',
-      render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant={row.status === 'due_soon' ? 'default' : 'secondary'}>
           {row.status === 'due_soon' ? 'Due Soon' : 'Upcoming'}
         </Badge>
@@ -601,13 +605,13 @@ export default function LoanRepaymentForecastPage() {
       id: 'dueDate',
       header: 'Due Date',
       sortable: true,
-      render: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.dueDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'daysUntilDue',
       header: 'Days',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.daysUntilDue <= 7 ? 'text-amber-400' : ''}>
           {row.daysUntilDue}
         </span>
@@ -617,26 +621,26 @@ export default function LoanRepaymentForecastPage() {
       id: 'principal',
       header: 'Principal',
       align: 'right' as const,
-      render: (row) => <span>₹{row.principal.toFixed(2)} Cr</span>,
+      cell: (row) => <span>₹{row.principal.toFixed(2)} Cr</span>,
     },
     {
       id: 'interest',
       header: 'Interest',
       align: 'right' as const,
-      render: (row) => <span>₹{row.interest.toFixed(2)} Cr</span>,
+      cell: (row) => <span>₹{row.interest.toFixed(2)} Cr</span>,
     },
     {
       id: 'total',
       header: 'Total',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-red-400">₹{row.total.toFixed(2)} Cr</span>
       ),
     },
     {
       id: 'priority',
       header: 'Priority',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant={row.priority === 'high' ? 'default' : 'secondary'}>
           {row.priority}
         </Badge>
@@ -731,7 +735,7 @@ export default function LoanRepaymentForecastPage() {
                 data={loanSchedule}
                 columns={loanColumns}
                 searchable
-                searchKeys={['lender', 'project', 'loanId']}
+                // searchKeys={['lender', 'project', 'loanId']}
               />
             </CardContent>
           </Card>
@@ -743,10 +747,11 @@ export default function LoanRepaymentForecastPage() {
                 key={insight.id}
                 type={insight.type}
                 title={insight.title}
-                description={insight.description}
-                impact={insight.impact}
+                insight={insight.description}
+                impactValue={insight.impact}
+                impact={insight.impactLevel as 'low' | 'medium' | 'high'}
                 confidence={insight.confidence}
-                action={insight.action}
+                // action={insight.action}
               />
             ))}
           </div>
@@ -811,7 +816,7 @@ export default function LoanRepaymentForecastPage() {
                 data={interestSchedule}
                 columns={interestColumns}
                 searchable
-                searchKeys={['lender', 'project']}
+                // searchKeys={['lender', 'project']}
               />
             </CardContent>
           </Card>
@@ -876,7 +881,7 @@ export default function LoanRepaymentForecastPage() {
                 data={principalSchedule}
                 columns={principalColumns}
                 searchable
-                searchKeys={['lender', 'project']}
+                // searchKeys={['lender', 'project']}
               />
             </CardContent>
           </Card>
@@ -894,7 +899,7 @@ export default function LoanRepaymentForecastPage() {
                 data={upcomingPayments}
                 columns={upcomingColumns}
                 searchable
-                searchKeys={['lender', 'project']}
+                // searchKeys={['lender', 'project']}
               />
             </CardContent>
           </Card>
@@ -928,7 +933,7 @@ export default function LoanRepaymentForecastPage() {
               <CardContent>
                 <PieChart
                   data={debtByLender}
-                  height={280}
+                  // height={280}
                   showLegend
                 />
               </CardContent>
@@ -941,7 +946,7 @@ export default function LoanRepaymentForecastPage() {
               <CardDescription>EMI breakdown over next 6 months</CardDescription>
             </CardHeader>
             <CardContent>
-              <BarChart
+              {/* <BarChart
                 data={debtOutlookData}
                 xKey="month"
                 series={[
@@ -949,7 +954,18 @@ export default function LoanRepaymentForecastPage() {
                   { key: 'emi', name: 'EMI', color: '#ef4444' },
                 ]}
                 height={300}
-              />
+              /> */}
+              <ResponsiveContainer width="100%" height={250}>
+                                <BarChart data={debtOutlookData}>
+                                  <CartesianGrid strokeDasharray="3 3" />
+                                  <XAxis dataKey="month" />
+                                  <YAxis />
+                                  <Tooltip />
+                                  <Legend />
+                                  <Bar dataKey="interest" name="Interest" fill="#f59e0b" />
+                                  <Bar dataKey="emi" name="EMI" fill="#ef4444" />
+                                </BarChart>
+                              </ResponsiveContainer>
             </CardContent>
           </Card>
         </TabsContent>

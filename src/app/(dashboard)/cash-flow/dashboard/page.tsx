@@ -5,7 +5,7 @@ import { PageHeader } from '@/components/layout/page-header';
 import { PageContainer, Section } from '@/components/layout/dashboard-shell';
 import { KPICard, KPIGrid } from '@/components/shared/kpi-card';
 import { LineChart } from '@/components/shared/charts/line-chart';
-import { BarChart } from '@/components/shared/charts/bar-chart';
+// import { BarChart } from '@/components/shared/charts/bar-chart';
 import { AreaChart } from '@/components/shared/charts/area-chart';
 import { DataTable, type Column } from '@/components/shared/data-table/data-table';
 import { AIInsightCard, AIInsightsPanel } from '@/components/shared/ai-insight-card';
@@ -44,6 +44,9 @@ import {
   Shield,
 } from 'lucide-react';
 import { cashFlowDashboardTabs } from '@/config/cash-flow-navigation';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { chartAxisStyle, chartGridStyle, chartTooltipStyle } from '@/components/shared/charts/chart-utils';
+import { chartGradients } from '@/components/shared/charts/chart-theme';
 
 // Mock KPI Data based on checklist requirements
 const kpiData = {
@@ -347,7 +350,7 @@ const aiInsights = [
   {
     title: 'Funding Gap Analysis',
     insight: 'Projected ₹78 Cr shortfall in next 30 days can be covered by accelerating 3 customer collections or drawing ₹50 Cr from credit line.',
-    type: 'alert' as const,
+    type: 'warning' as const,
     confidence: 89,
     impact: 'high' as const,
   },
@@ -657,7 +660,7 @@ export default function CashFlowDashboardPage() {
               ]}
               formatValue={(v) => `₹${v.toFixed(0)} Cr`}
             />
-            <BarChart
+            {/* <BarChart
               data={monthlyForecastData.slice(0, 6)}
               title="Monthly Inflow vs Outflow"
               subtitle="Current fiscal year"
@@ -667,7 +670,33 @@ export default function CashFlowDashboardPage() {
                 { label: 'Outflow', color: '#f87171' },
               ]}
               formatValue={(v) => `₹${v} Cr`}
-            />
+            /> */}
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={monthlyForecastData.slice(0, 6)}>
+                <CartesianGrid {...chartGridStyle} />
+                <XAxis
+                  // dataKey="label"
+                  {...chartAxisStyle}
+                />
+                <YAxis
+                  dataKey="label"
+                  {...chartAxisStyle}
+                />
+                <Tooltip
+                  contentStyle={chartTooltipStyle}
+                />
+                <Bar
+                  dataKey="inflow"
+                  fill={chartGradients['purple'].id}
+                  radius={[8, 8, 0, 0]}
+                />
+                <Bar
+                  dataKey="outflow"
+                  fill={chartGradients['green'].id}
+                  radius={[8, 8, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
 
           {/* AI Insights Panel */}
@@ -734,8 +763,8 @@ export default function CashFlowDashboardPage() {
                 data={pendingApprovals}
                 columns={approvalColumns}
                 actions={[
-                  { label: 'Approve', onClick: () => {} },
-                  { label: 'Reject', onClick: () => {}, variant: 'danger' },
+                  { label: 'Approve', onClick: () => { } },
+                  { label: 'Reject', onClick: () => { }, variant: 'danger' },
                 ]}
                 hoverable
                 compact
@@ -792,7 +821,7 @@ export default function CashFlowDashboardPage() {
               height={350}
               formatValue={(v) => `₹${v.toFixed(0)} Cr`}
             />
-            <BarChart
+            {/* <BarChart
               data={weeklyForecastData}
               title="12-Week Rolling Forecast"
               subtitle="Weekly projections with confidence bands"
@@ -802,7 +831,33 @@ export default function CashFlowDashboardPage() {
                 { label: 'Base Case', color: '#3b82f6' },
               ]}
               formatValue={(v) => `₹${v} Cr`}
-            />
+            /> */}
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={weeklyForecastData}>
+                <CartesianGrid {...chartGridStyle} />
+                <XAxis
+                  // dataKey="period"
+                  {...chartAxisStyle}
+                />
+                <YAxis
+                  dataKey="label"
+                  {...chartAxisStyle}
+                />
+                <Tooltip
+                  contentStyle={chartTooltipStyle}
+                />
+                <Bar
+                  dataKey="value"
+                  fill={chartGradients['green'].id}
+                  radius={[8, 8, 0, 0]}
+                />
+                <Bar
+                  dataKey="value2"
+                  fill={chartGradients['purple'].id}
+                  radius={[8, 8, 0, 0]}
+                />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </TabsContent>
 
@@ -955,9 +1010,9 @@ export default function CashFlowDashboardPage() {
               data={pendingApprovals}
               columns={approvalColumns}
               actions={[
-                { label: 'Approve', onClick: () => {} },
-                { label: 'Reject', onClick: () => {}, variant: 'danger' },
-                { label: 'Hold', onClick: () => {}, variant: 'secondary' },
+                { label: 'Approve', onClick: () => { } },
+                { label: 'Reject', onClick: () => { }, variant: 'danger' },
+                { label: 'Hold', onClick: () => { }, variant: 'danger' },
               ]}
               hoverable
             />

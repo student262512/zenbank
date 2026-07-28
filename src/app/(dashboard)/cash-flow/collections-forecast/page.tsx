@@ -54,6 +54,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { collectionsForecastTabs } from '@/config/cash-flow-navigation';
+import NeonRadialPieChart from '@/components/shared/charts/NeonRadialPieChart';
 
 // Mock data for KPIs
 const kpiData = {
@@ -383,6 +384,7 @@ const aiInsights = [
     title: 'High Risk Customer Alert',
     description: 'Lodha Developers shows 45% deterioration in payment behavior. ₹61.5 Cr overdue with declining trend.',
     impact: 'High collection risk',
+    impactLevel: 'high',
     confidence: 94,
     action: 'Escalate Immediately',
   },
@@ -392,6 +394,7 @@ const aiInsights = [
     title: 'Early Collection Opportunity',
     description: 'Offering 1.5% discount to 8 customers can accelerate ₹45.2 Cr in current dues by 15 days.',
     impact: '+₹68 Lakhs interest',
+    impactLevel: 'high',
     confidence: 87,
     action: 'Launch Campaign',
   },
@@ -401,6 +404,7 @@ const aiInsights = [
     title: 'PTP Conversion Rate',
     description: 'Brigade Group has 95% PTP fulfillment rate. Prioritize their commitments for cash planning.',
     impact: 'Reliable forecast',
+    impactLevel: 'high',
     confidence: 92,
     action: 'Update Forecast',
   },
@@ -437,7 +441,7 @@ export default function CollectionsForecastPage() {
       id: 'customerName',
       header: 'Customer',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.customerName}</div>
           <div className="text-xs text-muted-foreground">{row.project}</div>
@@ -449,7 +453,7 @@ export default function CollectionsForecastPage() {
       header: 'Current',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-emerald-400">₹{row.current.toFixed(1)} Cr</span>
       ),
     },
@@ -458,7 +462,7 @@ export default function CollectionsForecastPage() {
       header: '0-30 Days',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.overdue030 > 0 ? 'text-amber-400' : 'text-muted-foreground'}>
           ₹{row.overdue030.toFixed(1)} Cr
         </span>
@@ -469,7 +473,7 @@ export default function CollectionsForecastPage() {
       header: '31-60 Days',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.overdue3160 > 0 ? 'text-orange-400' : 'text-muted-foreground'}>
           ₹{row.overdue3160.toFixed(1)} Cr
         </span>
@@ -480,7 +484,7 @@ export default function CollectionsForecastPage() {
       header: '61-90 Days',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.overdue6190 > 0 ? 'text-red-400' : 'text-muted-foreground'}>
           ₹{row.overdue6190.toFixed(1)} Cr
         </span>
@@ -491,7 +495,7 @@ export default function CollectionsForecastPage() {
       header: '90+ Days',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.overdue90Plus > 0 ? 'text-red-500 font-semibold' : 'text-muted-foreground'}>
           ₹{row.overdue90Plus.toFixed(1)} Cr
         </span>
@@ -502,16 +506,16 @@ export default function CollectionsForecastPage() {
       header: 'Total',
       align: 'right' as const,
       sortable: true,
-      render: (row) => <span className="font-semibold">₹{row.total.toFixed(1)} Cr</span>,
+      cell: (row) => <span className="font-semibold">₹{row.total.toFixed(1)} Cr</span>,
     },
     {
       id: 'creditScore',
       header: 'Score',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.creditScore.startsWith('A') ? 'default' :
-            row.creditScore.startsWith('B') ? 'secondary' : 'destructive'
+              row.creditScore.startsWith('B') ? 'secondary' : 'danger'
           }
         >
           {row.creditScore}
@@ -521,7 +525,7 @@ export default function CollectionsForecastPage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -544,21 +548,20 @@ export default function CollectionsForecastPage() {
       header: 'Projected',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-emerald-400">₹{row.projectedAmount.toFixed(1)} Cr</span>
       ),
     },
     {
       id: 'confidenceLevel',
       header: 'Confidence',
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${
-                row.confidenceLevel >= 90 ? 'bg-emerald-500' :
-                row.confidenceLevel >= 80 ? 'bg-amber-500' : 'bg-red-500'
-              }`}
+              className={`h-full rounded-full ${row.confidenceLevel >= 90 ? 'bg-emerald-500' :
+                  row.confidenceLevel >= 80 ? 'bg-amber-500' : 'bg-red-500'
+                }`}
               style={{ width: `${row.confidenceLevel}%` }}
             />
           </div>
@@ -575,7 +578,7 @@ export default function CollectionsForecastPage() {
       id: 'aiAdjustment',
       header: 'AI Adj.',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.aiAdjustment >= 0 ? 'text-emerald-400' : 'text-red-400'}>
           {row.aiAdjustment >= 0 ? '+' : ''}₹{row.aiAdjustment.toFixed(1)} Cr
         </span>
@@ -584,7 +587,7 @@ export default function CollectionsForecastPage() {
     {
       id: 'trend',
       header: 'Trend',
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-1">
           {row.trend === 'up' ? (
             <TrendingUp className="h-4 w-4 text-emerald-400" />
@@ -603,7 +606,7 @@ export default function CollectionsForecastPage() {
       id: 'customerName',
       header: 'Customer',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.customerName}</div>
           <div className="text-xs text-muted-foreground">{row.invoiceNumber}</div>
@@ -620,7 +623,7 @@ export default function CollectionsForecastPage() {
       header: 'Amount',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-red-400">₹{row.amount.toFixed(1)} Cr</span>
       ),
     },
@@ -629,11 +632,11 @@ export default function CollectionsForecastPage() {
       header: 'Days Overdue',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className={
           row.daysOverdue > 90 ? 'text-red-500 font-semibold' :
-          row.daysOverdue > 60 ? 'text-red-400' :
-          row.daysOverdue > 30 ? 'text-orange-400' : 'text-amber-400'
+            row.daysOverdue > 60 ? 'text-red-400' :
+              row.daysOverdue > 30 ? 'text-orange-400' : 'text-amber-400'
         }>
           {row.daysOverdue} days
         </span>
@@ -642,12 +645,12 @@ export default function CollectionsForecastPage() {
     {
       id: 'agingBucket',
       header: 'Bucket',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.agingBucket === '0-30 Days' ? 'secondary' :
-            row.agingBucket === '31-60 Days' ? 'outline' :
-            row.agingBucket === '61-90 Days' ? 'default' : 'destructive'
+              row.agingBucket === '31-60 Days' ? 'outline' :
+                row.agingBucket === '61-90 Days' ? 'default' : 'danger'
           }
         >
           {row.agingBucket}
@@ -657,21 +660,21 @@ export default function CollectionsForecastPage() {
     {
       id: 'collectionStatus',
       header: 'Status',
-      render: (row) => <span className="text-sm">{row.collectionStatus}</span>,
+      cell: (row) => <span className="text-sm">{row.collectionStatus}</span>,
     },
     {
       id: 'nextAction',
       header: 'Next Action',
-      render: (row) => <span className="text-sm text-muted-foreground">{row.nextAction}</span>,
+      cell: (row) => <span className="text-sm text-muted-foreground">{row.nextAction}</span>,
     },
     {
       id: 'priority',
       header: 'Priority',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
-            row.priority === 'critical' ? 'destructive' :
-            row.priority === 'high' ? 'default' : 'secondary'
+            row.priority === 'critical' ? 'danger' :
+              row.priority === 'high' ? 'default' : 'secondary'
           }
         >
           {row.priority}
@@ -685,7 +688,7 @@ export default function CollectionsForecastPage() {
       id: 'customerName',
       header: 'Customer',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.customerName}</div>
           <div className="text-xs text-muted-foreground">{row.project}</div>
@@ -696,14 +699,14 @@ export default function CollectionsForecastPage() {
       id: 'promiseDate',
       header: 'Promise Date',
       sortable: true,
-      render: (row) => new Date(row.promiseDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.promiseDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'promiseAmount',
       header: 'PTP Amount',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-emerald-400">₹{row.promiseAmount.toFixed(1)} Cr</span>
       ),
     },
@@ -711,19 +714,18 @@ export default function CollectionsForecastPage() {
       id: 'overdueAmount',
       header: 'Overdue',
       align: 'right' as const,
-      render: (row) => <span className="text-red-400">₹{row.overdueAmount.toFixed(1)} Cr</span>,
+      cell: (row) => <span className="text-red-400">₹{row.overdueAmount.toFixed(1)} Cr</span>,
     },
     {
       id: 'percentCovered',
       header: 'Coverage',
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-12 h-2 bg-slate-700 rounded-full overflow-hidden">
             <div
-              className={`h-full rounded-full ${
-                row.percentCovered >= 80 ? 'bg-emerald-500' :
-                row.percentCovered >= 50 ? 'bg-amber-500' : 'bg-red-500'
-              }`}
+              className={`h-full rounded-full ${row.percentCovered >= 80 ? 'bg-emerald-500' :
+                  row.percentCovered >= 50 ? 'bg-amber-500' : 'bg-red-500'
+                }`}
               style={{ width: `${row.percentCovered}%` }}
             />
           </div>
@@ -734,11 +736,11 @@ export default function CollectionsForecastPage() {
     {
       id: 'confidence',
       header: 'Confidence',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.confidence >= 90 ? 'default' :
-            row.confidence >= 70 ? 'secondary' : 'destructive'
+              row.confidence >= 70 ? 'secondary' : 'danger'
           }
         >
           {row.confidence}%
@@ -748,7 +750,7 @@ export default function CollectionsForecastPage() {
     {
       id: 'ptpStatus',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant={row.ptpStatus === 'Fulfilled' ? 'default' : 'outline'}>
           {row.ptpStatus}
         </Badge>
@@ -757,7 +759,7 @@ export default function CollectionsForecastPage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -910,10 +912,16 @@ export default function CollectionsForecastPage() {
                 <CardDescription>Receivables distribution</CardDescription>
               </CardHeader>
               <CardContent>
-                <PieChart
+                {/* <PieChart
                   data={collectionByProject}
                   height={280}
                   showLegend
+                /> */}
+                <NeonRadialPieChart
+                  data={collectionByProject}
+                  dataKey="value"
+                  nameKey="name"
+                  height={300}
                 />
               </CardContent>
             </Card>
@@ -929,7 +937,7 @@ export default function CollectionsForecastPage() {
                 data={customerAging}
                 columns={agingColumns}
                 searchable
-                searchKeys={['customerName', 'project']}
+                // searchKeys={['customerName', 'project']}
               />
             </CardContent>
           </Card>
@@ -958,10 +966,11 @@ export default function CollectionsForecastPage() {
                 key={insight.id}
                 type={insight.type}
                 title={insight.title}
-                description={insight.description}
-                impact={insight.impact}
+                insight={insight.description}
+                    impact={insight.impactLevel as 'low' | 'medium' | 'high'}
+                    impactValue={insight.impact}
                 confidence={insight.confidence}
-                action={insight.action}
+                // action={insight.action}
               />
             ))}
           </div>
@@ -1026,7 +1035,7 @@ export default function CollectionsForecastPage() {
                 data={overdueAccounts}
                 columns={overdueColumns}
                 searchable
-                searchKeys={['customerName', 'project', 'invoiceNumber']}
+                // searchKeys={['customerName', 'project', 'invoiceNumber']}
               />
             </CardContent>
           </Card>
@@ -1091,7 +1100,7 @@ export default function CollectionsForecastPage() {
                 data={promiseToPay}
                 columns={ptpColumns}
                 searchable
-                searchKeys={['customerName', 'project']}
+                // searchKeys={['customerName', 'project']}
               />
             </CardContent>
           </Card>

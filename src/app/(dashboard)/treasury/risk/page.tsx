@@ -167,9 +167,9 @@ const counterpartyData: CounterpartyRecord[] = [
 const aiInsights = [
   {
     id: '1',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'HDFC Bank Limit Breach',
-    description: 'HDFC Bank exposure at INR 280 Cr (112% of limit). Move INR 30 Cr to alternative banks on next maturity.',
+    insight: 'HDFC Bank exposure at INR 280 Cr (112% of limit). Move INR 30 Cr to alternative banks on next maturity.',
     impact: 'high' as const,
     confidence: 100,
     category: 'Concentration Risk',
@@ -178,7 +178,7 @@ const aiInsights = [
     id: '2',
     type: 'recommendation' as const,
     title: 'Liquidity Buffer Enhancement',
-    description: 'Recommend increasing buffer to INR 600 Cr given Q2 payment schedule. Cost: INR 50 Lakhs/year.',
+    insight: 'Recommend increasing buffer to INR 600 Cr given Q2 payment schedule. Cost: INR 50 Lakhs/year.',
     impact: 'high' as const,
     confidence: 88,
     category: 'Liquidity Risk',
@@ -187,7 +187,7 @@ const aiInsights = [
     id: '3',
     type: 'insight' as const,
     title: 'Interest Rate Sensitivity',
-    description: 'A 100bps rate increase would impact portfolio by INR 45 Cr. Consider hedging via IRS.',
+    insight: 'A 100bps rate increase would impact portfolio by INR 45 Cr. Consider hedging via IRS.',
     impact: 'medium' as const,
     confidence: 82,
     category: 'Interest Rate Risk',
@@ -210,7 +210,7 @@ const riskColumns: Column<RiskRecord>[] = [
     header: 'Severity',
     accessor: 'severity',
     cell: (row) => (
-      <Badge variant={row.severity === 'Critical' ? 'destructive' : row.severity === 'High' ? 'secondary' : 'outline'}>
+      <Badge variant={row.severity === 'Critical' ? 'danger' : row.severity === 'High' ? 'secondary' : 'outline'}>
         {row.severity}
       </Badge>
     ),
@@ -229,7 +229,7 @@ const riskColumns: Column<RiskRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Mitigated' ? 'default' : row.status === 'Monitoring' ? 'secondary' : row.status === 'Open' ? 'destructive' : 'outline'}>
+      <Badge variant={row.status === 'Mitigated' ? 'default' : row.status === 'Monitoring' ? 'secondary' : row.status === 'Open' ? 'danger' : 'outline'}>
         {row.status === 'Mitigated' && <CheckCircle2 className="mr-1 h-3 w-3" />}
         {row.status === 'Open' && <AlertCircle className="mr-1 h-3 w-3" />}
         {row.status}
@@ -275,7 +275,7 @@ const counterpartyColumns: Column<CounterpartyRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Within Limit' ? 'default' : row.status === 'Near Limit' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'Within Limit' ? 'default' : row.status === 'Near Limit' ? 'secondary' : 'danger'}>
         {row.status}
       </Badge>
     ),
@@ -317,7 +317,7 @@ export default function TreasuryRiskPage() {
         <KPICard
           title="Overall Risk Score"
           value={kpiData.overallRiskScore.value}
-          unit={kpiData.overallRiskScore.unit}
+          changeUnit={kpiData.overallRiskScore.unit}
           change={kpiData.overallRiskScore.change}
           trend={kpiData.overallRiskScore.trend}
           icon={Shield}
@@ -327,7 +327,7 @@ export default function TreasuryRiskPage() {
         <KPICard
           title="High Risk Items"
           value={kpiData.highRiskItems.value}
-          unit={kpiData.highRiskItems.unit}
+          changeUnit={kpiData.highRiskItems.unit}
           change={kpiData.highRiskItems.change}
           trend={kpiData.highRiskItems.trend}
           icon={AlertTriangle}
@@ -336,7 +336,7 @@ export default function TreasuryRiskPage() {
         <KPICard
           title="Critical Alerts"
           value={kpiData.criticalAlerts.value}
-          unit={kpiData.criticalAlerts.unit}
+          changeUnit={kpiData.criticalAlerts.unit}
           change={kpiData.criticalAlerts.change}
           trend={kpiData.criticalAlerts.trend}
           icon={AlertCircle}
@@ -345,7 +345,7 @@ export default function TreasuryRiskPage() {
         <KPICard
           title="Risk Trend"
           value={kpiData.riskTrend.value}
-          unit={kpiData.riskTrend.unit}
+          changeUnit={kpiData.riskTrend.unit}
           change={kpiData.riskTrend.change}
           trend={kpiData.riskTrend.trend}
           icon={TrendingDown}
@@ -354,7 +354,7 @@ export default function TreasuryRiskPage() {
         <KPICard
           title="VaR (1-day 99%)"
           value={kpiData.varOneDay.value}
-          unit={kpiData.varOneDay.unit}
+          changeUnit={kpiData.varOneDay.unit}
           change={kpiData.varOneDay.change}
           trend={kpiData.varOneDay.trend}
           icon={Target}
@@ -364,7 +364,7 @@ export default function TreasuryRiskPage() {
         <KPICard
           title="Stress Test Impact"
           value={kpiData.stressTestImpact.value}
-          unit={kpiData.stressTestImpact.unit}
+          changeUnit={kpiData.stressTestImpact.unit}
           change={kpiData.stressTestImpact.change}
           trend={kpiData.stressTestImpact.trend}
           icon={Thermometer}
@@ -395,7 +395,7 @@ export default function TreasuryRiskPage() {
                 <CardDescription>12-month risk score evolution</CardDescription>
               </CardHeader>
               <CardContent>
-                <LineChart data={riskTrendData} height={280} showGrid showTooltip color="#ef4444" />
+                <LineChart data={riskTrendData} height={280} showGrid showTooltip />
               </CardContent>
             </Card>
             <Card>
@@ -407,7 +407,7 @@ export default function TreasuryRiskPage() {
                 <CardDescription>Potential loss by scenario</CardDescription>
               </CardHeader>
               <CardContent>
-                <BarChart data={scenarioImpactData} height={280} showGrid showTooltip color="#f59e0b" />
+                <BarChart data={scenarioImpactData} height={280} showGrid />
               </CardContent>
             </Card>
           </div>
@@ -432,7 +432,7 @@ export default function TreasuryRiskPage() {
           </Card>
 
           <Section title="Risk Register" description="All identified treasury risks">
-            <DataTable data={riskRegisterData} columns={riskColumns} searchable pageSize={10} />
+            <DataTable data={riskRegisterData} columns={riskColumns} searchable />
           </Section>
 
           <AIInsightsPanel title="Risk Intelligence" insights={aiInsights} />
@@ -487,7 +487,7 @@ export default function TreasuryRiskPage() {
                 <div className="p-4 border rounded-lg border-red-200">
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-medium">Severe Stress</span>
-                    <Badge variant="destructive">50% outflow</Badge>
+                    <Badge variant="danger">50% outflow</Badge>
                   </div>
                   <Progress value={45} className="h-2" />
                   <p className="text-sm text-red-600 mt-2">Coverage: 72% - Emergency lines required</p>
@@ -500,7 +500,7 @@ export default function TreasuryRiskPage() {
         {/* Counterparty Tab */}
         <TabsContent value="counterparty" className="space-y-6">
           <Section title="Counterparty Exposure" description="Exposure limits and utilization">
-            <DataTable data={counterpartyData} columns={counterpartyColumns} searchable pageSize={10} />
+            <DataTable data={counterpartyData} columns={counterpartyColumns} searchable />
           </Section>
         </TabsContent>
 

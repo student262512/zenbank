@@ -240,7 +240,7 @@ const assumptionColumns: Column<ScenarioAssumption>[] = [
     header: 'Impact',
     cell: (row) => (
       <Badge variant={
-        row.impact === 'high' ? 'destructive' :
+        row.impact === 'high' ? 'danger' :
         row.impact === 'medium' ? 'secondary' : 'outline'
       }>
         {row.impact}
@@ -290,7 +290,7 @@ const recommendationColumns: Column<ScenarioRecommendation>[] = [
     header: 'Priority',
     cell: (row) => (
       <Badge variant={
-        row.priority === 'critical' ? 'destructive' :
+        row.priority === 'critical' ? 'danger' :
         row.priority === 'high' ? 'default' :
         row.priority === 'medium' ? 'secondary' : 'outline'
       }>
@@ -320,40 +320,42 @@ const aiInsights = [
   {
     id: '1',
     title: 'Critical Liquidity Risk Identified',
-    description: 'The scenario projects available liquidity falling below target buffer in Q2. Recommend drawing committed credit lines preemptively.',
-    type: 'alert' as const,
-    priority: 'high' as const,
-    impact: 'Risk of covenant breach if not addressed',
+    insight: 'The scenario projects available liquidity falling below target buffer in Q2. Recommend drawing committed credit lines preemptively.',
+    type: 'warning' as const,
+    impact: 'high' as const,
+    impactValue: 'Risk of covenant breach if not addressed',
     action: 'Draw Credit Line',
     confidence: 92
   },
   {
     id: '2',
     title: 'FX Hedge Gap Detected',
-    description: 'Current 71% hedge coverage insufficient for projected USD/INR volatility. Increasing to 85% would reduce scenario loss by ₹8 Cr.',
+    insight: 'Current 71% hedge coverage insufficient for projected USD/INR volatility. Increasing to 85% would reduce scenario loss by ₹8 Cr.',
     type: 'recommendation' as const,
-    priority: 'high' as const,
-    impact: 'Reduce FX exposure by ₹8 Cr',
+    impact: 'high' as const,
+    impactValue: 'Reduce FX exposure by ₹8 Cr',
     action: 'Increase Hedge',
     confidence: 88
   },
   {
     id: '3',
     title: 'Working Capital Optimization',
-    description: 'Monte Carlo simulation shows 78% probability of exceeding collection days target. Implement early payment discount program.',
+    insight: 'Monte Carlo simulation shows 78% probability of exceeding collection days target. Implement early payment discount program.',
     type: 'insight' as const,
     priority: 'medium' as const,
-    impact: 'Improve DSO by 5-8 days',
+    impact: 'high' as const,
+    impactValue: 'Improve DSO by 5-8 days',
     action: 'View Analysis',
     confidence: 78
   },
   {
     id: '4',
     title: 'Interest Rate Sensitivity',
-    description: 'Every 25bps rate increase adds ₹4.5 Cr to annual interest expense. Consider fixing portion of floating debt.',
+    insight: 'Every 25bps rate increase adds ₹4.5 Cr to annual interest expense. Consider fixing portion of floating debt.',
     type: 'insight' as const,
     priority: 'medium' as const,
-    impact: 'Cap interest expense volatility',
+    impact: 'high' as const,
+    impactValue: 'Cap interest expense volatility',
     action: 'Analyze Options',
     confidence: 85
   }
@@ -365,12 +367,12 @@ export default function ScenarioSimulatorPage() {
   const [timeHorizon, setTimeHorizon] = useState('12');
 
   // Slider values
-  const [interestRateChange, setInterestRateChange] = useState([125]);
-  const [salesChange, setSalesChange] = useState([-7]);
-  const [costChange, setCostChange] = useState([10]);
-  const [fxChange, setFxChange] = useState([5]);
-  const [collectionDelay, setCollectionDelay] = useState([15]);
-  const [paymentAcceleration, setPaymentAcceleration] = useState([5]);
+  const [interestRateChange, setInterestRateChange] = useState(125);
+  const [salesChange, setSalesChange] = useState(-7);
+  const [costChange, setCostChange] = useState(10);
+  const [fxChange, setFxChange] = useState(5);
+  const [collectionDelay, setCollectionDelay] = useState(15);
+  const [paymentAcceleration, setPaymentAcceleration] = useState(5);
 
   const getScoreColor = (score: number) => {
     if (score >= 75) return 'text-green-600';
@@ -401,40 +403,42 @@ export default function ScenarioSimulatorPage() {
           title={kpiData.scenarioScore.label}
           value={kpiData.scenarioScore.value.toString()}
           subtitle="/100"
-          trend={kpiData.scenarioScore.trend}
+          change={kpiData.scenarioScore.trend}
           icon={Target}
-          variant={kpiData.scenarioScore.value >= 70 ? 'default' : 'warning'}
+          variant={kpiData.scenarioScore.value >= 70 ? 'default' : 'gradient'}
         />
         <KPICard
           title={kpiData.financialImpact.label}
           value={kpiData.financialImpact.value}
-          trend={kpiData.financialImpact.trend}
+          change={kpiData.financialImpact.trend}
           icon={TrendingDown}
-          variant="danger"
+          variant="gradient"
         />
         <KPICard
           title={kpiData.liquidityImpact.label}
           value={kpiData.liquidityImpact.value}
-          trend={kpiData.liquidityImpact.trend}
+          change={kpiData.liquidityImpact.trend}
           icon={Activity}
-          variant="danger"
+          variant="gradient"
         />
         <KPICard
           title={kpiData.riskImpact.label}
           value={kpiData.riskImpact.value}
-          trend={kpiData.riskImpact.trend}
+          change={kpiData.riskImpact.trend}
           icon={AlertTriangle}
-          variant="warning"
+          variant="gradient"
         />
         <KPICard
           title={kpiData.probability.label}
           value={kpiData.probability.value}
+          change={kpiData.probability.trend}
           icon={Percent}
           variant="default"
         />
         <KPICard
           title={kpiData.recoveryTime.label}
           value={kpiData.recoveryTime.value}
+          change={kpiData.recoveryTime.trend}
           icon={Clock}
           variant="default"
         />
@@ -507,11 +511,11 @@ export default function ScenarioSimulatorPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span>Interest Rate Change</span>
-                        <span className="font-medium text-red-600">+{interestRateChange[0]} bps</span>
+                        <span className="font-medium text-red-600">+{interestRateChange} bps</span>
                       </div>
                       <Slider
                         value={interestRateChange}
-                        onValueChange={setInterestRateChange}
+                        onChange={setInterestRateChange}
                         min={-200}
                         max={300}
                         step={25}
@@ -521,11 +525,11 @@ export default function ScenarioSimulatorPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span>USD/INR Change</span>
-                        <span className="font-medium text-red-600">+{fxChange[0]}%</span>
+                        <span className="font-medium text-red-600">+{fxChange}%</span>
                       </div>
                       <Slider
                         value={fxChange}
-                        onValueChange={setFxChange}
+                        onChange={setFxChange}
                         min={-15}
                         max={15}
                         step={1}
@@ -539,11 +543,11 @@ export default function ScenarioSimulatorPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span>Sales Growth Change</span>
-                        <span className="font-medium text-amber-600">{salesChange[0]}%</span>
+                        <span className="font-medium text-amber-600">{salesChange}%</span>
                       </div>
                       <Slider
                         value={salesChange}
-                        onValueChange={setSalesChange}
+                        onChange={setSalesChange}
                         min={-30}
                         max={30}
                         step={1}
@@ -553,11 +557,11 @@ export default function ScenarioSimulatorPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span>Cost Change</span>
-                        <span className="font-medium text-red-600">+{costChange[0]}%</span>
+                        <span className="font-medium text-red-600">+{costChange}%</span>
                       </div>
                       <Slider
                         value={costChange}
-                        onValueChange={setCostChange}
+                        onChange={setCostChange}
                         min={-20}
                         max={30}
                         step={1}
@@ -571,11 +575,11 @@ export default function ScenarioSimulatorPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span>Collection Delay</span>
-                        <span className="font-medium text-red-600">+{collectionDelay[0]} days</span>
+                        <span className="font-medium text-red-600">+{collectionDelay} days</span>
                       </div>
                       <Slider
                         value={collectionDelay}
-                        onValueChange={setCollectionDelay}
+                        onChange={setCollectionDelay}
                         min={0}
                         max={30}
                         step={1}
@@ -585,11 +589,11 @@ export default function ScenarioSimulatorPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between text-sm">
                         <span>Payment Acceleration</span>
-                        <span className="font-medium text-amber-600">{paymentAcceleration[0]} days</span>
+                        <span className="font-medium text-amber-600">{paymentAcceleration} days</span>
                       </div>
                       <Slider
                         value={paymentAcceleration}
-                        onValueChange={setPaymentAcceleration}
+                        onChange={setPaymentAcceleration}
                         min={0}
                         max={15}
                         step={1}
@@ -622,7 +626,7 @@ export default function ScenarioSimulatorPage() {
                 <CardContent>
                   <AreaChart
                     data={cashProjectionData}
-                    xAxisKey="month"
+                    xKey="month"
                     series={[
                       { key: 'base', name: 'Base Case', color: '#3b82f6' },
                       { key: 'scenario', name: 'Scenario', color: '#ef4444' }
@@ -632,7 +636,7 @@ export default function ScenarioSimulatorPage() {
                 </CardContent>
               </Card>
 
-              <div className="grid grid-cols-2 gap-6">
+              {/* <div className="grid grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base">Liquidity Projection</CardTitle>
@@ -640,7 +644,7 @@ export default function ScenarioSimulatorPage() {
                   <CardContent>
                     <LineChart
                       data={liquidityCurveData}
-                      xAxisKey="month"
+                      xKey="month"
                       series={[
                         { key: 'liquidity', name: 'Available Liquidity', color: '#3b82f6' },
                         { key: 'minimum', name: 'Minimum Buffer', color: '#ef4444' },
@@ -658,13 +662,13 @@ export default function ScenarioSimulatorPage() {
                   <CardContent>
                     <BarChart
                       data={impactBreakdownData}
-                      xAxisKey="factor"
+                      xKey="factor"
                       series={[{ key: 'impact', name: 'Impact (₹ Cr)', color: '#ef4444' }]}
                       height={200}
                     />
                   </CardContent>
                 </Card>
-              </div>
+              </div> */}
 
               {/* Assumptions Table */}
               <Card>
@@ -677,7 +681,7 @@ export default function ScenarioSimulatorPage() {
                     data={scenarioAssumptions}
                     searchable
                     searchPlaceholder="Search assumptions..."
-                    pageSize={6}
+                    // pageSize={6}
                   />
                 </CardContent>
               </Card>
@@ -700,7 +704,7 @@ export default function ScenarioSimulatorPage() {
                     data={scenarioResults}
                     searchable
                     searchPlaceholder="Search metrics..."
-                    pageSize={10}
+                    // pageSize={10}
                   />
                 </CardContent>
               </Card>
@@ -728,7 +732,7 @@ export default function ScenarioSimulatorPage() {
                   <div className="mt-6 space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Liquidity Risk</span>
-                      <Badge variant="destructive">High</Badge>
+                      <Badge variant="danger">High</Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Solvency Risk</span>
@@ -736,7 +740,7 @@ export default function ScenarioSimulatorPage() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Profitability Risk</span>
-                      <Badge variant="destructive">High</Badge>
+                      <Badge variant="danger">High</Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm">Operational Risk</span>
@@ -797,7 +801,7 @@ export default function ScenarioSimulatorPage() {
                 <CardContent>
                   <AreaChart
                     data={scenarioComparisonData}
-                    xAxisKey="month"
+                    xKey="month"
                     series={[
                       { key: 'bestCase', name: 'Best Case', color: '#22c55e' },
                       { key: 'expected', name: 'Expected', color: '#3b82f6' },
@@ -918,7 +922,7 @@ export default function ScenarioSimulatorPage() {
                     data={scenarioRecommendations}
                     searchable
                     searchPlaceholder="Search actions..."
-                    pageSize={8}
+                    // pageSize={8}
                   />
                 </CardContent>
               </Card>

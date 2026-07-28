@@ -13,6 +13,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { AreaChart, BarChart, PieChart, LineChart, XAxis, YAxis, Area, ResponsiveContainer, Pie, Tooltip, Legend, CartesianGrid, Bar, Line } from 'recharts';
 // import { AreaChart, BarChart, PieChart, LineChart } from '@/components/shared/charts';
+import { addChartColors, chartColors, chartGradients, chartPalette } from "@/components/shared/charts/chart-theme";
+
+import {
+  chartAxisStyle,
+  chartGridStyle,
+  chartTooltipStyle,
+} from "@/components/shared/charts/chart-utils";
 import { AIInsightCard } from '@/components/shared/ai-insight-card';
 import { cashFlowTabs } from '@/config/cash-flow-navigation';
 import {
@@ -49,6 +56,8 @@ import {
   Hash,
   ChevronRight,
 } from 'lucide-react';
+import { ChartGradients } from '@/components/shared/charts/chart-gradients';
+import NeonRadialPieChart from '@/components/shared/charts/NeonRadialPieChart';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -167,6 +176,8 @@ const inflowBySource = [
   { name: 'Rental Income', value: 8, fill: '#eab308' },
   { name: 'Other', value: 4, fill: '#6b7280' },
 ];
+
+const pieInflowBySourceData = addChartColors(inflowBySource);
 
 const outflowByCategory = [
   { name: 'Construction', value: 42, fill: '#ef4444' },
@@ -1082,22 +1093,35 @@ export default function CashFlowAnalyticsPage() {
                   ]}
                   height={300}
                 /> */}
-                <AreaChart data={monthlyTrendData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }} height={300}>
-                  <XAxis dataKey="period" />
-                  <YAxis />
-
-                  <Area
-                    dataKey="inflow"
-                    stroke="#22c55e"
-                    fill="#22c55e"
-                  />
-
-                  <Area
-                    dataKey="outflow"
-                    stroke="#ef4444"
-                    fill="#ef4444"
-                  />
-                </AreaChart>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={monthlyTrendData}>
+                    <ChartGradients />
+                    <XAxis
+                      dataKey="period"
+                      {...chartAxisStyle}
+                    />
+                    <YAxis
+                      {...chartAxisStyle}
+                    />
+                    <Tooltip
+                      contentStyle={chartTooltipStyle}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="inflow"
+                      stroke="#00FFA3"
+                      strokeWidth={3}
+                      fill="url(#gradient-green)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="outflow"
+                      stroke="#FF3366"
+                      strokeWidth={3}
+                      fill="url(#gradient-red)"
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1114,10 +1138,10 @@ export default function CashFlowAnalyticsPage() {
                   valueKey="value"
                   height={250}
                 /> */}
-                <ResponsiveContainer width="100%" height={250}>
+                {/* <ResponsiveContainer width="100%" height={250}>
                   <PieChart>
                     <Pie
-                      data={inflowBySource}
+                      data={pieInflowBySourceData}
                       dataKey="value"
                       nameKey="name"
                       cx="50%"
@@ -1128,7 +1152,13 @@ export default function CashFlowAnalyticsPage() {
                     <Tooltip />
                     <Legend />
                   </PieChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer> */}
+                <NeonRadialPieChart
+                  data={inflowBySource}
+                  dataKey="value"
+                  nameKey="name"
+                  height={300}
+                />
               </CardContent>
             </Card>
 
@@ -1149,16 +1179,21 @@ export default function CashFlowAnalyticsPage() {
                 /> */}
                 <ResponsiveContainer width="100%" height={250}>
                   <BarChart data={monthlyTrendData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="period" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
+                    <CartesianGrid {...chartGridStyle} />
+                    <XAxis
+                      dataKey="period"
+                      {...chartAxisStyle}
+                    />
+                    <YAxis
+                      {...chartAxisStyle}
+                    />
+                    <Tooltip
+                      contentStyle={chartTooltipStyle}
+                    />
                     <Bar
                       dataKey="netCash"
-                      name="Net Cash"
-                      fill="#3b82f6"
-                      radius={[4, 4, 0, 0]}
+                      fill="url(#gradient-blue-purple)"
+                      radius={[8, 8, 0, 0]}
                     />
                   </BarChart>
                 </ResponsiveContainer>
@@ -1262,28 +1297,34 @@ export default function CashFlowAnalyticsPage() {
                 /> */}
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={seasonalityData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
+                    <CartesianGrid
+                      stroke="#1E293B"
+                      strokeDasharray="3 3"
+                    />
+                    <XAxis
+                      dataKey="month"
+                    />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
                     <Line
                       type="monotone"
                       dataKey="avgInflow"
-                      name="Avg Inflow"
-                      stroke="#22c55e"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                      activeDot={{ r: 5 }}
+                      stroke={chartColors.neonGreen}
+                      strokeWidth={3}
+                      dot={{
+                        r: 4,
+                        fill: chartColors.neonGreen
+                      }}
                     />
                     <Line
                       type="monotone"
                       dataKey="avgOutflow"
-                      name="Avg Outflow"
-                      stroke="#ef4444"
-                      strokeWidth={2}
-                      dot={{ r: 3 }}
-                      activeDot={{ r: 5 }}
+                      stroke={chartColors.neonRed}
+                      strokeWidth={3}
+                      dot={{
+                        r: 4,
+                        fill: chartColors.neonRed
+                      }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -1437,6 +1478,7 @@ export default function CashFlowAnalyticsPage() {
                     <Bar dataKey="inflow" name="Inflow" fill="#22c55e" />
                     <Bar dataKey="outflow" name="Outflow" fill="#ef4444" />
                     <Bar dataKey="netCash" name="Net Cash" fill="#3b82f6" />
+                    <Bar dataKey="margin" name="Margin" fill="#8b5cf6" />
                   </BarChart>
                 </ResponsiveContainer>
               </CardContent>

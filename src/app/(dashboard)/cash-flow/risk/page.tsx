@@ -10,7 +10,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
-import { AreaChart, BarChart, PieChart, LineChart } from '@/components/shared/charts';
+import { AreaChart, BarChart, PieChart } from '@/components/shared/charts';
 import { AIInsightCard } from '@/components/shared/ai-insight-card';
 import { cashRiskTabs } from '@/config/cash-flow-navigation';
 import {
@@ -43,6 +43,8 @@ import {
   CreditCard,
   TrendingUp as Trending,
 } from 'lucide-react';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { chartColors } from '@/components/shared/charts/chart-theme';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -598,11 +600,11 @@ const riskTrendData = [
 ];
 
 const riskByCategory = [
-  { name: 'Liquidity', value: 35, color: '#ef4444' },
-  { name: 'Concentration', value: 28, color: '#f97316' },
-  { name: 'Counterparty', value: 18, color: '#eab308' },
-  { name: 'Covenant', value: 12, color: '#22c55e' },
-  { name: 'FX & Interest', value: 7, color: '#3b82f6' },
+  { label: 'Liquidity', value: 35, color: '#ef4444' },
+  { label: 'Concentration', value: 28, color: '#f97316' },
+  { label: 'Counterparty', value: 18, color: '#eab308' },
+  { label: 'Covenant', value: 12, color: '#22c55e' },
+  { label: 'FX & Interest', value: 7, color: '#3b82f6' },
 ];
 
 const riskMatrixData = [
@@ -617,36 +619,40 @@ const aiInsights = [
     id: '1',
     type: 'warning' as const,
     title: 'Liquidity Stress Predicted',
-    description: 'AI models predict liquidity stress in Metro Commercial Hub within 15 days based on current burn rate and collection patterns.',
+    insight: 'AI models predict liquidity stress in Metro Commercial Hub within 15 days based on current burn rate and collection patterns.',
     action: 'Initiate emergency funding',
     impact: '₹45 Cr potential shortfall',
+    impactLevel: 'high',
     confidence: 92,
   },
   {
     id: '2',
     type: 'insight' as const,
     title: 'Concentration Risk Mitigation',
-    description: 'Opening credit lines with 2 additional banks could reduce HDFC concentration to 28% within 90 days.',
+    insight: 'Opening credit lines with 2 additional banks could reduce HDFC concentration to 28% within 90 days.',
     action: 'Explore new banking relationships',
     impact: 'Reduce concentration by 14%',
+    impactLevel: 'low',
     confidence: 88,
   },
   {
     id: '3',
     type: 'recommendation' as const,
     title: 'Covenant Compliance Strategy',
-    description: 'Accelerating collections by ₹25 Cr would improve DSCR to 1.72, providing 15% headroom above minimum.',
+    insight: 'Accelerating collections by ₹25 Cr would improve DSCR to 1.72, providing 15% headroom above minimum.',
     action: 'Priority collection campaign',
     impact: 'DSCR improvement +0.14',
+    impactLevel: 'medium',
     confidence: 85,
   },
   {
     id: '4',
     type: 'opportunity' as const,
     title: 'Interest Rate Hedge Opportunity',
-    description: 'Current swap rates favorable for converting ₹150 Cr floating to fixed, locking in 8.75% vs projected 9.25%.',
+    insight: 'Current swap rates favorable for converting ₹150 Cr floating to fixed, locking in 8.75% vs projected 9.25%.',
     action: 'Execute interest rate swap',
     impact: '₹7.5 Cr annual savings',
+    impactLevel: 'high',
     confidence: 78,
   },
 ];
@@ -733,26 +739,26 @@ export default function CashRiskIntelligencePage() {
   //   sortOrder: 'desc',
   // });
   const [filters, setFilters] = useState<CashFlowFilterState>({
-      companyIds: [],
-      businessUnitIds: [],
-      spvIds: [],
-      projectIds: [],
-      regionIds: [],
-      bankIds: [],
-      accountIds: [],
-      currencyIds: [],
-      costCenterIds: [],
-      customerIds: [],
-      vendorIds: [],
-      loanIds: [],
-      statusIds: [],
-      tagIds: [],
-      scenario: 'actual',
-      forecastVersion: 'current',
-      forecastHorizon: '3m',
-      datePreset: 'thisMonth',
-      dateRange: { startDate: undefined, endDate: undefined },
-    });
+    companyIds: [],
+    businessUnitIds: [],
+    spvIds: [],
+    projectIds: [],
+    regionIds: [],
+    bankIds: [],
+    accountIds: [],
+    currencyIds: [],
+    costCenterIds: [],
+    customerIds: [],
+    vendorIds: [],
+    loanIds: [],
+    statusIds: [],
+    tagIds: [],
+    scenario: 'actual',
+    forecastVersion: 'current',
+    forecastHorizon: '3m',
+    datePreset: 'thisMonth',
+    dateRange: { startDate: undefined, endDate: undefined },
+  });
   const [selectedRisk, setSelectedRisk] = useState<RiskItem | null>(null);
   const [selectedAlert, setSelectedAlert] = useState<RiskAlert | null>(null);
 
@@ -772,7 +778,7 @@ export default function CashRiskIntelligencePage() {
   const riskColumns: Column<RiskItem>[] = [
     {
       id: 'id',
-      header: 'Risk ID',      
+      header: 'Risk ID',
       accessor: 'id',
       cell: (row) => <span className="font-mono text-sm">{row.id}</span>,
       sortable: true,
@@ -1121,8 +1127,8 @@ export default function CashRiskIntelligencePage() {
       cell: (row) => (
         <Badge variant="outline" className={
           row.creditRating.startsWith('A') ? 'bg-green-500/20 text-green-400' :
-          row.creditRating.startsWith('B') ? 'bg-yellow-500/20 text-yellow-400' :
-          'bg-red-500/20 text-red-400'
+            row.creditRating.startsWith('B') ? 'bg-yellow-500/20 text-yellow-400' :
+              'bg-red-500/20 text-red-400'
         }>
           {row.creditRating}
         </Badge>
@@ -1340,8 +1346,8 @@ export default function CashRiskIntelligencePage() {
       <CashFlowFilters
         initialFilters={filters}
         onFilterChange={setFilters}
-        // variant="compact"
-        // availableFilters={['search', 'dateRange', 'entities', 'projects', 'status']}
+      // variant="compact"
+      // availableFilters={['search', 'dateRange', 'entities', 'projects', 'status']}
       />
 
       {/* KPI Grid */}
@@ -1407,7 +1413,7 @@ export default function CashRiskIntelligencePage() {
                 <CardDescription>6-month risk evolution across categories</CardDescription>
               </CardHeader>
               <CardContent>
-                <LineChart
+                {/* <LineChart
                   data={riskTrendData}
                   xKey="month"
                   lines={[
@@ -1417,7 +1423,40 @@ export default function CashRiskIntelligencePage() {
                     { key: 'covenant', name: 'Covenant', color: '#22c55e' },
                   ]}
                   height={300}
-                />
+                /> */}
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={riskTrendData}>
+                    <CartesianGrid
+                      stroke="#1E293B"
+                      strokeDasharray="3 3"
+                    />
+                    <XAxis
+                      dataKey="month"
+                    />
+                    <YAxis />
+                    <Tooltip />
+                    <Line
+                      type="monotone"
+                      dataKey="avgInflow"
+                      stroke={chartColors.neonGreen}
+                      strokeWidth={3}
+                      dot={{
+                        r: 4,
+                        fill: chartColors.neonGreen
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="avgOutflow"
+                      stroke={chartColors.neonRed}
+                      strokeWidth={3}
+                      dot={{
+                        r: 4,
+                        fill: chartColors.neonRed
+                      }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 
@@ -1430,9 +1469,9 @@ export default function CashRiskIntelligencePage() {
               <CardContent>
                 <PieChart
                   data={riskByCategory}
-                  nameKey="name"
-                  valueKey="value"
-                  height={250}
+                // xKey="label"
+                // valueKey="value"
+                // height={250}
                 />
               </CardContent>
             </Card>
@@ -1456,11 +1495,10 @@ export default function CashRiskIntelligencePage() {
                       <div className="flex items-center gap-2">
                         <div className="w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
                           <div
-                            className={`h-full ${
-                              item.category === 'Critical' ? 'bg-red-500' :
-                              item.category === 'High' ? 'bg-orange-500' :
-                              item.category === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
-                            }`}
+                            className={`h-full ${item.category === 'Critical' ? 'bg-red-500' :
+                                item.category === 'High' ? 'bg-orange-500' :
+                                  item.category === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
+                              }`}
                             style={{ width: `${item.percentage}%` }}
                           />
                         </div>
@@ -1492,16 +1530,14 @@ export default function CashRiskIntelligencePage() {
                       className="flex items-start justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700/50"
                     >
                       <div className="flex items-start gap-3">
-                        <div className={`p-2 rounded-lg ${
-                          alert.severity === 'critical' ? 'bg-red-500/20' :
-                          alert.severity === 'high' ? 'bg-orange-500/20' :
-                          'bg-yellow-500/20'
-                        }`}>
-                          <AlertTriangle className={`h-4 w-4 ${
-                            alert.severity === 'critical' ? 'text-red-400' :
-                            alert.severity === 'high' ? 'text-orange-400' :
-                            'text-yellow-400'
-                          }`} />
+                        <div className={`p-2 rounded-lg ${alert.severity === 'critical' ? 'bg-red-500/20' :
+                            alert.severity === 'high' ? 'bg-orange-500/20' :
+                              'bg-yellow-500/20'
+                          }`}>
+                          <AlertTriangle className={`h-4 w-4 ${alert.severity === 'critical' ? 'text-red-400' :
+                              alert.severity === 'high' ? 'text-orange-400' :
+                                'text-yellow-400'
+                            }`} />
                         </div>
                         <div>
                           <p className="font-medium text-sm">{alert.title}</p>
@@ -1535,10 +1571,11 @@ export default function CashRiskIntelligencePage() {
                     key={insight.id}
                     type={insight.type}
                     title={insight.title}
-                    description={insight.description}
-                    action={insight.action}
-                    impact={insight.impact}
+                    insight={insight.insight}
+                    // action={insight.action}
+                    impactValue={insight.impact}
                     confidence={insight.confidence}
+                    impact={insight.impactLevel as 'low' | 'medium' | 'high'}
                   />
                 ))}
               </div>

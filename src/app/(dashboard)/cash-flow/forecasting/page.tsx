@@ -14,7 +14,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
+import { Select } from '@/components/ui/select2';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -98,7 +98,7 @@ const forecastInsights = [
   {
     title: 'Forecast Confidence High',
     insight: 'Current 30-day forecast shows 94.5% confidence based on strong historical patterns.',
-    type: 'info' as const,
+    type: 'insight' as const,
     confidence: 94,
     impact: 'medium' as const,
   },
@@ -191,7 +191,7 @@ const versionColumns: Column<ForecastVersion>[] = [
 export default function CashForecastingPage() {
   const [activeTab, setActiveTab] = React.useState('workspace');
   const [includeAI, setIncludeAI] = React.useState(true);
-  const [confidenceThreshold, setConfidenceThreshold] = React.useState([80]);
+  const [confidenceThreshold, setConfidenceThreshold] = React.useState(80);
 
   return (
     <PageContainer>
@@ -310,7 +310,7 @@ export default function CashForecastingPage() {
                 <Label>Confidence Threshold: {confidenceThreshold}%</Label>
                 <Slider
                   value={confidenceThreshold}
-                  onValueChange={setConfidenceThreshold}
+                  onChange={setConfidenceThreshold}
                   min={50}
                   max={100}
                   step={5}
@@ -319,7 +319,11 @@ export default function CashForecastingPage() {
               <div className="space-y-2">
                 <Label>Include AI Predictions</Label>
                 <div className="flex items-center gap-2 h-10">
-                  <Switch checked={includeAI} onCheckedChange={setIncludeAI} />
+                  <Switch
+                    id="includeAI"
+                    checked={includeAI}
+                    onCheckedChange={setIncludeAI}
+                  />
                   <span className="text-sm text-slate-400">{includeAI ? 'Enabled' : 'Disabled'}</span>
                 </div>
               </div>
@@ -482,8 +486,8 @@ export default function CashForecastingPage() {
               data={forecastVersions}
               columns={versionColumns}
               actions={[
-                { label: 'View', onClick: () => {} },
-                { label: 'Compare', onClick: () => {} },
+                { label: 'View', onClick: () => { } },
+                { label: 'Compare', onClick: () => { } },
               ]}
               hoverable
             />

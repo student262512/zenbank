@@ -38,7 +38,7 @@ import {
   DataTable,
   Column,
   LineChart,
-  BarChart,
+  // BarChart,
   AreaChart,
   PieChart,
   AIInsightCard,
@@ -52,6 +52,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { projectForecastTabs } from '@/config/cash-flow-navigation';
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 // Mock data for KPIs
 const kpiData = {
@@ -329,11 +330,11 @@ const projectForecastData = [
 
 // Mock data for spend by category
 const spendByCategory = [
-  { name: 'Construction', value: 685.4, color: '#3b82f6' },
-  { name: 'Materials', value: 312.5, color: '#10b981' },
-  { name: 'MEP', value: 156.8, color: '#f59e0b' },
-  { name: 'Labor', value: 89.4, color: '#8b5cf6' },
-  { name: 'Other', value: 45.2, color: '#6b7280' },
+  { label: 'Construction', value: 685.4, color: '#3b82f6' },
+  { label: 'Materials', value: 312.5, color: '#10b981' },
+  { label: 'MEP', value: 156.8, color: '#f59e0b' },
+  { label: 'Labor', value: 89.4, color: '#8b5cf6' },
+  { label: 'Other', value: 45.2, color: '#6b7280' },
 ];
 
 // AI Insights
@@ -344,6 +345,7 @@ const aiInsights = [
     title: 'Funding Gap Alert',
     description: 'Downtown Plaza shows ₹34.5 Cr funding gap for Aug 2026. Customer collections can cover ₹18.5 Cr.',
     impact: '₹16 Cr shortfall',
+    impactLevel: 'high',
     confidence: 92,
     action: 'Request Disbursement',
   },
@@ -353,6 +355,7 @@ const aiInsights = [
     title: 'Accelerate Green Valley',
     description: 'Green Valley Villas is 10 days ahead of schedule. Advancing milestone can unlock ₹12.4 Cr in customer payments.',
     impact: '+₹12.4 Cr inflow',
+    impactLevel: 'medium',
     confidence: 88,
     action: 'Accelerate Schedule',
   },
@@ -362,6 +365,7 @@ const aiInsights = [
     title: 'Material Cost Optimization',
     description: 'Bulk ordering steel across 3 projects can save ₹8.5 Cr. JSW Steel offering 3% discount.',
     impact: '+₹8.5 Cr savings',
+    impactLevel: 'low',
     confidence: 85,
     action: 'Consolidate Orders',
   },
@@ -398,7 +402,7 @@ export default function ProjectCompletionForecastPage() {
       id: 'projectName',
       header: 'Project',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.projectName}</div>
           <div className="text-xs text-muted-foreground">{row.milestoneName}</div>
@@ -408,7 +412,7 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'milestoneType',
       header: 'Type',
-      render: (row) => (
+      cell: (row) => (
         <Badge variant="outline">{row.milestoneType}</Badge>
       ),
     },
@@ -416,12 +420,12 @@ export default function ProjectCompletionForecastPage() {
       id: 'targetDate',
       header: 'Target',
       sortable: true,
-      render: (row) => new Date(row.targetDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.targetDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'estimatedCompletion',
       header: 'Est. Completion',
-      render: (row) => (
+      cell: (row) => (
         <span className={new Date(row.estimatedCompletion) > new Date(row.targetDate) ? 'text-amber-400' : ''}>
           {new Date(row.estimatedCompletion).toLocaleDateString('en-IN')}
         </span>
@@ -432,14 +436,14 @@ export default function ProjectCompletionForecastPage() {
       header: 'Cash Required',
       align: 'right' as const,
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold text-red-400">₹{row.cashRequired.toFixed(1)} Cr</span>
       ),
     },
     {
       id: 'completionPercent',
       header: 'Progress',
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
             <div
@@ -454,11 +458,11 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'fundingStatus',
       header: 'Funding',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.fundingStatus === 'funded' ? 'default' :
-            row.fundingStatus === 'partial' ? 'secondary' : 'destructive'
+            row.fundingStatus === 'partial' ? 'secondary' : 'danger'
           }
         >
           {row.fundingStatus}
@@ -468,12 +472,12 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.status === 'ahead' ? 'default' :
             row.status === 'on_track' ? 'secondary' :
-            row.status === 'delayed' ? 'destructive' : 'outline'
+            row.status === 'delayed' ? 'danger' : 'outline'
           }
         >
           {row.status === 'ahead' ? 'Ahead' :
@@ -485,7 +489,7 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -502,7 +506,7 @@ export default function ProjectCompletionForecastPage() {
       id: 'projectName',
       header: 'Project',
       sortable: true,
-      render: (row) => (
+      cell: (row) => (
         <div>
           <div className="font-medium">{row.projectName}</div>
           <div className="text-xs text-muted-foreground">{row.projectType}</div>
@@ -512,7 +516,7 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'overallProgress',
       header: 'Overall',
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-2">
           <div className="w-16 h-2 bg-slate-700 rounded-full overflow-hidden">
             <div
@@ -527,22 +531,22 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'structuralProgress',
       header: 'Structural',
-      render: (row) => <span>{row.structuralProgress}%</span>,
+      cell: (row) => <span>{row.structuralProgress}%</span>,
     },
     {
       id: 'mepProgress',
       header: 'MEP',
-      render: (row) => <span>{row.mepProgress}%</span>,
+      cell: (row) => <span>{row.mepProgress}%</span>,
     },
     {
       id: 'finishingProgress',
       header: 'Finishing',
-      render: (row) => <span>{row.finishingProgress}%</span>,
+      cell: (row) => <span>{row.finishingProgress}%</span>,
     },
     {
       id: 'budgetUtilization',
       header: 'Budget Used',
-      render: (row) => (
+      cell: (row) => (
         <span className={row.budgetUtilization > row.overallProgress + 10 ? 'text-red-400' : ''}>
           {row.budgetUtilization}%
         </span>
@@ -551,13 +555,13 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'expectedCompletion',
       header: 'Completion',
-      render: (row) => new Date(row.expectedCompletion).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.expectedCompletion).toLocaleDateString('en-IN'),
     },
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
-        <Badge variant={row.status === 'on_track' ? 'default' : 'destructive'}>
+      cell: (row) => (
+        <Badge variant={row.status === 'on_track' ? 'default' : 'danger'}>
           {row.status === 'on_track' ? 'On Track' : 'Delayed'}
         </Badge>
       ),
@@ -565,7 +569,7 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'actions',
       header: '',
-      render: (row) => (
+      cell: (row) => (
         <Button
           variant="ghost"
           size="sm"
@@ -591,19 +595,19 @@ export default function ProjectCompletionForecastPage() {
       id: 'construction',
       header: 'Construction',
       align: 'right' as const,
-      render: (row) => <span>₹{row.construction.toFixed(1)} Cr</span>,
+      cell: (row) => <span>₹{row.construction.toFixed(1)} Cr</span>,
     },
     {
       id: 'materials',
       header: 'Materials',
       align: 'right' as const,
-      render: (row) => <span>₹{row.materials.toFixed(1)} Cr</span>,
+      cell: (row) => <span>₹{row.materials.toFixed(1)} Cr</span>,
     },
     {
       id: 'total',
       header: 'Total Required',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold">₹{row.total.toFixed(1)} Cr</span>
       ),
     },
@@ -611,7 +615,7 @@ export default function ProjectCompletionForecastPage() {
       id: 'fundedAmount',
       header: 'Funded',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="text-emerald-400">₹{row.fundedAmount.toFixed(1)} Cr</span>
       ),
     },
@@ -619,7 +623,7 @@ export default function ProjectCompletionForecastPage() {
       id: 'gap',
       header: 'Gap',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className={row.gap > 0 ? 'text-red-400 font-semibold' : 'text-muted-foreground'}>
           {row.gap > 0 ? `₹${row.gap.toFixed(1)} Cr` : '-'}
         </span>
@@ -628,7 +632,7 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'fundingSource',
       header: 'Source',
-      render: (row) => <span className="text-sm">{row.fundingSource}</span>,
+      cell: (row) => <span className="text-sm">{row.fundingSource}</span>,
     },
   ];
 
@@ -645,13 +649,13 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'expectedDate',
       header: 'Expected',
-      render: (row) => new Date(row.expectedDate).toLocaleDateString('en-IN'),
+      cell: (row) => new Date(row.expectedDate).toLocaleDateString('en-IN'),
     },
     {
       id: 'requiredFunding',
       header: 'Required',
       align: 'right' as const,
-      render: (row) => (
+      cell: (row) => (
         <span className="font-semibold">₹{row.requiredFunding.toFixed(1)} Cr</span>
       ),
     },
@@ -662,11 +666,11 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'status',
       header: 'Status',
-      render: (row) => (
+      cell: (row) => (
         <Badge
           variant={
             row.status === 'approved' ? 'default' :
-            row.status === 'pending' ? 'destructive' : 'secondary'
+            row.status === 'pending' ? 'danger' : 'secondary'
           }
         >
           {row.status}
@@ -676,7 +680,7 @@ export default function ProjectCompletionForecastPage() {
     {
       id: 'disbursementDate',
       header: 'Disbursement',
-      render: (row) => row.disbursementDate !== '-' ? new Date(row.disbursementDate).toLocaleDateString('en-IN') : '-',
+      cell: (row) => row.disbursementDate !== '-' ? new Date(row.disbursementDate).toLocaleDateString('en-IN') : '-',
     },
   ];
 
@@ -767,7 +771,7 @@ export default function ProjectCompletionForecastPage() {
                 data={projectMilestones}
                 columns={milestoneColumns}
                 searchable
-                searchKeys={['projectName', 'milestoneName']}
+                // searchKeys={['projectName', 'milestoneName']}
               />
             </CardContent>
           </Card>
@@ -779,10 +783,11 @@ export default function ProjectCompletionForecastPage() {
                 key={insight.id}
                 type={insight.type}
                 title={insight.title}
-                description={insight.description}
-                impact={insight.impact}
+                insight={insight.description}
+                impactValue={insight.impact}
+                impact={insight.impactLevel as 'low' | 'medium' | 'high'}
                 confidence={insight.confidence}
-                action={insight.action}
+                // action={insight.action}
               />
             ))}
           </div>
@@ -847,7 +852,7 @@ export default function ProjectCompletionForecastPage() {
                 data={constructionProgress}
                 columns={progressColumns}
                 searchable
-                searchKeys={['projectName']}
+                // searchKeys={['projectName']}
               />
             </CardContent>
           </Card>
@@ -882,7 +887,7 @@ export default function ProjectCompletionForecastPage() {
               <CardContent>
                 <PieChart
                   data={spendByCategory}
-                  height={280}
+                  // height={280}
                   showLegend
                 />
               </CardContent>
@@ -899,7 +904,7 @@ export default function ProjectCompletionForecastPage() {
                 data={cashRequirements}
                 columns={requirementColumns}
                 searchable
-                searchKeys={['projectName']}
+                // searchKeys={['projectName']}
               />
             </CardContent>
           </Card>
@@ -917,7 +922,7 @@ export default function ProjectCompletionForecastPage() {
                 data={fundingTimeline}
                 columns={timelineColumns}
                 searchable
-                searchKeys={['projectName', 'milestone']}
+                // searchKeys={['projectName', 'milestone']}
               />
             </CardContent>
           </Card>
@@ -931,7 +936,7 @@ export default function ProjectCompletionForecastPage() {
               <CardDescription>6-month cash requirement projection</CardDescription>
             </CardHeader>
             <CardContent>
-              <BarChart
+              {/* <BarChart
                 data={projectForecastData}
                 xKey="month"
                 series={[
@@ -939,7 +944,18 @@ export default function ProjectCompletionForecastPage() {
                   { key: 'gap', name: 'Gap', color: '#f59e0b' },
                 ]}
                 height={350}
-              />
+              /> */}
+              <ResponsiveContainer width="100%" height={250}>
+                                <BarChart data={projectForecastData}>
+                                  <CartesianGrid strokeDasharray="3 3" />
+                                  <XAxis dataKey="week" />
+                                  <YAxis />
+                                  <Tooltip />
+                                  <Legend />
+                                  <Bar dataKey="required" name="Required" fill="#22c55e" />
+                                  <Bar dataKey="gap" name="Gap" fill="#ef4444" />
+                                </BarChart>
+                              </ResponsiveContainer>
             </CardContent>
           </Card>
         </TabsContent>
@@ -990,7 +1006,7 @@ export default function ProjectCompletionForecastPage() {
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Funding Status</p>
-                    <Badge variant={selectedMilestone.fundingStatus === 'funded' ? 'default' : 'destructive'}>
+                    <Badge variant={selectedMilestone.fundingStatus === 'funded' ? 'default' : 'danger'}>
                       {selectedMilestone.fundingStatus}
                     </Badge>
                   </div>
@@ -999,7 +1015,7 @@ export default function ProjectCompletionForecastPage() {
                     <Badge
                       variant={
                         selectedMilestone.status === 'ahead' || selectedMilestone.status === 'on_track'
-                          ? 'default' : 'destructive'
+                          ? 'default' : 'danger'
                       }
                     >
                       {selectedMilestone.status}
@@ -1077,7 +1093,7 @@ export default function ProjectCompletionForecastPage() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Status</p>
-                    <Badge variant={selectedProject.status === 'on_track' ? 'default' : 'destructive'}>
+                    <Badge variant={selectedProject.status === 'on_track' ? 'default' : 'danger'}>
                       {selectedProject.status}
                     </Badge>
                   </div>

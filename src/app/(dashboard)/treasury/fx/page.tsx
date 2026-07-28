@@ -210,16 +210,16 @@ const aiInsights = [
     id: '1',
     type: 'recommendation' as const,
     title: 'Hedge EUR Exposure',
-    description: 'EUR/INR exposure of EUR 8M is currently unhedged. Given EUR strength forecast of 2-3% over next quarter, recommend hedging 60% via 3-month forwards at 91.50.',
+    insight: 'EUR/INR exposure of EUR 8M is currently unhedged. Given EUR strength forecast of 2-3% over next quarter, recommend hedging 60% via 3-month forwards at 91.50.',
     impact: 'high' as const,
     confidence: 85,
     category: 'Hedge Strategy',
   },
   {
     id: '2',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'Forward Contract Settling',
-    description: 'FWD-003 (USD 7M) settling on Feb 28. Current MTM gain of INR 25 Lakhs. Ensure funds availability and consider rollover strategy.',
+    insight: 'FWD-003 (USD 7M) settling on Feb 28. Current MTM gain of INR 25 Lakhs. Ensure funds availability and consider rollover strategy.',
     impact: 'high' as const,
     confidence: 100,
     category: 'Settlement',
@@ -228,7 +228,7 @@ const aiInsights = [
     id: '3',
     type: 'insight' as const,
     title: 'Optimal Hedge Timing',
-    description: 'USD/INR technical analysis suggests resistance at 83.50. Consider adding to USD hedge position if spot breaks above 83.30 for better forward rates.',
+    insight: 'USD/INR technical analysis suggests resistance at 83.50. Consider adding to USD hedge position if spot breaks above 83.30 for better forward rates.',
     impact: 'medium' as const,
     confidence: 72,
     category: 'Market Timing',
@@ -237,7 +237,7 @@ const aiInsights = [
     id: '4',
     type: 'recommendation' as const,
     title: 'Natural Hedge Opportunity',
-    description: 'AED receivables of AED 5M can be naturally hedged against AED payables of AED 4.5M. Implement internal netting to reduce hedge costs.',
+    insight: 'AED receivables of AED 5M can be naturally hedged against AED payables of AED 4.5M. Implement internal netting to reduce hedge costs.',
     impact: 'medium' as const,
     confidence: 90,
     category: 'Natural Hedging',
@@ -276,7 +276,7 @@ const exposureColumns: Column<FXExposureRecord>[] = [
     header: 'Instrument',
     accessor: 'hedgeInstrument',
     cell: (row) => (
-      <Badge variant={row.hedgeInstrument === 'None' ? 'destructive' : 'outline'}>
+      <Badge variant={row.hedgeInstrument === 'None' ? 'danger' : 'outline'}>
         {row.hedgeInstrument}
       </Badge>
     ),
@@ -309,7 +309,7 @@ const exposureColumns: Column<FXExposureRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Hedged' ? 'default' : row.status === 'Partially Hedged' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'Hedged' ? 'default' : row.status === 'Partially Hedged' ? 'secondary' : 'danger'}>
         {row.status}
       </Badge>
     ),
@@ -319,7 +319,7 @@ const exposureColumns: Column<FXExposureRecord>[] = [
     header: 'Risk',
     accessor: 'riskLevel',
     cell: (row) => (
-      <Badge variant={row.riskLevel === 'Low' ? 'outline' : row.riskLevel === 'Medium' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.riskLevel === 'Low' ? 'outline' : row.riskLevel === 'Medium' ? 'secondary' : 'danger'}>
         {row.riskLevel}
       </Badge>
     ),
@@ -464,7 +464,7 @@ export default function FXManagementPage() {
         <KPICard
           title="Net FX Exposure"
           value={kpiData.netFXExposure.value}
-          unit={kpiData.netFXExposure.unit}
+          changeUnit={kpiData.netFXExposure.unit}
           change={kpiData.netFXExposure.change}
           trend={kpiData.netFXExposure.trend}
           icon={Globe}
@@ -474,7 +474,7 @@ export default function FXManagementPage() {
         <KPICard
           title="Hedged Amount"
           value={kpiData.hedgedAmount.value}
-          unit={kpiData.hedgedAmount.unit}
+          changeUnit={kpiData.hedgedAmount.unit}
           change={kpiData.hedgedAmount.change}
           trend={kpiData.hedgedAmount.trend}
           icon={Shield}
@@ -484,7 +484,7 @@ export default function FXManagementPage() {
         <KPICard
           title="Hedge Coverage"
           value={kpiData.hedgeCoverage.value}
-          unit={kpiData.hedgeCoverage.unit}
+          changeUnit={kpiData.hedgeCoverage.unit}
           change={kpiData.hedgeCoverage.change}
           trend={kpiData.hedgeCoverage.trend}
           icon={Target}
@@ -494,7 +494,7 @@ export default function FXManagementPage() {
         <KPICard
           title="Open Contracts"
           value={kpiData.openContracts.value}
-          unit={kpiData.openContracts.unit}
+          changeUnit={kpiData.openContracts.unit}
           change={kpiData.openContracts.change}
           trend={kpiData.openContracts.trend}
           icon={ArrowLeftRight}
@@ -503,7 +503,7 @@ export default function FXManagementPage() {
         <KPICard
           title="FX Risk Score"
           value={kpiData.fxRiskScore.value}
-          unit={kpiData.fxRiskScore.unit}
+          changeUnit={kpiData.fxRiskScore.unit}
           change={kpiData.fxRiskScore.change}
           trend={kpiData.fxRiskScore.trend}
           icon={AlertTriangle}
@@ -513,7 +513,7 @@ export default function FXManagementPage() {
         <KPICard
           title="MTM Gain/Loss"
           value={kpiData.mtmGainLoss.value}
-          unit={kpiData.mtmGainLoss.unit}
+          changeUnit={kpiData.mtmGainLoss.unit}
           change={kpiData.mtmGainLoss.change}
           trend={kpiData.mtmGainLoss.trend}
           icon={TrendingUp}
@@ -540,7 +540,7 @@ export default function FXManagementPage() {
             <Card className="col-span-1">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5 text-muted-foreground" />
+                  {/* <PieChart className="h-5 w-5 text-muted-foreground" /> */}
                   Exposure by Currency
                 </CardTitle>
                 <CardDescription>Net exposure distribution</CardDescription>
@@ -548,9 +548,9 @@ export default function FXManagementPage() {
               <CardContent>
                 <PieChart
                   data={currencyExposureData}
-                  height={250}
+                  // height={250}
                   showLegend
-                  showTooltip
+                  // showTooltip
                 />
               </CardContent>
             </Card>
@@ -568,7 +568,7 @@ export default function FXManagementPage() {
                   height={250}
                   showGrid
                   showTooltip
-                  color="#3b82f6"
+                  // color="#3b82f6"
                 />
               </CardContent>
             </Card>
@@ -581,7 +581,7 @@ export default function FXManagementPage() {
               columns={exposureColumns}
               searchable
               searchPlaceholder="Search exposures..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
 
@@ -695,7 +695,7 @@ export default function FXManagementPage() {
               data={forwardContractsData}
               columns={forwardColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -820,7 +820,7 @@ export default function FXManagementPage() {
               data={settlementScheduleData}
               columns={settlementColumns}
               searchable
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -842,7 +842,7 @@ export default function FXManagementPage() {
                   height={280}
                   showGrid
                   showTooltip
-                  color="#10b981"
+                  // color="#10b981"
                 />
               </CardContent>
             </Card>

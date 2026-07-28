@@ -187,16 +187,16 @@ const aiInsights = [
     id: '1',
     type: 'recommendation' as const,
     title: 'Optimize Concentration Rules',
-    description: 'Increasing threshold for ZenBank Pune from INR 20 Cr to INR 25 Cr would reduce daily transfer frequency by 40% while maintaining optimal liquidity.',
+    insight: 'Increasing threshold for ZenBank Pune from INR 20 Cr to INR 25 Cr would reduce daily transfer frequency by 40% while maintaining optimal liquidity.',
     impact: 'medium' as const,
     confidence: 85,
     category: 'Rule Optimization',
   },
   {
     id: '2',
-    type: 'alert' as const,
+    type: 'warning' as const,
     title: 'Idle Cash Alert',
-    description: 'INR 45 Cr idle cash identified across 5 accounts that are not covered by concentration rules. Consider adding rules for ZenBank Surat and ZenBank Lucknow.',
+    insight: 'INR 45 Cr idle cash identified across 5 accounts that are not covered by concentration rules. Consider adding rules for ZenBank Surat and ZenBank Lucknow.',
     impact: 'high' as const,
     confidence: 92,
     category: 'Cash Optimization',
@@ -205,7 +205,7 @@ const aiInsights = [
     id: '3',
     type: 'insight' as const,
     title: 'Schedule Optimization',
-    description: 'Moving Delhi concentration from 06:00 AM to 05:30 AM would capture INR 2.5 Cr additional early morning collections.',
+    insight: 'Moving Delhi concentration from 06:00 AM to 05:30 AM would capture INR 2.5 Cr additional early morning collections.',
     impact: 'medium' as const,
     confidence: 78,
     category: 'Schedule Optimization',
@@ -214,7 +214,7 @@ const aiInsights = [
     id: '4',
     type: 'recommendation' as const,
     title: 'Error Resolution',
-    description: 'The Kolkata rule has failed 3 consecutive times due to bank timeout. Recommend switching to HDFC Bank backup account or adjusting retry timing.',
+    insight: 'The Kolkata rule has failed 3 consecutive times due to bank timeout. Recommend switching to HDFC Bank backup account or adjusting retry timing.',
     impact: 'high' as const,
     confidence: 88,
     category: 'Error Resolution',
@@ -261,7 +261,7 @@ const ruleColumns: Column<ConcentrationRule>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Active' ? 'default' : row.status === 'Paused' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'Active' ? 'default' : row.status === 'Paused' ? 'secondary' : 'danger'}>
         {row.status === 'Active' && <CheckCircle2 className="mr-1 h-3 w-3" />}
         {row.status === 'Paused' && <Pause className="mr-1 h-3 w-3" />}
         {row.status === 'Error' && <AlertCircle className="mr-1 h-3 w-3" />}
@@ -291,7 +291,7 @@ const scheduleColumns: Column<ScheduleRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Scheduled' ? 'outline' : row.status === 'Running' ? 'default' : row.status === 'Completed' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'Scheduled' ? 'outline' : row.status === 'Running' ? 'default' : row.status === 'Completed' ? 'secondary' : 'danger'}>
         {row.status}
       </Badge>
     ),
@@ -321,7 +321,7 @@ const exceptionColumns: Column<ExceptionRecord>[] = [
     header: 'Status',
     accessor: 'status',
     cell: (row) => (
-      <Badge variant={row.status === 'Resolved' ? 'default' : row.status === 'Pending' ? 'secondary' : 'destructive'}>
+      <Badge variant={row.status === 'Resolved' ? 'default' : row.status === 'Pending' ? 'secondary' : 'danger'}>
         {row.status}
       </Badge>
     ),
@@ -369,7 +369,7 @@ export default function CashConcentrationPage() {
         <KPICard
           title="Concentrated Today"
           value={kpiData.concentratedToday.value}
-          unit={kpiData.concentratedToday.unit}
+          changeUnit={kpiData.concentratedToday.unit}
           change={kpiData.concentratedToday.change}
           trend={kpiData.concentratedToday.trend}
           icon={ArrowUpToLine}
@@ -379,7 +379,7 @@ export default function CashConcentrationPage() {
         <KPICard
           title="Pending Transfers"
           value={kpiData.pendingTransfers.value}
-          unit={kpiData.pendingTransfers.unit}
+          changeUnit={kpiData.pendingTransfers.unit}
           change={kpiData.pendingTransfers.change}
           trend={kpiData.pendingTransfers.trend}
           icon={Clock}
@@ -388,7 +388,7 @@ export default function CashConcentrationPage() {
         <KPICard
           title="Active Rules"
           value={kpiData.activeRules.value}
-          unit={kpiData.activeRules.unit}
+          changeUnit={kpiData.activeRules.unit}
           change={kpiData.activeRules.change}
           trend={kpiData.activeRules.trend}
           icon={Settings}
@@ -397,7 +397,7 @@ export default function CashConcentrationPage() {
         <KPICard
           title="Exceptions"
           value={kpiData.exceptionCount.value}
-          unit={kpiData.exceptionCount.unit}
+          changeUnit={kpiData.exceptionCount.unit}
           change={kpiData.exceptionCount.change}
           trend={kpiData.exceptionCount.trend}
           icon={AlertTriangle}
@@ -406,7 +406,7 @@ export default function CashConcentrationPage() {
         <KPICard
           title="Idle Cash Identified"
           value={kpiData.idleCashIdentified.value}
-          unit={kpiData.idleCashIdentified.unit}
+          changeUnit={kpiData.idleCashIdentified.unit}
           change={kpiData.idleCashIdentified.change}
           trend={kpiData.idleCashIdentified.trend}
           icon={Wallet}
@@ -443,7 +443,7 @@ export default function CashConcentrationPage() {
                   height={280}
                   showGrid
                   showTooltip
-                  color="#3b82f6"
+                  // color="#3b82f6"
                 />
               </CardContent>
             </Card>
@@ -460,8 +460,8 @@ export default function CashConcentrationPage() {
                   data={transferVolumeData}
                   height={280}
                   showGrid
-                  showTooltip
-                  color="#10b981"
+                  // showTooltip
+                  // color="#10b981"
                 />
               </CardContent>
             </Card>
@@ -474,7 +474,7 @@ export default function CashConcentrationPage() {
               columns={ruleColumns}
               searchable
               searchPlaceholder="Search rules..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
 
@@ -584,7 +584,7 @@ export default function CashConcentrationPage() {
               columns={ruleColumns}
               searchable
               searchPlaceholder="Search rules..."
-              pageSize={10}
+              // pageSize={10}
             />
           </Section>
         </TabsContent>
@@ -623,7 +623,7 @@ export default function CashConcentrationPage() {
                 data={scheduleData}
                 columns={scheduleColumns}
                 searchable
-                pageSize={10}
+                // pageSize={10}
               />
             </CardContent>
           </Card>
@@ -664,7 +664,7 @@ export default function CashConcentrationPage() {
                 columns={exceptionColumns}
                 searchable
                 searchPlaceholder="Search exceptions..."
-                pageSize={10}
+                // pageSize={10}
               />
             </CardContent>
           </Card>

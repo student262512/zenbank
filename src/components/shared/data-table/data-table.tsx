@@ -220,7 +220,7 @@ export function DataTable<T>({
                   <Checkbox
                     checked={selectedRows.length === data.length && data.length > 0}
                     indeterminate={selectedRows.length > 0 && selectedRows.length < data.length}
-                    onCheckedChange={handleSelectAll}
+                    onChange={handleSelectAll}
                   />
                 </th>
               )}
@@ -317,7 +317,7 @@ export function DataTable<T>({
                       >
                         <Checkbox
                           checked={isSelected}
-                          onCheckedChange={() => handleSelectRow(row)}
+                          onChange={() => handleSelectRow(row)}
                         />
                       </td>
                     )}
@@ -341,7 +341,7 @@ export function DataTable<T>({
                         onClick={(e) => e.stopPropagation()}
                       >
                         <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
+                          <DropdownMenuTrigger>
                             <Button variant="ghost" size="icon" className="h-8 w-8">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>

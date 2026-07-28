@@ -122,7 +122,7 @@ export function Sidebar({ className, collapsed = false, onCollapse }: SidebarPro
   return (
     <aside
       className={cn(
-        'flex h-[calc(100vh-4rem)] flex-col border-r border-slate-800 bg-slate-950 transition-all duration-300',
+        'fixed flex h-[calc(100vh-4rem)] flex-col border-r border-slate-800 bg-slate-950 transition-all duration-300',
         collapsed ? 'w-16' : 'w-64',
         className
       )}

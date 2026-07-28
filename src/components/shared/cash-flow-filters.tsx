@@ -498,7 +498,7 @@ export function CashFlowFilters({
       {/* Scenario Filter */}
       {showScenario && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <GitBranch className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">{selectedScenario?.name || 'Scenario'}</span>
@@ -523,7 +523,7 @@ export function CashFlowFilters({
       {/* Forecast Version Filter */}
       {showForecastVersion && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <GitBranch className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">{selectedVersion?.name || 'Version'}</span>
@@ -555,7 +555,7 @@ export function CashFlowFilters({
       {/* Forecast Horizon Filter */}
       {showForecastHorizon && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <Clock className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">{selectedHorizon?.name || 'Horizon'}</span>
@@ -582,7 +582,7 @@ export function CashFlowFilters({
       {/* Date Range Filter */}
       {showDateRange && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
               <Calendar className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:inline">{selectedDatePreset?.label || 'Date Range'}</span>
@@ -632,7 +632,7 @@ export function CashFlowFilters({
 
       {/* More Filters Button */}
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+        <DropdownMenuTrigger>
           <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
             <Filter className="h-4 w-4 text-slate-400" />
             <span className="hidden sm:inline">More</span>
@@ -710,7 +710,7 @@ function MultiSelectFilter({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger>
         <Button variant="outline" size={compact ? 'sm' : 'default'} className="gap-2">
           <Icon className="h-4 w-4 text-slate-400" />
           <span className="hidden sm:inline">
@@ -729,7 +729,7 @@ function MultiSelectFilter({
           <DropdownMenuCheckboxItem
             key={option.id}
             checked={option.id === 'all' ? selectedIds.length === 0 : selectedIds.includes(option.id)}
-            onCheckedChange={() => onToggle(option.id)}
+            onChange={() => onToggle(option.id)}
             className="gap-2"
           >
             <div className="flex flex-1 items-center justify-between">

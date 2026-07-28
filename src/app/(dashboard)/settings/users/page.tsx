@@ -337,7 +337,7 @@ export default function UsersPage() {
               { label: 'Deactivate', onClick: (row) => console.log('Deactivate', row.id), variant: 'danger' },
             ]}
             searchable={false}
-            pageSize={10}
+            // pageSize={10}
           />
         </Card>
       </Section>

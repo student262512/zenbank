@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { AlertCircle, CheckCircle, Info, AlertTriangle, X } from 'lucide-react';
